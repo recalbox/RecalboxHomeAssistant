@@ -175,6 +175,8 @@ It allows to control the Recalbox as a switch, and use assist to turn OFF recalb
 
 Example : "Eteins Recalbox" will turn off the Recalbox.
 
+![](turnOffRecalbox.png)
+
 
 ### Get current game with text/voice command
 
