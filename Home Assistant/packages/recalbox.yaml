@@ -64,7 +64,6 @@ automation:
       - topic: recalbox/commands/reboot
         trigger: mqtt
 
-    
 
 # Eteindre la recalbox : recalbox.local == 192.168.1.147
 rest_command:
@@ -75,3 +74,20 @@ rest_command:
     url: "http://recalbox.local/api/system/reboot"
     method: POST
     
+
+# Pour les commandes intelligentes : voix/texte
+template:
+- switch:
+  - unique_id: switch_recalbox_assist
+    turn_on:
+    - action: notify.persistent_notification
+      data:
+        message: L'allumage de Recalbox n'est pas réalisable à distance. Alimentez votre Recalbox, ou appuyez sur son interrupteur.
+    turn_off:
+    - action: button.press
+      target:
+        entity_id: button.recalbox_eteindre_recalbox
+      data: {}
+    #default_entity_id: switch.recalbox_global
+    name: Recalbox
+    state: "{{ is_state('binary_sensor.recalbox_rpi3', 'on') }}"

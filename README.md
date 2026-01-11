@@ -52,7 +52,11 @@ Two buttons can also be used to stop/reboot the recalbox via Home Assistant.
    
    - Create a new Home Assistant User, named "recalbox" (or something else), allowed to connect only on the local network. This user will be used for MQTT Authentication. Replace the user/password `home_assistant_notifier.sh` line 13 and 14 (`MQTT_USER` & `MQTT_PASS`)
    
-   - Install MQTT Mosquitto broker in Home assistant (in addons). Check on services, and assign the created user for authentication.
+   - Install MQTT Mosquitto broker in Home assistant (in addons). Enable the Run on start, and watchdog.
+   
+   - In services integration, add MQTT service which should be now available.
+     Click on reconfigure, and use the credentials defined for authentication.
+	 Double check they are the same defined in `home_assistant_notifier.sh` lines 13+14.
    
    - Copy file `/packages/recalbox.yaml` from this repo, to `/homeassistant/packages/recalbox.yaml`, and add in `configuration.yaml` those lines in order to load this external config file (and then restart HA) :
      
@@ -60,94 +64,114 @@ Two buttons can also be used to stop/reboot the recalbox via Home Assistant.
      homeassistant:
          packages: !include_dir_named packages
      ```
-   
-   - Add a card to Home Assistant to display the Recalbox status, game info, picture, etc. For example :
-     ![](example.png)
-     
-     ```
-     type: vertical-stack
-     title: Recalbox (retro gaming)
-     cards:
-       - type: entities
-         visibility:
-           - condition: state
-             entity: binary_sensor.recalbox_rpi3
-             state_not: "on"
-         entities:
-           - binary_sensor.recalbox_rpi3
-       - type: markdown
-         content: |-
-           <small>Version 9.2.3-PULSTAR,
-           sur Raspberry Pi 3B+
-           </small>
-       - type: entities
-         visibility:
-           - condition: state
-             entity: binary_sensor.recalbox_rpi3
-             state: "on"
-         entities:
-           - type: attribute
-             entity: binary_sensor.recalbox_rpi3
-             attribute: console
-             name: Console émulée
-             icon: mdi:sony-playstation
-           - type: attribute
-             entity: binary_sensor.recalbox_rpi3
-             attribute: game
-             name: Jeu en cours
-             icon: mdi:gamepad-variant-outline
-           - type: attribute
-             entity: binary_sensor.recalbox_rpi3
-             attribute: genre
-             name: Genre du jeu
-             icon: mdi:folder-outline
-         show_header_toggle: false
-         state_color: false
-         footer:
-           type: buttons
-           entities:
-             - entity: button.recalbox_eteindre_recalbox
-               name: Eteindre
-             - entity: button.recalbox_reboot_recalbox
-               name: Redémarrer
-       - type: markdown
-         content: |-
-           <center>
-           <img src="{{ state_attr('binary_sensor.recalbox_rpi3', 'imageUrl') }}">
-           </center>
-         text_only: true
-     ```
-   
-   - You can also use automations based on launched games.
-     Example : send phone notification when a game in launched :
-     
-     ```
-     alias: Notification de nouveau jeu
-     description: Annonce le nouveau jeu qui vient d'être lancé
-     triggers:
-      - trigger: state
-        entity_id:
-          - binary_sensor.recalbox_rpi3
+ 
+## Usage 
+
+### Add Recalbox status to dashboard
+ 
+Add a card to Home Assistant to display the Recalbox status, game info, picture, etc. 
+It will be refreshed in real time.
+
+For example :
+![](example.png)
+ 
+```yaml
+type: vertical-stack
+title: Recalbox (retro gaming)
+cards:
+  - type: entities
+    entities:
+      - entity: switch.recalbox_global
+        icon: mdi:gamepad-variant-outline
+        secondary_info: last-changed
+  - type: markdown
+    content: |-
+      <small>Version 9.2.3-PULSTAR,
+      sur Raspberry Pi 3B+
+      </small>
+  - type: entities
+    visibility:
+      - condition: state
+        entity: binary_sensor.recalbox_rpi3
+        state: "on"
+    entities:
+      - type: attribute
+        entity: binary_sensor.recalbox_rpi3
+        attribute: console
+        name: Console émulée
+        icon: mdi:sony-playstation
+      - type: attribute
+        entity: binary_sensor.recalbox_rpi3
         attribute: game
-     conditions:
-      - condition: template
-        value_template: |-
-          {{ trigger.to_state.attributes.game != None and 
-             trigger.to_state.attributes.game != 'unknown' and
-             trigger.to_state.attributes.console != 'Kodi' and
-             trigger.to_state.attributes.game != '' }}
-     actions:
-      - action: notify.notify
-        metadata: {}
-        data:
-          message: >-
-            Lancement du jeu {{ trigger.to_state.attributes.game -}}
-     
-            {%- if trigger.to_state.attributes.console %}, sur {{
-            trigger.to_state.attributes.console }}{% endif -%}
-     
-            {%- if trigger.to_state.attributes.genre %} ({{
-            trigger.to_state.attributes.genre }}){% endif %}.
-          title: Jeu sur Recalbox
-     mode: single
-     ```
+        name: Jeu en cours
+        icon: mdi:gamepad-variant-outline
+      - type: attribute
+        entity: binary_sensor.recalbox_rpi3
+        attribute: genre
+        name: Genre du jeu
+        icon: mdi:folder-outline
+    show_header_toggle: false
+    state_color: false
+    footer:
+      type: buttons
+      entities:
+        - entity: button.recalbox_eteindre_recalbox
+          name: Eteindre
+        - entity: button.recalbox_reboot_recalbox
+          name: Redémarrer
+  - type: markdown
+    visibility:
+      - condition: state
+        entity: binary_sensor.recalbox_rpi3
+        state: "on"
+    content: |-
+      <center>
+      <img src="{{ state_attr('binary_sensor.recalbox_rpi3', 'imageUrl') }}">
+      </center>
+    text_only: true
+ ```
+
+### Automation when a game is launched
+
+You can also use automations based on launched games.
+Example : send phone notification when a game in launched :
+ 
+```yaml
+alias: Notification de nouveau jeu
+description: Annonce le nouveau jeu qui vient d'être lancé
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.recalbox_rpi3
+    attribute: game
+conditions:
+  - condition: template
+    value_template: |-
+      {{ trigger.to_state.attributes.game != None and 
+         trigger.to_state.attributes.game != 'unknown' and
+         trigger.to_state.attributes.console != 'Kodi' and
+         trigger.to_state.attributes.game != '' }}
+actions:
+  - action: notify.notify
+    metadata: {}
+    data:
+      message: >-
+        Lancement du jeu {{ trigger.to_state.attributes.game -}}
+
+        {%- if trigger.to_state.attributes.console %}, sur {{
+        trigger.to_state.attributes.console }}{% endif -%}
+
+        {%- if trigger.to_state.attributes.genre %} ({{
+        trigger.to_state.attributes.genre }}){% endif %}.
+      title: Jeu sur Recalbox
+mode: single
+```
+
+### Turn OFF recalbox with text/voice command
+
+Since January 11th 2026, the script added a switch template.
+It allows to control the Recalbox as a switch, and use assist to turn OFF recalbox with voice or assist text :
+
+Example : "Eteins Recalbox" will turn off the Recalbox.
+
+
