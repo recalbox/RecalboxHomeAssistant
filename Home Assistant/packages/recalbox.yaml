@@ -82,8 +82,8 @@ rest_command:
   recalbox_launch_game:
     url: "http://recalbox.local:81/api/systems/{{ console }}/launcher"
     method: POST
-    payload: '{"path": "{{ path }}"}'
-    content_type: "application/json"
+    payload: "{{ path }}"
+    #content_type: "application/txt"
 
 
 # ----- Assistant
@@ -135,14 +135,25 @@ intent_script:
       text: >
         {% if script_output is defined %}
           {{ script_output.result_message }}
+        {% elif not is_state('binary_sensor.recalbox_rpi3', 'on') %}
+          La recalbox ne semble pas allumée, ou pas accessible.
         {% else %}
-          Une erreur est survenue lors de la recherche du jeu sur Recalbox.
+          Une erreur est survenue lors de la recherche du jeu sur Recalbox. {{ script_output }}
         {% endif %}
 
 script:
   recalbox_search_and_launch:
     mode: restart
     sequence:
+      - if:
+          - condition: not
+            conditions:
+              - condition: state
+                entity_id: binary_sensor.recalbox_rpi3
+                state: "on"
+        then:
+          stop: "Recalbox is OFF"
+          
       # 1 ; lister toutes les roms de la console
       - action: rest_command.recalbox_get_roms
         data:
@@ -177,8 +188,14 @@ script:
             data:
               console: "{{ console_id }}"
               path: "{{ target_game.path }}"
+          - variables:
+              retour_dictionnaire:
+                result_message: "{{ final_msg }}"
           - stop: "Game found"
-            response_variable: final_msg
+            response_variable: retour_dictionnaire
         else:
+          - variables:
+              retour_dictionnaire:
+                result_message: "{{ final_msg }}"
           - stop: "Game not found"
-            response_variable: final_msg
+            response_variable: retour_dictionnaire
