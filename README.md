@@ -208,5 +208,7 @@ intents:
   
   Query examples :
   - "Recalbox lance Pokemon Jaune sur Game Boy"
+  - "Recalbox lance Mario 64 sur nintendo 64"
   - "Joue à Mario 64 sur la Nintendo 64 sur Recalbox"
+  - "Lance Mario 64 sur la Nintendo 64"
   - "Lance Sonic 1 sur megadrive"

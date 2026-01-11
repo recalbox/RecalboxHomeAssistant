@@ -80,7 +80,7 @@ rest_command:
     method: GET
   
   recalbox_launch_game:
-    url: "http://recalbox.local:81/api/systems/{{ console }}/games/launch"
+    url: "http://recalbox.local:81/api/systems/{{ console }}/launcher"
     method: POST
     payload: '{"path": "{{ path }}"}'
     content_type: "application/json"
