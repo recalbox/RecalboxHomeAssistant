@@ -21,7 +21,7 @@ mqtt:
         name: "Recalbox"
         model: "Raspberry Pi 3"
         manufacturer: "Recalbox"
-        sw_version: "Latest" # Optionnel : version du système
+        sw_version: "9.2.3-PULSAR" # Optionnel : version du système
         configuration_url: "http://recalbox.local" # Lien direct vers l'interface web
         
   # On crée des boutons pour éteindre/redémarrer la recalbox.
