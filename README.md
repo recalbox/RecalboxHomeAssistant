@@ -4,6 +4,23 @@ By Aurélien Tomassini, 2026.
 
 ![](example.png)
 
+<!-- Use "markdown-toc -i README.md --maxdepth 3" to auto update table of content -->
+<!-- (if not installed yet, run "npm install --save markdown-toc -g") -->
+
+<!-- toc -->
+
+- [Features](#features)
+- [Context](#context)
+- [Installation](#installation)
+- [Usage](#usage)
+  * [Add Recalbox status to dashboard](#add-recalbox-status-to-dashboard)
+  * [Automation when a game is launched](#automation-when-a-game-is-launched)
+  * [Turn OFF recalbox with text/voice command](#turn-off-recalbox-with-textvoice-command)
+  * [Get current game with text/voice command](#get-current-game-with-textvoice-command)
+  * [Launch a game from text/voice assistant](#launch-a-game-from-textvoice-assistant)
+
+<!-- tocstop -->
+
 ## Features
 
 A script listens on Recalbox events, based on [Scripts sur événements d'EmulationStation | Recalbox Wiki](https://wiki.recalbox.com/fr/advanced-usage/scripts-on-emulationstation-events) . The scripts reads the needed data for game information, and sends a MQTT message to Home Assistant with JSON data. Home Assistant can then update its "Recalbox" entity with the current game.
