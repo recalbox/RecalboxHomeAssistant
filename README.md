@@ -2,7 +2,7 @@
 
 By Aurélien Tomassini, 2026.
 
-![](example.png)
+![](RecalboxHomeAssistantIntegration.png)
 
 <!-- Use "markdown-toc -i README.md --maxdepth 3" to auto update table of content -->
 <!-- (if not installed yet, run "npm install --save markdown-toc -g") -->
