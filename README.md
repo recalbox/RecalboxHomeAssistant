@@ -91,7 +91,7 @@ Assist integration for voice/text control has also been implemented in order to 
 Add a card to Home Assistant to display the Recalbox status, game info, picture, etc. 
 It will be refreshed in real time.
 
-You can use this card yaml [](Home Assistant/dashboards/recalbox_card.yaml) for this example :
+You can use this card yaml [Home Assistant/dashboards/recalbox_card.yaml](Home Assistant/dashboards/recalbox_card.yaml) for this example :
 ![](example.png)
 
 
