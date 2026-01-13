@@ -18,6 +18,7 @@ By Aurélien Tomassini, 2026.
   * [Turn OFF recalbox with text/voice command](#turn-off-recalbox-with-textvoice-command)
   * [Get current game with text/voice command](#get-current-game-with-textvoice-command)
   * [Launch a game from text/voice assistant](#launch-a-game-from-textvoice-assistant)
+  * [screenshot](#screenshot)
 - [Todo](#todo)
 - [Releases notes](#releases-notes)
   * [v0.0.2 - In progress...](#v002---in-progress)
