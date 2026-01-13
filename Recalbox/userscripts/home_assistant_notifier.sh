@@ -41,11 +41,6 @@ GAME_GENRE_ID=$(get_val "GenreId")
 # si le nom du jeu commence par 3 chiifres puis espace, alors on les retire :
 GAME_NAME="${GAME_NAME/#[0-9][0-9][0-9] /}"
 
-	
-# Extraction de la version et du hardware
-RECALBOX_VERSION=$(cat /recalbox/recalbox.version 2>/dev/null || echo "Inconnue")
-HARDWARE_MODEL=$(tr -d '\0' < /proc/device-tree/model 2>/dev/null || echo "Hardware inconnu")
-
 
 # Nettoyage des variables pour le JSON
 clean_json_val() {
@@ -62,30 +57,14 @@ clean_json_val() {
 send_mqtt() {
     local sub_topic="$1"
     local message="$2"
-    mosquitto_pub -h "$HA_IP" -u "$MQTT_USER" -P "$MQTT_PASS" -t "$TOPIC/$sub_topic" -m "$message" -r
-}
+	
+    if [ "$3" == "true" ]; then
+		mosquitto_pub -h "$HA_IP" -u "$MQTT_USER" -P "$MQTT_PASS" -t "$TOPIC/$sub_topic" -m "$message" -r
+	else
+		mosquitto_pub -h "$HA_IP" -u "$MQTT_USER" -P "$MQTT_PASS" -t "$TOPIC/$sub_topic" -m "$message"
+    fi
 
-# Fonction pour générer le JSON de jeu
-gen_game_json() {
-    local imageUrl="null"
-	if [ -n "$ROM" ] && [ "$ROM" != "null" ]; then
-		local ROM_PATH_ENCODED="${ROM//\//%2F}"
-        local ROM_PATH_ENCODED="${ROM_PATH_ENCODED// /%20}"
-		imageUrl="\"http://$RECALBOX_DOMAIN:81/api/systems/$SYSTEM_ID/roms/metadata/image/$ROM_PATH_ENCODED\""
-	fi
-    
-    cat <<EOF
-{
-  "game": $(clean_json_val "$GAME_NAME"),
-  "console": $(clean_json_val "$SYSTEM_NAME"),
-  "rom": $(clean_json_val "$ROM"),
-  "genre": $(clean_json_val "$GAME_GENRE"),
-  "genreId": $(clean_json_val "$GAME_GENRE_ID"),
-  "imageUrl": $imageUrl,
-  "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
-  "hardware": $(clean_json_val "$HARDWARE_MODEL")
-}
-EOF
+	
 }
 
 clear_game() {
@@ -120,5 +99,43 @@ case "$ACTION" in
         ;;
 esac
 
-send_mqtt "status" "$STATUS"
-send_mqtt "game" "$(gen_game_json)"
+
+
+
+
+	
+# Extraction de la version et du hardware
+RECALBOX_VERSION=$(cat /recalbox/recalbox.version 2>/dev/null || echo "Inconnue")
+HARDWARE_MODEL=$(tr -d '\0' < /proc/device-tree/model 2>/dev/null || echo "Hardware inconnu")
+
+
+# Fonction pour générer le JSON de jeu
+gen_game_json() {
+    local imageUrl="null"
+	if [ -n "$ROM" ] && [ "$ROM" != "null" ]; then
+		local ROM_PATH_ENCODED="${ROM//\//%2F}"
+        local ROM_PATH_ENCODED="${ROM_PATH_ENCODED// /%20}"
+		imageUrl="\"http://$RECALBOX_DOMAIN:81/api/systems/$SYSTEM_ID/roms/metadata/image/$ROM_PATH_ENCODED\""
+	fi
+    
+    cat <<EOF
+{
+  "game": $(clean_json_val "$GAME_NAME"),
+  "console": $(clean_json_val "$SYSTEM_NAME"),
+  "rom": $(clean_json_val "$ROM"),
+  "genre": $(clean_json_val "$GAME_GENRE"),
+  "genreId": $(clean_json_val "$GAME_GENRE_ID"),
+  "imageUrl": $imageUrl,
+  "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
+  "hardware": $(clean_json_val "$HARDWARE_MODEL")
+}
+EOF
+}
+
+
+# Si on doit effacer le retain du status...
+# send_mqtt "status" "" "true"
+# On ne demande pas de retenir l'état sur le log terme
+send_mqtt "status" "$STATUS" "false"
+# Mais on veut persister les attributs, notamment pour retenir la version de recalbox et le hardware
+send_mqtt "game" "$(gen_game_json)" "true"

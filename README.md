@@ -228,7 +228,7 @@ intents:
 - Try to search for a game even if the recalbox is not seen connected
 - Add `recalboxVersion` and `hardware` in the MQTT message sent to Home Assistant. So HA can know the OS version and device of Recalbox.
 - Update the recalbox_card example with actual Recabox version and hardware
-- Recalbox now sends messages to MQTT in retain mode
+- Recalbox now sends messages to MQTT in retain mode for the attributes (and then remember the recabox version and hardware)
 - Add SSH installation info to launch a game
 - SSH implementation for game launch ???
 
