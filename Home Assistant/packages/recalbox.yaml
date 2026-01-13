@@ -111,9 +111,9 @@ rest_command:
 # https://gitlab.com/recalbox/recalbox/-/tree/master/projects/configgen/
 shell_command:
   recalbox_launch_game_ssh: >
-    {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
     {# On retire le http:// pour n'avoir que recalbox.local #}
-    {% set host = base.replace('http://', '').replace('https://', '') %}
+    {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
+    {% set host = base.replace('http://', '').replace('https://', '').split(':')[0] if base is not none else 'recalbox.local' %}
     
     ssh -i /config/.ssh/recalboxHomeAssistantKey -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@{{ host }} 
     "ROM='{{ path }}'; 
