@@ -30,17 +30,11 @@ By Aurélien Tomassini, 2026.
 A script listens on Recalbox events, based on [Scripts sur événements d'EmulationStation | Recalbox Wiki](https://wiki.recalbox.com/fr/advanced-usage/scripts-on-emulationstation-events) . The scripts reads the needed data for game information, and sends a MQTT message to Home Assistant with JSON data. Home Assistant can then update its "Recalbox" entity with the current game.
 
 The attributes read by Home Assistant are, through this JSON :
-
 - `game `: name of the running game, user friendly. null if no game launched.
-
 - `console `: name of the console, user friendly. null if no game launched, or "Kodi"
-
 - `rom `: path to the current rom. null if no game launched.
-
 - `genre `: genre of the running game, user friendly. null if no game launched.
-
 - `genreId `: genreId of the running game. null if no game launched. Can be useful for automation where you want to set lights colors depending on type of game for example.
-
 - `imageUrl `: URL to the image of the current game. null if no game running. The picture exists only if the game has been scrapped.
 
 Two buttons can also be used to stop/reboot the recalbox via Home Assistant.
@@ -55,7 +49,7 @@ Assist integration for voice/text control has also been implemented in order to 
   By default, should be accessible on `recalbox.local`
 
 - You should have a `Home Assistant`.
-  Tested on Home Assistant <mark>2026.1</mark>.
+  Tested on Home Assistant <mark>2026.1</mark>, Raspberry Pi 3 B+.
   By default, It should be accessible in the same network, at`homeassistant.local`
 
 ## Installation
@@ -275,15 +269,17 @@ intents:
 
 - [ ] Get the actual Recalbox version and device to be shown in the dashboard
 - [ ] Implement the launch game via SSH if possible (we already know if we found the game, the rom path, and system. Only need a way to launch it on device)
+- [ ] Internationalization
 
 
 ## Releases notes
 
 ### v0.0.2 - In progress...
 
-- Update the exammle dashboard template, to use the device information to display it at the bottom of the Recalbox column
-- Changes the device infos in the yaml, as Recalbox 9.2.3 on Raspberry Pi3. The actual version and device will be dynamic later.
-- SSH implementation or game launch ???
+- Update the example dashboard template, to use the device information to display it at the bottom of the Recalbox column
+- Changes the device infos in the yaml, as Recalbox 9.2.3 on Raspberry Pi3. The actual version and device will be dynamic later
+- Adds web links to recalbox web manager, and to this repository to get updates
+- SSH implementation for game launch ???
 
 
 ### v0.0.1 - 13/01/2026
