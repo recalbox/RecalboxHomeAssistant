@@ -4,8 +4,6 @@
 
 homeassistant:
   customize:
-    _recalbox_hw: &recalbox_hardware "-"
-    _recalbox_sw: &recalbox_sw_version "-"
     _recalbox_name: &recalbox_name "Recalbox"
     _recalbox_url: &recalbox_url "http://recalbox.local"
     
@@ -29,9 +27,9 @@ mqtt:
       device: &recalbox_device
         identifiers: "recalbox_rpi3_system"
         name: *recalbox_name
-        model: *recalbox_hardware
+        model: "Recalbox OS"
         manufacturer: "Recalbox"
-        sw_version: *recalbox_sw_version
+        # sw_version: *recalbox_sw_version
         configuration_url: *recalbox_url
         
   # On crée des boutons pour éteindre/redémarrer la recalbox.
