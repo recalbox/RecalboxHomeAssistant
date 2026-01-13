@@ -44,6 +44,7 @@ mqtt:
     icon: mdi:restart
     device: *recalbox_device
     command_topic: "recalbox/commands/reboot"
+    
 
     
 automation:
@@ -84,6 +85,11 @@ rest_command:
     url: >
         {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
         {{ base }}/api/system/reboot
+    method: POST
+  screenshot_recalbox:
+    url: >
+        {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
+        {{ base }}:81/api/media/takescreenshot
     method: POST
     
   # Récupère les roms d'une console précise
@@ -147,6 +153,7 @@ shell_command:
 # python3 /usr/bin/emulatorlauncher.py -system \"$SYSTEM\" -rom \"$ROM\" -emulator \"$EMU\" -core \"$CORE\" -p1index 0 -p1guid 0 -p1name \"Gamepad\" -ratio auto -rotation 0 -resolution 1920x1080"
 
 
+
 # ----- Assistant
 
 
@@ -166,6 +173,17 @@ template:
     #default_entity_id: switch.recalbox_global
     name: Recalbox
     state: "{{ is_state('binary_sensor.recalbox_rpi3', 'on') }}"
+- button:
+  - name: "Capture Recalbox"
+    unique_id: screenshot_recalbox_btn
+    # device: *recalbox_device
+    icon: mdi:camera
+    press:
+      - action: rest_command.screenshot_recalbox
+      - action: notify.persistent_notification
+        data:
+          message: "Capture d'écran Recalbox effectuée !"
+          title: "Succès"
 
 
 # Pour les infos sur le jeu en cours
@@ -204,6 +222,24 @@ intent_script:
         {% else %}
           Une erreur imprévue est survenue pendant l'exécution du script.
           Aucun status n'a été reçu du script de recherche. ({{ resp }})
+        {% endif %}
+
+  # Pour lancer un jeu par la voix
+  RecalboxCreateSnapshot:
+    action:
+      - action: rest_command.screenshot_recalbox
+        response_variable: script_output
+      - stop: "Return value to intent script"
+        response_variable: script_output
+    speech:
+      text: >
+        {% set resp = action_response %}
+        {% if resp is not none %}
+          Une capture d'écran a été faite et enregistée dans /recalbox/share/screenshots/
+        {% elif not is_state('binary_sensor.recalbox_rpi3', 'on') %}
+          La recalbox ne semble pas allumée, ou pas accessible.
+        {% else %}
+          La capture n'a pas pu être effectuée.
         {% endif %}
 
 script:

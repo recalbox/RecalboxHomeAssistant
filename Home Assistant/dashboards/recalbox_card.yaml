@@ -36,6 +36,8 @@ cards:
           name: Eteindre
         - entity: button.recalbox_reboot_recalbox
           name: Redémarrer
+        - entity: button.capture_recalbox
+          name: Capture d'écran
   - type: markdown
     visibility:
       - condition: state
@@ -61,8 +63,8 @@ cards:
   - type: markdown
     content: >-
       ---
-      
-      <small> 
+
+      <small>
       {{ device_attr('binary_sensor.recalbox_rpi3', 'name') }} version
       {{ state_attr('binary_sensor.recalbox_rpi3', 'recalboxVersion') 
         if state_attr('binary_sensor.recalbox_rpi3', 'recalboxVersion') is not none 
@@ -70,7 +72,7 @@ cards:
       }}{%- if state_attr('binary_sensor.recalbox_rpi3', 'hardware') %}, sur {{
         state_attr('binary_sensor.recalbox_rpi3', 'hardware') }}{% endif -%}
       .
-      
+
       [Ouvrir l'interface web de Recalbox]({{
       device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') }})
 

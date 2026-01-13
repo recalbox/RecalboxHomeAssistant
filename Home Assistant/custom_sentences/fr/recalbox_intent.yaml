@@ -11,13 +11,16 @@ intents:
           - "à quoi je joue [sur recalbox]"
           - "qu'est-ce qui tourne sur [la] recalbox"
           - "quel jeu est lancé [sur recalbox]"
-          - "quel esl le jeu lancé [sur recalbox]"
+          - "quel est le jeu lancé [sur recalbox]"
+  RecalboxCreateSnapshot:
+    data:
+      - sentences:
+          - "(fais | prends) (une capture | un screenshot) [d'écran] [du jeu] [sur recalbox]"
   RecalboxLaunchGame:
     data:
       - sentences:
-          - "joue à {game} sur [la] {console} sur recalbox"
-          - "lance {game} sur [la] {console}"
-          - "recalbox lance {game} sur [la] {console}"
+          - "(joue à | lance | mets) {game} sur [la] {console} [sur recalbox]"
+          - "recalbox (joue à | lance | mets) {game} sur [la] {console}"
           
 lists:
   game:

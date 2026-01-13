@@ -62,11 +62,8 @@ Assist integration for voice/text control has also been implemented in order to 
      This script will react to Recabox events :
      
      - `start`|`systembrowsing`|`endgame `: refreshes the status ON, no game
-     
      - `runkodi `: refreshes ON status, set the current console as "Kodi"
-     
      - `rungame `: refreshes ON status, show current game, console (readable name), and builds image URL base on the scrapped data. If the game has a numeric prefix with 3 digits, it is removed. Example : "001 Sonic 1" will be shown as "Sonic 1".
-     
      - `stop `: change status to OFF, remove current game, image
 
 2. **Home Assistant**
@@ -86,6 +83,20 @@ Assist integration for voice/text control has also been implemented in order to 
          packages: !include_dir_named packages
      ```
  
+3. **SSH for Home Assistant to access Recalbox**
+
+
+Some Recalbox API are not existing (launch a game, for example). We can still execute some features with scripts over SSH.
+It means that Home Assistant needs access to Recalbox via SSH if you want to access those features.  
+- Enable "Advanced mode" for your user
+- Install "Terminal & SSH" in Home Assistant : enable watchdog and sidebar. Go to settings and import a public key or define a password, and then save and restart the addon.
+- Type "ssh-keygen -t rsa -b 4096", name it "/config/.ssh/recalboxHomeAssistantKey" (create folder /config/.ssh if needed)
+- Your keys will then be sotred in /config/.ssh/recalboxHomeAssistantKey
+- Type "ssh-copy-id -i /config/.ssh/recalboxHomeAssistantKey.pub root@recalbox.local" (default credentials on Recalbox are "root" / "recalboxroot")
+- Verify in the terminal that the SSH connexion is good, without asking you the password anymore : "ssh -i /config/.ssh/recalboxHomeAssistantKey -o StrictHostKeyChecking=no root@recalbox.local"
+- Type "exit"
+
+
 ## Usage 
 
 ### Add Recalbox status to dashboard
@@ -167,17 +178,8 @@ intents:
 
 ### Launch a game from text/voice assistant
 
-> SSH launch NOT WORKING YET !
-
-> Because of non existing APi to launch a game, we need to launch the game via SSH.
-> It means that Home Assistant needs access to Recalbox via SSH.  
-> - Enable "Advanced mode" for your user
-> - Install "Terminal & SSH" in Home Assistant : enable watchdog and sidebar. Go to settings and import a public key or define a password, and then save and restart the addon.
-> - Type "ssh-keygen -t rsa -b 4096", name it "/config/.ssh/recalboxHomeAssistantKey" (create folder /config/.ssh if needed)
-> - Your keys will then be sotred in /config/.ssh/recalboxHomeAssistantKey
-> - Type "ssh-copy-id -i /config/.ssh/recalboxHomeAssistantKey.pub root@recalbox.local" (default credentials on Recalbox are "root" / "recalboxroot")
-> - Verify in the terminal that the SSH connexion is good, without asking you the password anymore : "ssh -i /config/.ssh/recalboxHomeAssistantKey -o StrictHostKeyChecking=no root@recalbox.local"
-> - Type "exit"
+> SSH access is required. 
+> Launch via SSH is NOT WORKING YET !
 
 
 - If not yet done, create a file `/config/custom_sentences/<language>/recalbox_intent.yaml`, having a `RecalboxLaunchGame` intent.
@@ -212,6 +214,17 @@ intents:
   - "Lance Sonic 1 sur megadrive"
 
 
+
+### screenshot
+
+You can make a screejn shot simply push the screen shot button on your dashboard.
+
+You can also make a screen shot via Assist, typing or saying "Prends une capture d'écran du jeu", for example.
+Once again, use the exampes in [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml), for the `RecalboxCreateSnapshot` intent.
+
+> Note : on Recalbox 9.2.3 or Raspberry Pi 3, the screenshots are broken, also in the Recalbox Web Manager. Hopefully it will be fixed soon.
+> `fbgrab` command gives better results, but keeps the welcome screen as fixed image, to I can't switch to this command to get better screenshots.
+
 ## Todo
 
 - [ ] Implement the launch game via SSH if possible (we already know if we found the game, the rom path, and system. Only need a way to launch it on device)
@@ -229,6 +242,8 @@ intents:
 - Add `recalboxVersion` and `hardware` in the MQTT message sent to Home Assistant. So HA can know the OS version and device of Recalbox.
 - Update the recalbox_card example with actual Recabox version and hardware
 - Recalbox now sends messages to MQTT in retain mode for the attributes (and then remember the recabox version and hardware)
+- Add screen shot button
+- Add screen shot action via assist (text or voice)
 - Add SSH installation info to launch a game
 - SSH implementation for game launch ???
 
