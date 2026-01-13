@@ -91,7 +91,7 @@ Assist integration for voice/text control has also been implemented in order to 
 Add a card to Home Assistant to display the Recalbox status, game info, picture, etc. 
 It will be refreshed in real time.
 
-You can use this card yaml [Home Assistant/dashboards/recalbox_card.yaml](Home%20Assistant/dashboards/recalbox_card.yaml), to get this example :
+You can use this [recalbox_card.yaml](Home%20Assistant/dashboards/recalbox_card.yaml) in your dashboard, to get this example :
 ![](example.png)
 
 
@@ -143,8 +143,9 @@ Example : "Eteins Recalbox" will turn off the Recalbox.
 
 ### Get current game with text/voice command
 
-- Create file `/config/custom_sentences/<language>/recalbox_intent.yaml`, with `RecalboxGameStatus` intent.
-Example in `custom_sentences/fr/recalbox_intent.yaml` :
+- If not yet done, create a file `/config/custom_sentences/<language>/recalbox_intent.yaml`, having a `RecalboxGameStatus` intent.
+
+  You can download the example [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml), that already contains this intent in French :
 
 ```yaml
 language: "fr"
@@ -176,7 +177,11 @@ intents:
 > - Verify in the terminal that the SSH connexion is good, without asking you the password anymore : "ssh -i /config/.ssh/recalboxHomeAssistantKey -o StrictHostKeyChecking=no root@recalbox.local"
 > - Type "exit"
 
-- Copy/get the intent RecalboxLaunchGame for game launch in `custom_sentences/fr/recalbox_intent.yaml` :
+
+- If not yet done, create a file `/config/custom_sentences/<language>/recalbox_intent.yaml`, having a `RecalboxLaunchGame` intent.
+
+  You can download the example [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml), that already contains this intent in French :
+  
 ```yaml
 language: "fr"
 intents:
@@ -189,7 +194,7 @@ intents:
           - "recalbox lance {game} sur [la] {console}"
 ```
 
-- Update the systems list in `/config/custom_sentences/fr/recalbox_intent.yaml` with the consoles you want to support in the launch command.
+- If needed, update the systems list in `/config/custom_sentences/fr/recalbox_intent.yaml` with the consoles you want to support/recognize in the launch command.
   By default, it supports launching command on NES, SNES, Megadrive, PSX, N64, GB, GBA, GBC, Dreamcast, PSP.
   
   The search ignores case, and can find roms with words in between your search.
