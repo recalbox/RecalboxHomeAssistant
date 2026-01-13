@@ -89,7 +89,7 @@ rest_command:
   screenshot_recalbox:
     url: >
         {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
-        {{ base }}/api/media/takescreenshot
+        {{ base }}:81/api/media/takescreenshot
     method: POST
     
   # Récupère les roms d'une console précise
