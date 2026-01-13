@@ -1,10 +1,19 @@
 # /config/packages/recalbox.yaml
 # Par Aurélien Tomassini
 
+
+homeassistant:
+  customize:
+    _recalbox_hw: &recalbox_hardware "Raspberry Pi 3 B+"
+    _recalbox_sw: &recalbox_sw_version "9.2.3-PULSAR"
+    _recalbox_name: &recalbox_name "Recalbox RPI3"
+    _recalbox_url: &recalbox_url "http://recalbox.local"
+    
+
 # Pour avoir recalbox sous forme d'une entité avec un status ON/OFF
 mqtt:
   binary_sensor:
-    - name: "Recalbox RPI3"
+    - name: *recalbox_name
       unique_id: recalbox_console_rpi3
       state_topic: "recalbox/notifications/status"
       payload_on: "ON"
@@ -19,10 +28,10 @@ mqtt:
       device: &recalbox_device
         identifiers: "recalbox_rpi3_system"
         name: "Recalbox"
-        model: "Raspberry Pi 3"
+        model: *recalbox_hardware
         manufacturer: "Recalbox"
-        sw_version: "9.2.3-PULSAR" # Optionnel : version du système
-        configuration_url: "http://recalbox.local" # Lien direct vers l'interface web
+        sw_version: *recalbox_sw_version
+        configuration_url: *recalbox_url
         
   # On crée des boutons pour éteindre/redémarrer la recalbox.
   button:
@@ -68,20 +77,28 @@ automation:
 # Eteindre la recalbox : recalbox.local == 192.168.1.147
 rest_command:
   shutdown_recalbox:
-    url: "http://recalbox.local/api/system/shutdown"
+    url: >
+        {% set base = *recalbox_url %}
+        {{ base }}/api/system/shutdown
     method: POST
   reboot_recalbox:
-    url: "http://recalbox.local/api/system/reboot"
+    url: >
+        {% set base = *recalbox_url %}
+        {{ base }}/api/system/reboot
     method: POST
     
   # Récupère les roms d'une console précise
   recalbox_get_roms:
-    url: "http://recalbox.local:81/api/systems/{{ console }}/roms"
+    url: >
+        {% set base = *recalbox_url %}
+        {{ base }}:81/api/systems/{{ console }}/roms
     method: GET
   
   #https://github.com/recalbox/recalbox-api/blob/1.1.x/documentation/api/system-launch-game.md
   #recalbox_launch_game:
-  #  url: "http://recalbox.local:1337/systems/{{ console }}/launcher"
+  #  url: >
+  #     {% set base = *recalbox_url %}
+  #     {{ base }}:1337/systems/{{ console }}/launcher"
   #  method: POST
   #  payload: "{{ path }}"
   #  content_type: "text/plain"
@@ -93,8 +110,10 @@ rest_command:
 # https://gitlab.com/recalbox/recalbox/-/tree/master/projects/configgen/
 shell_command:
   recalbox_launch_game_ssh: >
-    # ssh -i /config/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@recalbox.local "recalbox-config launch {{ console }} '{{ path }}'"
-    ssh -i /config/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@recalbox.local "python configgen/emulatorlauncher.py  -system {{ console }} -rom '{{ path }}'"
+    {% set base = *recalbox_url %}
+    {# On retire le http:// pour n'avoir que recalbox.local #}
+    {% set host = base.replace('http://', '').replace('https://', '') %}
+    ssh -i /config/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@{{ host }} "recalbox-config launch {{ console }} '{{ path }}'"
 
 
 # ----- Assistant
