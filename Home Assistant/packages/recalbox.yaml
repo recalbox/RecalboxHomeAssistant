@@ -157,8 +157,9 @@ shell_command:
 # ----- Assistant
 
 
-# Pour les commandes intelligentes ON OFF : voix/texte
+
 template:
+# Pour les commandes intelligentes ON OFF : voix/texte
 - switch:
   - unique_id: switch_recalbox_assist
     turn_on:
@@ -173,6 +174,7 @@ template:
     #default_entity_id: switch.recalbox_global
     name: Recalbox
     state: "{{ is_state('binary_sensor.recalbox_rpi3', 'on') }}"
+# Pour les boutons d'actions
 - button:
   - name: "Capture Recalbox"
     unique_id: screenshot_recalbox_btn
@@ -184,6 +186,22 @@ template:
         data:
           message: "Capture d'écran Recalbox effectuée !"
           title: "Succès"
+- trigger:
+  - platform: state
+    entity_id: binary_sensor.recalbox_rpi3
+  sensor:
+  - name: "Recalbox Firmware Version"
+    unique_id: recalbox_firmware_version
+    state: >
+      {% set val = state_attr('binary_sensor.recalbox_rpi3', 'recalboxVersion') %}
+      {{ val if val is not none else states('sensor.recalbox_firmware_version') }}
+    icon: mdi:label-outline
+  - name: "Recalbox Hardware"
+    unique_id: recalbox_hardware
+    state: >
+      {% set val = state_attr('binary_sensor.recalbox_rpi3', 'hardware') %}
+      {{ val if val is not none else states('sensor.recalbox_hardware') }}
+    icon: mdi:raspberry-pi
 
 
 # Pour les infos sur le jeu en cours

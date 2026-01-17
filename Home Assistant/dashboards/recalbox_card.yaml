@@ -64,13 +64,12 @@ cards:
     content: >-
       ---
 
-      <small>
-      {{ device_attr('binary_sensor.recalbox_rpi3', 'name') }} version
-      {{ state_attr('binary_sensor.recalbox_rpi3', 'recalboxVersion') 
-        if state_attr('binary_sensor.recalbox_rpi3', 'recalboxVersion') is not none 
+      <small> {{ device_attr('binary_sensor.recalbox_rpi3', 'name') }} version
+      {{ states('sensor.recalbox_firmware_version') 
+        if states('sensor.recalbox_firmware_version') is not none 
         else device_attr('binary_sensor.recalbox_rpi3', 'sw_version') 
-      }}{%- if state_attr('binary_sensor.recalbox_rpi3', 'hardware') %}, sur {{
-        state_attr('binary_sensor.recalbox_rpi3', 'hardware') }}{% endif -%}
+      }}{%- if states('sensor.recalbox_hardware') %}, sur {{
+        states('sensor.recalbox_hardware') }}{% endif -%}
       .
 
       [Ouvrir l'interface web de Recalbox]({{
