@@ -4,7 +4,7 @@ By Aurélien Tomassini, 2026.
 
 ![](RecalboxHomeAssistantIntegration.png)
 
-<!-- Use "markdown-toc -i README.md --maxdepth 3" to auto update table of content -->
+<!-- Use "markdown-toc -i README.md --maxdepth 4" to auto update table of content -->
 <!-- (if not installed yet, run "npm install --save markdown-toc -g") -->
 
 <!-- toc -->
@@ -13,12 +13,13 @@ By Aurélien Tomassini, 2026.
 - [Context](#context)
 - [Installation](#installation)
 - [Usage](#usage)
-  * [Add Recalbox status to dashboard](#add-recalbox-status-to-dashboard)
-  * [Automation when a game is launched](#automation-when-a-game-is-launched)
-  * [Turn OFF recalbox with text/voice command](#turn-off-recalbox-with-textvoice-command)
-  * [Get current game with text/voice command](#get-current-game-with-textvoice-command)
-  * [Launch a game from text/voice assistant](#launch-a-game-from-textvoice-assistant)
-  * [Take a screenshot](#take-a-screenshot)
+  * [Dashboard card](#dashboard-card)
+  * [Automations](#automations)
+  * [Assist (text/voice)](#assist-textvoice)
+    + [Turn OFF recalbox](#turn-off-recalbox)
+    + [Get current game](#get-current-game)
+    + [Launch a game](#launch-a-game)
+    + [Take a screenshot](#take-a-screenshot)
 - [Todo](#todo)
 - [Releases notes](#releases-notes)
   * [v0.0.2 - In progress...](#v002---in-progress)
@@ -100,7 +101,9 @@ It means that Home Assistant needs access to Recalbox via SSH if you want to acc
 
 ## Usage 
 
-### Add Recalbox status to dashboard
+### Dashboard card
+
+> Add Recalbox status to dashboard
  
 Add a card to Home Assistant to display the Recalbox status, game info, picture, etc. 
 It will be refreshed in real time.
@@ -108,11 +111,14 @@ It will be refreshed in real time.
 You can use this [recalbox_card.yaml](Home%20Assistant/dashboards/recalbox_card.yaml) in your dashboard, to get this example :
 ![](example.png)
 
+Three action buttons allow you to turn off, reboot, or take a screen short of the Recolbox with their web manager API.
+If any of the services doenst work as exptected (like scteen shot on Raspberry Pi 3 on Recalbox 9.2.3) try directly with the web manager.
 
-### Automation when a game is launched
 
-You can also use automations based on launched games.
-Example : send phone notification when a game in launched :
+### Automations
+
+You can also create automations, triggered when a game is launched for example.  
+Example :
  
 ```yaml
 alias: Notification de nouveau jeu
@@ -145,7 +151,12 @@ actions:
 mode: single
 ```
 
-### Turn OFF recalbox with text/voice command
+### Assist (text/voice)
+
+The file [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml) should be 
+copied to `/config/custom_sentences/<language>/recalbox_intent.yaml`, and improved/updated according to your preferences.
+
+#### Turn OFF recalbox
 
 Since January 11th 2026, the script added a switch template.
 It allows to control the Recalbox as a switch, and use assist to turn OFF recalbox with voice or assist text :
@@ -155,76 +166,56 @@ Example : "Eteins Recalbox" will turn off the Recalbox.
 ![](turnOffRecalbox.png)
 
 
-### Get current game with text/voice command
+#### Get current game
 
-- If not yet done, create a file `/config/custom_sentences/<language>/recalbox_intent.yaml`, having a `RecalboxGameStatus` intent.
+This required the `RecalboxGameStatus` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
-  You can download the example [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml), that already contains this intent in French :
-
-```yaml
-language: "fr"
-intents:
-  RecalboxGameStatus:
-    data:
-      - sentences:
-          - "quel est le jeu en cours [sur recalbox]"
-          - "à quoi je joue [sur recalbox]"
-          - "qu'est-ce qui tourne sur la recalbox"
-          - "quel jeu est lancé [sur recalbox]"
-          - "quel est le jeu lancé [sur recalbox]"
-```
+Examples :
+  - "quel est le jeu en cours [sur recalbox]"
+  - "à quoi je joue [sur recalbox]"
+  - "qu'est-ce qui tourne sur la recalbox"
+  - "quel jeu est lancé [sur recalbox]"
+  - "quel est le jeu lancé [sur recalbox]"
 
 ![](currentGameAssist.png)
 
 
-### Launch a game from text/voice assistant
+#### Launch a game
 
 > SSH access is required. 
 > Launch via SSH is NOT WORKING YET !
 
+This required the `RecalboxLaunchGame` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
-- If not yet done, create a file `/config/custom_sentences/<language>/recalbox_intent.yaml`, having a `RecalboxLaunchGame` intent.
-
-  You can download the example [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml), that already contains this intent in French :
-  
-```yaml
-language: "fr"
-intents:
-  (...)
-  RecalboxLaunchGame:
-    data:
-      - sentences:
-          - "joue à {game} sur [la] {console} sur recalbox"
-          - "lance {game} sur [la] {console}"
-          - "recalbox lance {game} sur [la] {console}"
-```
-
-- If needed, update the systems list in `/config/custom_sentences/fr/recalbox_intent.yaml` with the consoles you want to support/recognize in the launch command.
-  By default, it supports launching command on NES, SNES, Megadrive, PSX, N64, GB, GBA, GBC, Dreamcast, PSP.
-  
-  The search ignores case, and can find roms with words in between your search.
-  Example : Searching for "Pokemon Jaune", can find the rom "Pokemon - Version Jaune - Edition Speciale Pikachu".
-  
-  ![](launchGame.png)
-  
-  Query examples :
+Examples :
   - "Recalbox lance Pokemon Jaune sur Game Boy"
   - "Recalbox lance Mario 64 sur nintendo 64"
   - "Joue à Mario 64 sur la Nintendo 64 sur Recalbox"
   - "Lance Mario 64 sur la Nintendo 64"
   - "Lance Sonic 1 sur megadrive"
 
+  ![](launchGame.png)
+  
+> If needed, update the systems list in `/config/custom_sentences/fr/recalbox_intent.yaml` with the consoles you want to support/recognize in the launch command.
+> By default, it supports launching command on NES, SNES, Megadrive, PSX, N64, GB, GBA, GBC, Dreamcast, PSP.
+> 
+> The search ignores case, and can find roms with words in between your search.
+> Example : Searching for "Pokemon Jaune", can find the rom "Pokemon - Version Jaune - Edition Speciale Pikachu".
 
 
-### Take a screenshot
+
+
+#### Take a screenshot
+
+This required the `RecalboxCreateSnapshot` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
 You can make a game screenshot, simply pushing the screenshot button on your dashboard.
-
 You can also make a screen shot via Assist, typing or saying "Prends une capture d'écran du jeu", for example.
-Once again, use the exampes in [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml), for the `RecalboxCreateSnapshot` intent.
 
 > Note : on Recalbox 9.2.3 or Raspberry Pi 3, the screenshots are broken, also in the Recalbox Web Manager. Hopefully it will be fixed soon.
 > `fbgrab` command gives better results, but keeps the welcome screen as fixed image, to I can't switch to this command to get better screenshots.
+
+
 
 ## Todo
 
