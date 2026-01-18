@@ -1,0 +1,67 @@
+# /config/custom_sentences/fr/recalbox_intent.yaml
+# By Aurélien Tomassini
+
+
+language: "en"
+intents:
+  RecalboxGameStatus:
+    data:
+      - sentences:
+          - "(what's | what is) the [current] game [on recalbox]"
+          - "(what | which game) (are you | am I) playiong [on recalbox]"
+          - "which game is (running | launched) [on recalbox]"
+  RecalboxCreateSnapshot:
+    data:
+      - sentences:
+          - "(take | make | do) a [game] screen shot [on recalbox]"
+  RecalboxLaunchGame:
+    data:
+      - sentences:
+          - "(run | launch | play | start) {game} on [the] {console} [on recalbox]"
+          - "recalbox (run | launch | play | start) {game} on [the] {console}"
+          
+lists:
+  game:
+    wildcard: true
+  console:
+    values:
+      - in: "super nintendo"
+        out: "snes"
+      - in: "super nes"
+        out: "snes"
+      - in: "nes"
+        out: "nes"
+      - in: "nintendo"
+        out: "nes"
+      - in: "megadrive"
+        out: "megadrive"
+      - in: "genesis"
+        out: "megadrive"
+      - in: "sega"
+        out: "megadrive"
+      - in: "sega megadrive"
+        out: "megadrive"
+      - in: "game boy"
+        out: "gb"
+      - in: "game boy color"
+        out: "gbc"
+      - in: "game boy advance"
+        out: "gba"
+      - in: "play"
+        out: "psx"
+      - in: "playstation"
+        out: "psx"
+      - in: "playstation 1"
+        out: "psx"
+      - in: "p s x"
+        out: "psx"
+      - in: "psx"
+        out: "psx"
+      - in: "n 64"
+        out: "n64"
+      - in: "nintendo 64"
+        out: "n64"
+      - in: "dreamcast"
+        out: "dreamcast"
+      - in: "psp"
+        out: "psp"
