@@ -19,7 +19,7 @@ intents:
   RecalboxLaunchGame:
     data:
       - sentences:
-          - "(joue à | lance | mets) [le jeu] {game} sur [la] {console} [sur recalbox]"
+          - "(joue à | joue au jeu | lance | lance le jeu | mets | mets le jeu) {game} sur [la] {console} [sur recalbox]"
           - "recalbox (joue à | joue au jeu | lance | lance le jeu | mets | mets le jeu) {game} sur [la] {console}"
           
 lists:
