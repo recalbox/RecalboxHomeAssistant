@@ -1,0 +1,29 @@
+# /config/automations/recalbox_automations.yaml
+# Par Aurélien Tomassini
+
+- id: '1767560355708'
+  alias: Notification de nouveau jeu
+  description: Annonce le nouveau jeu qui vient d'être lancé
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.recalbox_rpi3
+    attribute: game
+  conditions:
+  - condition: template
+    value_template: "{{ trigger.to_state.attributes.game != None and \n   trigger.to_state.attributes.game
+      != 'unknown' and\n   trigger.to_state.attributes.console != 'Kodi' and\n   trigger.to_state.attributes.game
+      != '' }}"
+  actions:
+  - action: notify.notify
+    metadata: {}
+    data:
+      message: 'Lancement du jeu {{ trigger.to_state.attributes.game -}}
+
+        {%- if trigger.to_state.attributes.console %}, sur {{ trigger.to_state.attributes.console
+        }}{% endif -%}
+
+        {%- if trigger.to_state.attributes.genre %} ({{ trigger.to_state.attributes.genre
+        }}){% endif %}.'
+      title: Jeu sur Recalbox
+  mode: single

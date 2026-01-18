@@ -47,6 +47,33 @@ mqtt:
     
 
     
+automation:
+# Pour forcer le passage à OFF, on crée une petite automatisation interne
+  - alias: "Recalbox Feedback Extinction"
+    trigger:
+      # On détecte quand l'ordre d'extinction est envoyé par le bouton
+      - platform: mqtt
+        topic: "recalbox/commands/shutdown"
+    action:
+      # On force immédiatement le statut à OFF dans MQTT
+      - service: mqtt.publish
+        data:
+          topic: "recalbox/notifications/status"
+          payload: "OFF"
+          retain: true
+          
+# Pour convertir les actions MQTT en appel REST
+  - alias: Lien Boutons MQTT vers REST
+    description: Nécessaire pour faire fonctionner les boutons de reboot/shutdown de recalbox
+    actions:
+      - action: rest_command.{{ trigger.topic.split('/')[-1] }}_recalbox
+    triggers:
+      - topic: recalbox/commands/shutdown
+        trigger: mqtt
+      - topic: recalbox/commands/reboot
+        trigger: mqtt
+
+
 # Eteindre la recalbox : recalbox.local == 192.168.1.147
 rest_command:
   shutdown_recalbox:
@@ -130,8 +157,9 @@ shell_command:
 # ----- Assistant
 
 
-# Pour les commandes intelligentes ON OFF : voix/texte
+
 template:
+# Pour les commandes intelligentes ON OFF : voix/texte
 - switch:
   - unique_id: switch_recalbox_assist
     turn_on:
@@ -146,6 +174,7 @@ template:
     #default_entity_id: switch.recalbox_global
     name: Recalbox
     state: "{{ is_state('binary_sensor.recalbox_rpi3', 'on') }}"
+# Pour les boutons d'actions
 - button:
   - name: "Capture Recalbox"
     unique_id: screenshot_recalbox_btn
@@ -317,69 +346,3 @@ script:
       - stop: "Fin du script de recherche"
         response_variable: reponse_finale
         
-        
-
-automation:
-# Pour forcer le passage à OFF, on crée une petite automatisation interne
-  - alias: "Recalbox Feedback Extinction"
-    trigger:
-      # On détecte quand l'ordre d'extinction est envoyé par le bouton
-      - platform: mqtt
-        topic: "recalbox/commands/shutdown"
-    action:
-      # On force immédiatement le statut à OFF dans MQTT
-      - service: mqtt.publish
-        data:
-          topic: "recalbox/notifications/status"
-          payload: "OFF"
-          retain: true
-          
-# Pour convertir les actions MQTT en appel REST
-  - alias: Lien Boutons MQTT vers REST
-    description: Nécessaire pour faire fonctionner les boutons de reboot/shutdown de recalbox
-    actions:
-      - action: rest_command.{{ trigger.topic.split('/')[-1] }}_recalbox
-    triggers:
-      - topic: recalbox/commands/shutdown
-        trigger: mqtt
-      - topic: recalbox/commands/reboot
-        trigger: mqtt
-
-# Pour énoncer les lancements de jeux
-  - id: '1767560355708'
-    alias: Notification de nouveau jeu
-    description: Annonce le nouveau jeu qui vient d'être lancé
-    triggers:
-    - trigger: state
-      entity_id:
-      - binary_sensor.recalbox_rpi3
-      attribute: game
-    conditions:
-    - condition: template
-      value_template: "{{ trigger.to_state.attributes.game != None and \n   trigger.to_state.attributes.game
-        != 'unknown' and\n   trigger.to_state.attributes.console != 'Kodi' and\n   trigger.to_state.attributes.game
-        != '' }}"
-    actions:
-    - action: tts.speak
-      metadata: {}
-      data:
-        cache: true
-        message: Lancement du jeu {{ trigger.to_state.attributes.game }}, sur  {{ trigger.to_state.attributes.console
-          }}.
-        media_player_entity_id: media_player.waveshare_audio_3
-        language: fr
-      enabled: true
-      target:
-        entity_id: tts.google_translate_en_com
-    - action: notify.notify
-      metadata: {}
-      data:
-        message: 'Lancement du jeu {{ trigger.to_state.attributes.game -}}
-  
-          {%- if trigger.to_state.attributes.console %}, sur {{ trigger.to_state.attributes.console
-          }}{% endif -%}
-  
-          {%- if trigger.to_state.attributes.genre %} ({{ trigger.to_state.attributes.genre
-          }}){% endif %}.'
-        title: Jeu sur Recalbox
-    mode: single
