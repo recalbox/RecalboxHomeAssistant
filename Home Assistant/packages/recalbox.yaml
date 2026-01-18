@@ -34,12 +34,12 @@ mqtt:
         
   # On crée des boutons pour éteindre/redémarrer la recalbox.
   button:
-  - name: "Eteindre Recalbox"
+  - name: "Shutdown"
     unique_id: eteindre_recalbox_btn
     icon: mdi:power-off
     device: *recalbox_device
     command_topic: "recalbox/commands/shutdown"
-  - name: "Reboot Recalbox"
+  - name: "Reboot"
     unique_id: reboot_recalbox_btn
     icon: mdi:restart
     device: *recalbox_device
@@ -176,7 +176,7 @@ template:
     state: "{{ is_state('binary_sensor.recalbox_rpi3', 'on') }}"
 # Pour les boutons d'actions
 - button:
-  - name: "Capture Recalbox"
+  - name: "Recalbox Screenshot"
     unique_id: screenshot_recalbox_btn
     # device: *recalbox_device
     icon: mdi:camera
