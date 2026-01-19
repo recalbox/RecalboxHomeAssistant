@@ -15,29 +15,29 @@ cards:
       - type: attribute
         entity: binary_sensor.recalbox_rpi3
         attribute: console
-        name: Console émulée
+        name: Console
         icon: mdi:sony-playstation
       - type: attribute
         entity: binary_sensor.recalbox_rpi3
         attribute: game
-        name: Jeu en cours
+        name: Game
         icon: mdi:gamepad-variant-outline
       - type: attribute
         entity: binary_sensor.recalbox_rpi3
         attribute: genre
-        name: Genre du jeu
+        name: Genre
         icon: mdi:folder-outline
     show_header_toggle: false
     state_color: false
     footer:
       type: buttons
       entities:
-        - entity: button.recalbox_eteindre_recalbox
-          name: Eteindre
-        - entity: button.recalbox_reboot_recalbox
-          name: Redémarrer
-        - entity: button.capture_recalbox
-          name: Capture d'écran
+        - entity: button.recalbox_shutdown
+          name: Turn off
+        - entity: button.recalbox_reboot
+          name: Reboot
+        - entity: button.recalbox_screenshot
+          name: Screenshot
   - type: markdown
     visibility:
       - condition: state
@@ -68,13 +68,12 @@ cards:
       {{ states('sensor.recalbox_firmware_version') 
         if states('sensor.recalbox_firmware_version') is not none 
         else device_attr('binary_sensor.recalbox_rpi3', 'sw_version') 
-      }}{%- if states('sensor.recalbox_hardware') %}, sur {{
+      }}{%- if states('sensor.recalbox_hardware') %}, {{
         states('sensor.recalbox_hardware') }}{% endif -%}
       .
 
-      [Ouvrir l'interface web de Recalbox]({{
+      [Web manager Recalbox]({{
       device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') }})
 
-      [Ouvrir la page Github de l'intégration (mises à jour et
-      docs)](https://github.com/tototo23/RecalboxHomeAssistant) </small>
+      [Github de l'intégration](https://github.com/tototo23/RecalboxHomeAssistant) </small>
     text_only: true
