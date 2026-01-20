@@ -114,21 +114,13 @@ rest_command:
 # https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio
 shell_command:
   recalbox_launch_game_upd: >
-    {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
-    {% set host = base.replace('http://', '').replace('https://', '').split(':')[0] if base is not none else 'recalbox.local' %}
-    echo -n "START|{{ console }}|{{ path }}" | nc -u -w1 $host 1337
+    echo -n "START|{{ console }}|{{ path }}" | nc -u -w1 recalbox.local 1337
   recalbox_stop_game_upd: >
-    {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
-    {% set host = base.replace('http://', '').replace('https://', '').split(':')[0] if base is not none else 'recalbox.local' %}
-    echo -n "QUIT" | nc -u -w1 $host 55435
+    echo -n "QUIT" | nc -u -w1 recalbox.local 55435
   recalbox_screenshot_upd: >
-    {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
-    {% set host = base.replace('http://', '').replace('https://', '').split(':')[0] if base is not none else 'recalbox.local' %}
-    echo -n "SCREENSHOT" | nc -u -w1 $host 55435
+    echo -n "SCREENSHOT" | nc -u -w1 recalbox.local 55435
   recalbox_pause_upd: >
-    {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
-    {% set host = base.replace('http://', '').replace('https://', '').split(':')[0] if base is not none else 'recalbox.local' %}
-    echo -n "PAUSE_TOGGLE" | nc -u -w1 $host 55435
+    echo -n "PAUSE_TOGGLE" | nc -u -w1 recalbox.local 55435
 
 
 # ----- Assistant
@@ -321,7 +313,7 @@ script:
             continue_on_error: true # Permet de ne pas stopper le script si l'appel échoue
             response_variable: launch_result
           - variables:
-              final_success: "{{ launch_result is defined and launch_result['status'] == 200 }}"
+              final_success: "{{ launch_result is defined and launch_result.returncode == 0 }}"
               final_msg: > 
                 {% if final_success == 'True' %}
                   Le jeu {{ target_game.name }} a été trouvé et lancé sur {{ console_id }}.
