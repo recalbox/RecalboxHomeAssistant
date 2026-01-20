@@ -110,49 +110,13 @@ rest_command:
   #  content_type: "text/plain"
 
 
-# Lancement d'un jeu par commande SSH :
-# recalbox-config launch snes /recalbox/share/roms/snes/SuperMario.smc
-# https://wiki.recalbox.com/fr/tutorials/system/access/root-access-terminal-cli
-# https://gitlab.com/recalbox/recalbox/-/tree/master/projects/configgen/
+# Lancement d'un jeu par commande UDP :
+# https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio
 shell_command:
-  recalbox_launch_game_ssh: >
-    false
-# Pas d'implémentation fiable pour le moment !
-
-# {% set base = device_attr('binary_sensor.recalbox_rpi3', 'configuration_url') %}
-# {% set host = base.replace('http://', '').replace('https://', '').split(':')[0] if base is not none else 'recalbox.local' %}
-#
-# ssh -i /config/.ssh/recalboxHomeAssistantKey -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@{{ host }} 
-# "ROM='{{ path }}'; 
-# SYSTEM='{{ console }}'; 
-# ROM_NAME=$(basename \"$ROM\"); 
-# GAMELIST=\"/recalbox/share/roms/$SYSTEM/gamelist.xml\";
-# CONF='/recalbox/share/system/recalbox.conf';
-# echo \"--- DEBUG ---\"
-# echo \"Recherche des paramètres de lancement du jeu $ROM_NAME sur $SYSTEM\"
-# echo \"Recherche de l'émulateur et coeur spécifique au jeu dans $GAMELIST ...\"
-# if [ -f \"$GAMELIST\" ]; then 
-#   BLOCK=$(sed -n \"/<path>$ROM_NAME<\/path>/,/<\/game>/p\" \"$GAMELIST\");
-#   EMU=$(echo \"$BLOCK\" | sed -n 's/.*<emulator>\(.*\)<\/emulator>.*/\1/p');
-#   CORE=$(echo \"$BLOCK\" | sed -n 's/.*<core>\(.*\)<\/core>.*/\1/p');
-#   echo \"Trouvé dans XML: EMU=$EMU / CORE=$CORE\"
-# fi;
-# echo \"Recherche de l'émulateur et coeur par défaut de $CONF ...\"
-# [[ -z \"$EMU\" ]] && EMU=$(grep \"^${SYSTEM}.emulator=\" \"$CONF\" | cut -d'=' -f2);
-# [[ -z \"$CORE\" ]] && CORE=$(grep \"^${SYSTEM}.core=\" \"$CONF\" | cut -d'=' -f2);
-# [[ -z \"$EMU\" ]] && EMU='libretro';
-# [[ -z \"$CORE\" || \"$CORE\" == \"default\" ]] && { 
-#     [ \"$SYSTEM\" == \"megadrive\" ] && CORE=\"picodrive\";
-#     [ \"$SYSTEM\" == \"snes\" ] && CORE=\"snes9x\"; 
-#     [ \"$SYSTEM\" == \"nes\" ] && CORE=\"fceumm\"; 
-#     [ \"$SYSTEM\" == \"n64\" ] && CORE=\"mupen64plus\"; 
-#     [ \"$SYSTEM\" == \"psx\" ] && CORE=\"pcsx_rearmed\"; 
-#     [ \"$SYSTEM\" == \"gba\" ] && CORE=\"mgba\"; 
-# }; 
-# [[ -z \"$CORE\" ]] && CORE=\"default\";
-# echo \"Lancement du jeu $ROM, sur $SYSTEM, via l'émulateur $EMU et le coeur $CORE ...\"
-# python3 /usr/bin/emulatorlauncher.py -system \"$SYSTEM\" -rom \"$ROM\" -emulator \"$EMU\" -core \"$CORE\" -p1index 0 -p1guid 0 -p1name \"Gamepad\" -ratio auto -rotation 0 -resolution 1920x1080"
-
+  recalbox_launch_game_upd: /bin/sh -c "printf 'START|{{ console }}|{{ path }}' | nc -u -w1 recalbox.local 1337"
+  recalbox_stop_game_upd: /bin/sh -c "printf 'QUIT' | nc -u -w1 recalbox.local 55435"
+  recalbox_screenshot_upd: /bin/sh -c "printf 'SCREENSHOT' | nc -u -w1 recalbox.local 55435"
+  recalbox_pause_upd: /bin/sh -c "printf 'PAUSE_TOGGLE' | nc -u -w1 recalbox.local 55435"
 
 
 # ----- Assistant
@@ -243,8 +207,44 @@ intent_script:
           Aucun status n'a été reçu du script de recherche. ({{ resp }})
         {% endif %}
 
+  # Pour arrêter le jeu par la voix
+  RecalboxStopGame:
+    action:
+      - action: shell_command.recalbox_stop_game_upd
+        response_variable: script_output
+      - stop: "Return value to intent script"
+        response_variable: script_output
+    speech:
+      text: >
+        {% set resp = action_response %}
+        {% if resp is not none %}
+          Retour au menu
+        {% elif not is_state('binary_sensor.recalbox_rpi3', 'on') %}
+          La recalbox ne semble pas allumée, ou pas accessible.
+        {% else %}
+          Une erreur est survenue.
+        {% endif %}
+
+  # Pour mettre en pause le jeu par la voix
+  RecalboxPauseGame:
+    action:
+      - action: shell_command.recalbox_pause_upd
+        response_variable: script_output
+      - stop: "Return value to intent script"
+        response_variable: script_output
+    speech:
+      text: >
+        {% set resp = action_response %}
+        {% if resp is not none %}
+          Bouton pause appuyé
+        {% elif not is_state('binary_sensor.recalbox_rpi3', 'on') %}
+          La recalbox ne semble pas allumée, ou pas accessible.
+        {% else %}
+          Une erreur est survenue.
+        {% endif %}
+
   # Pour lancer un jeu par la voix
-  RecalboxCreateSnapshot:
+  RecalboxCreateScreenshot:
     action:
       - action: rest_command.screenshot_recalbox
         response_variable: script_output
@@ -320,19 +320,19 @@ script:
           - condition: template
             value_template: "{{ target_game is not none }}"
         then:
-          - action: shell_command.recalbox_launch_game_ssh
+          - action: shell_command.recalbox_launch_game_upd
             data:
               console: "{{ console_id }}"
               path: "{{ target_game.path }}"
             continue_on_error: true # Permet de ne pas stopper le script si l'appel échoue
             response_variable: launch_result
           - variables:
-              final_success: "{{ launch_result is defined and launch_result['status'] == 200 }}"
+              final_success: "{{ launch_result is defined and launch_result.returncode == 0 }}"
               final_msg: > 
-                {% if final_success == 'True' %}
-                  Le jeu {{ target_game.name }} a été trouvé et lancé sur {{ console_id }} en SSH.
+                {% if final_success %}
+                  Le jeu {{ target_game.name }} a bien été trouvé. Je le lance sur {{ console_id }} !
                 {% else %}
-                  Le jeu {{ target_game.name }} a bien été trouvé sur {{ console_id }}, mais n'a malheureusement pas pu être lancé sur la Recalbox par script SSH.
+                  Le jeu {{ target_game.name }} a bien été trouvé sur {{ console_id }}, mais n'a malheureusement pas pu être lancé sur la Recalbox.
                 {% endif %}
         else:
           - variables:

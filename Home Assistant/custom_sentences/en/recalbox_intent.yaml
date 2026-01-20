@@ -10,7 +10,7 @@ intents:
           - "(what's | what is) the [current] game [on recalbox]"
           - "(what | which game) (are you | am I) playiong [on recalbox]"
           - "which game is (running | launched) [on recalbox]"
-  RecalboxCreateSnapshot:
+  RecalboxCreateScreenshot:
     data:
       - sentences:
           - "(take | make | do) a [game] screen shot [on recalbox]"
@@ -19,6 +19,10 @@ intents:
       - sentences:
           - "(run | launch | play | start) {game} on [the] {console} [on recalbox]"
           - "recalbox (run | launch | play | start) {game} on [the] {console}"
+  RecalboxStopGame:
+    data:
+      - sentences:
+          - "(stop | quit) [the] [current] game [on recalbox]"
           
 lists:
   game:

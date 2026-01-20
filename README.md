@@ -72,6 +72,9 @@ Assist integration for voice/text control has also been implemented in order to 
      - `rungame `: refreshes ON status, show current game, console (readable name), and builds image URL base on the scrapped data. If the game has a numeric prefix with 3 digits, it is removed. Example : "001 Sonic 1" will be shown as "Sonic 1".
      - `stop `: change status to OFF, remove current game, image
 
+   <!-- - If you want to support UDP commands, like starting a game by text/voice request, you need to set `network_cmd_enable = true` in `retroarch.cfg`, as [documented in the Recalbox Wiki / GPIO](https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio). -->
+
+
 2. **Home Assistant**
    
    - Create a new Home Assistant User, named "recalbox" (or something else), allowed to connect only on the local network. This user will be used for MQTT Authentication. Replace the user/password `home_assistant_notifier.sh` line 13 and 14 (`MQTT_USER` & `MQTT_PASS`)
@@ -88,35 +91,20 @@ Assist integration for voice/text control has also been implemented in order to 
      homeassistant:
          packages: !include_dir_named packages
      ```
- 
-3. **SSH for Home Assistant to access Recalbox**
 
-
-Some Recalbox API are not existing (launch a game, for example). We can still execute some features with scripts over SSH.
-It means that Home Assistant needs access to Recalbox via SSH if you want to access those features.  
-- Enable "Advanced mode" for your user
-- Install "Terminal & SSH" in Home Assistant : enable watchdog and sidebar. Go to settings and import a public key or define a password, and then save and restart the addon.
-- Type "ssh-keygen -t rsa -b 4096", name it "/config/.ssh/recalboxHomeAssistantKey" (create folder /config/.ssh if needed)
-- Your keys will then be sotred in /config/.ssh/recalboxHomeAssistantKey
-- Type "ssh-copy-id -i /config/.ssh/recalboxHomeAssistantKey.pub root@recalbox.local" (default credentials on Recalbox are "root" / "recalboxroot")
-- Verify in the terminal that the SSH connexion is good, without asking you the password anymore : "ssh -i /config/.ssh/recalboxHomeAssistantKey -o StrictHostKeyChecking=no root@recalbox.local"
-- Type "exit"
 
 
 ## Usage 
 
 ### Dashboard card
 
-> Add Recalbox status to dashboard
- 
-Add a card to Home Assistant to display the Recalbox status, game info, picture, etc. 
-It will be refreshed in real time.
-
-You can use this [recalbox_card.yaml](Home%20Assistant/dashboards/recalbox_card.yaml) in your dashboard, to get this example :
+You can add a card to your Home Assistant dashboard, in order to display the Recalbox status, game info, picture, etc.  
+It will be refreshed in real time.  
+You can use [recalbox_card.yaml](Home%20Assistant/dashboards/recalbox_card.yaml) to get this example :  
 ![](docs/example.png)
 
 Three action buttons allow you to turn off, reboot, or take a screen short of the Recolbox with their web manager API.
-If any of the services doenst work as exptected (like scteen shot on Raspberry Pi 3 on Recalbox 9.2.3) try directly with the web manager.
+If one of the services doesn't work as expected (like screenshot on Raspberry Pi 3 on Recalbox 9.2.3) try directly with the web manager.
 
 
 ### Automations
@@ -133,16 +121,16 @@ in `configuration.yaml`, to allow Home Assistant to read yaml files in `automati
 
 ### Assist (text/voice)
 
-The file [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml) should be 
-copied to `/config/custom_sentences/<language>/recalbox_intent.yaml`, and improved/updated according to your preferences.
+The file [custom_sentences/fr/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml) and/or [custom_sentences/en/recalbox_intent.yaml](Home%20Assistant/custom_sentences/fr/recalbox_intent.yaml) should be 
+copied to `/config/custom_sentences/<language>/recalbox_intent.yaml`. Update/improve the sentences according to your preferences.
 
 
 #### Turn OFF recalbox
 
-Since January 11th 2026, the script added a switch template.
-It allows to control the Recalbox as a switch, and use assist to turn OFF recalbox with voice or assist text :
-
-Example : "Eteins Recalbox" will turn off the Recalbox.
+Since January 11th 2026, the script added a switch template.  
+It allows to control the Recalbox as a switch, and use assist to turn OFF recalbox with voice or assist text :  
+Example : 
+  - "Eteins Recalbox" will turn off the Recalbox.
 
 ![](docs/turnOffRecalbox.png)
 
@@ -163,9 +151,6 @@ Examples :
 
 #### Launch a game
 
-> SSH access is required. 
-> Launch via SSH is NOT WORKING YET !
-
 This requires the `RecalboxLaunchGame` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
 Examples :
@@ -177,21 +162,30 @@ Examples :
 
   ![](docs/launchGame.png)
   
-> If needed, update the systems list in `/config/custom_sentences/fr/recalbox_intent.yaml` with the consoles you want to support/recognize in the launch command.
-> By default, it supports launching command on NES, SNES, Megadrive, PSX, N64, GB, GBA, GBC, Dreamcast, PSP.
+> If needed, update the systems list in `/config/custom_sentences/fr/recalbox_intent.yaml` with the consoles you want to support/recognize in the launch command.  
+> By default, it supports systems recognition for launching command on NES, SNES, Megadrive, PSX, N64, GB, GBA, GBC, Dreamcast, PSP.
 > 
 > The search ignores case, and can find roms with words in between your search.
 > Example : Searching for "Pokemon Jaune", can find the rom "Pokemon - Version Jaune - Edition Speciale Pikachu".
 
 
+#### Stop running a game
+
+> This uses a retroarch UDP command.  
+> It requires to set `network_cmd_enable = true` in `retroarch.cfg`, as [documented in the Recalbox Wiki / GPIO](https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio).
+
+This requires the `RecalboxStopGame` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
+
+Examples :
+  - "Arrête le jeu en cours sur Recalbox"
 
 
 #### Take a screenshot
 
-This requires the `RecalboxCreateSnapshot` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
+This requires the `RecalboxCreateScreenshot` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
-You can make a game screenshot, simply pushing the screenshot button on your dashboard.
-You can also make a screen shot via Assist, typing or saying "Prends une capture d'écran du jeu", for example.
+You can make a game screenshot, simply pushing the screenshot button on your dashboard.  
+You can also make a screenshot via Assist, typing or saying "Prends une capture d'écran du jeu", for example.
 
 > Note : on Recalbox 9.2.3 or Raspberry Pi 3, the screenshots are broken, also in the Recalbox Web Manager. Hopefully it will be fixed soon.
 > `fbgrab` command gives better results, but keeps the welcome screen as fixed image, to I can't switch to this command to get better screenshots.
