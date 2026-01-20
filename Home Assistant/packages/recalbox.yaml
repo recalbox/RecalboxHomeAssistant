@@ -114,9 +114,9 @@ rest_command:
 # https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio
 shell_command:
   recalbox_launch_game_upd: /bin/sh -c "printf 'START|{{ console }}|{{ path }}' | nc -u -w1 recalbox.local 1337"
-  recalbox_stop_game_upd: /bin/sh -c "printf 'QUIT' | nc -u -w1 recalbox.local 55435"
-  recalbox_screenshot_upd: /bin/sh -c "printf 'SCREENSHOT' | nc -u -w1 recalbox.local 55435"
-  recalbox_pause_upd: /bin/sh -c "printf 'PAUSE_TOGGLE' | nc -u -w1 recalbox.local 55435"
+  recalbox_stop_game_upd: /bin/sh -c "printf 'QUIT' | nc -u -w1 recalbox.local 55355"
+  recalbox_screenshot_upd: /bin/sh -c "printf 'SCREENSHOT' | nc -u -w1 recalbox.local 55355"
+  recalbox_pause_upd: /bin/sh -c "printf 'PAUSE_TOGGLE' | nc -u -w1 recalbox.local 55355"
 
 
 # ----- Assistant

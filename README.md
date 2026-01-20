@@ -200,6 +200,11 @@ You can also make a screenshot via Assist, typing or saying "Prends une capture 
 
 ## Releases notes
 
+### v0.0.3 - Work in progress...
+
+- ...
+
+
 ### v0.0.2 - 20/01/2026
 
 - Update the example dashboard template, to use the device information to display it at the bottom of the Recalbox column
