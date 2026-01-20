@@ -19,6 +19,10 @@ intents:
       - sentences:
           - "(run | launch | play | start) {game} on [the] {console} [on recalbox]"
           - "recalbox (run | launch | play | start) {game} on [the] {console}"
+  RecalboxStopGame:
+    data:
+      - sentences:
+          - "(stop | quit) [the] [current] game [on recalbox]"
           
 lists:
   game:

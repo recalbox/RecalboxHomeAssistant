@@ -219,6 +219,24 @@ intent_script:
           Aucun status n'a été reçu du script de recherche. ({{ resp }})
         {% endif %}
 
+  # Pour arrêter le jeu par la voix
+  RecalboxStopGame:
+    action:
+      - action: shell_command.recalbox_stop_game_upd
+        response_variable: script_output
+      - stop: "Return value to intent script"
+        response_variable: script_output
+    speech:
+      text: >
+        {% set resp = action_response %}
+        {% if resp is not none %}
+          Retour au menu
+        {% elif not is_state('binary_sensor.recalbox_rpi3', 'on') %}
+          La recalbox ne semble pas allumée, ou pas accessible.
+        {% else %}
+          Une erreur est survenue.
+        {% endif %}
+
   # Pour lancer un jeu par la voix
   RecalboxCreateSnapshot:
     action:
@@ -306,9 +324,9 @@ script:
               final_success: "{{ launch_result is defined and launch_result['status'] == 200 }}"
               final_msg: > 
                 {% if final_success == 'True' %}
-                  Le jeu {{ target_game.name }} a été trouvé et lancé sur {{ console_id }} en SSH.
+                  Le jeu {{ target_game.name }} a été trouvé et lancé sur {{ console_id }}.
                 {% else %}
-                  Le jeu {{ target_game.name }} a bien été trouvé sur {{ console_id }}, mais n'a malheureusement pas pu être lancé sur la Recalbox par script SSH.
+                  Le jeu {{ target_game.name }} a bien été trouvé sur {{ console_id }}, mais n'a malheureusement pas pu être lancé sur la Recalbox.
                 {% endif %}
         else:
           - variables:

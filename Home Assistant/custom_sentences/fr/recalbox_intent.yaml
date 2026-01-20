@@ -21,6 +21,10 @@ intents:
       - sentences:
           - "(joue à | joue au jeu | lance | lance le jeu | mets | mets le jeu) {game} sur [la] {console} [sur recalbox]"
           - "recalbox (joue à | joue au jeu | lance | lance le jeu | mets | mets le jeu) {game} sur [la] {console}"
+  RecalboxStopGame:
+    data:
+      - sentences:
+          - "(arrête | stop | quitte) le jeu (actuel | en cours) [sur recalbox]"
           
 lists:
   game:

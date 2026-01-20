@@ -169,6 +169,13 @@ Examples :
 > Example : Searching for "Pokemon Jaune", can find the rom "Pokemon - Version Jaune - Edition Speciale Pikachu".
 
 
+#### Stop running a game
+
+This requires the `RecalboxStopGame` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
+
+Examples :
+  - "Arrête le jeu en cours sur Recalbox"
+
 
 #### Take a screenshot
 
