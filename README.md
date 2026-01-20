@@ -19,10 +19,11 @@ By Aurélien Tomassini, 2026.
     + [Turn OFF recalbox](#turn-off-recalbox)
     + [Get current game](#get-current-game)
     + [Launch a game](#launch-a-game)
+    + [Stop running a game](#stop-running-a-game)
     + [Take a screenshot](#take-a-screenshot)
 - [Todo](#todo)
 - [Releases notes](#releases-notes)
-  * [v0.0.2 - In progress...](#v002---in-progress)
+  * [v0.0.2 - 20/01/2026](#v002---20012026)
   * [v0.0.1 - 13/01/2026](#v001---13012026)
 
 <!-- tocstop -->
@@ -194,13 +195,12 @@ You can also make a screenshot via Assist, typing or saying "Prends une capture 
 
 ## Todo
 
-- [ ] Implement the launch game via SSH if possible (we already know if we found the game, the rom path, and system. Only need a way to launch it on device)
 - [ ] Internationalization
 
 
 ## Releases notes
 
-### v0.0.2 - In progress...
+### v0.0.2 - 20/01/2026
 
 - Update the example dashboard template, to use the device information to display it at the bottom of the Recalbox column
 - Moved variables to be changed on top of the `recalbox.yaml` file. The version and hardware are not hardcoded anymore.
@@ -212,8 +212,7 @@ You can also make a screenshot via Assist, typing or saying "Prends une capture 
 - Add 2 sensors sensor.recalbox_hardware and sensor.recalbox_firmware_version to persist values
 - Add screen shot button
 - Add screen shot action via assist (text or voice)
-- Add SSH installation info to launch a game
-- SSH implementation for game launch ???
+- Launch game from text/voice command, searching for the ROM in the wanted system, and launch command via UDP
 
 
 ### v0.0.1 - 13/01/2026
