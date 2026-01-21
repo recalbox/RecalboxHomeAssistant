@@ -7,6 +7,8 @@ By Aurélien Tomassini, 2026.
 >   - Get status
 >   - Display current game
 >   - Turn off, reboot, take screenshots, ...
+> - Trigger any automation you want.  
+>   For example, change light color according to the game launched, send notifications, etc.
 > - Voice/text commands with assistant :
 >   - Launch a game
 >   - Stop current game
@@ -21,6 +23,8 @@ By Aurélien Tomassini, 2026.
 
 - [Requirements](#requirements)
 - [Architecture](#architecture)
+  * [Recalbox to Home Assistant](#recalbox-to-home-assistant)
+  * [Home Assistant to Recalbox](#home-assistant-to-recalbox)
 - [Installation](#installation)
 - [Usage](#usage)
   * [Dashboard card](#dashboard-card)
@@ -29,10 +33,11 @@ By Aurélien Tomassini, 2026.
     + [Turn OFF recalbox](#turn-off-recalbox)
     + [Get current game](#get-current-game)
     + [Launch a game](#launch-a-game)
-    + [Stop running a game](#stop-running-a-game)
+    + [Stop the current game](#stop-the-current-game)
     + [Take a screenshot](#take-a-screenshot)
 - [Todo](#todo)
 - [Releases notes](#releases-notes)
+  * [v0.0.3 - Work in progress...](#v003---work-in-progress)
   * [v0.0.2 - 20/01/2026](#v002---20012026)
   * [v0.0.1 - 13/01/2026](#v001---13012026)
 
@@ -40,12 +45,13 @@ By Aurélien Tomassini, 2026.
 
 ## Requirements
 
-- You should have a `Recalbox` OS available.
-  Tested only with Recalbox <mark>9.2.3</mark>, Raspberry Pi 3 B+.
+- You should have a `Recalbox` OS available.  
+  Tested only with Recalbox <mark>9.2.3</mark>, Raspberry Pi 3 B+.  
   By default, should be accessible on `recalbox.local`
 
-- You should have a `Home Assistant`.
-  Tested on Home Assistant <mark>2026.1</mark>, Raspberry Pi 3 B+.
+
+- You should have a `Home Assistant`.  
+  Tested on Home Assistant <mark>2026.1</mark>, Raspberry Pi 3 B+.  
   By default, It should be accessible in the same network, at `homeassistant.local`
 
 
@@ -53,24 +59,32 @@ By Aurélien Tomassini, 2026.
 
 ![](docs/RecalboxHomeAssistantArchitecture.png)
 
+### Recalbox to Home Assistant
+
 On the Recalbox, a script listens on local events, based on [Scripts sur événements d'EmulationStation | Recalbox Wiki](https://wiki.recalbox.com/fr/advanced-usage/scripts-on-emulationstation-events) .
 The scripts reads the needed data for game information, and sends a MQTT message to Home Assistant with JSON data.
 Home Assistant can then update its "Recalbox" entity with the current game.
 
-The attributes read by Home Assistant are, through this JSON :
-- `game `: name of the running game, user friendly. null if no game launched.
-- `console `: name of the console, user friendly. null if no game launched, or "Kodi"
-- `rom `: path to the current rom. null if no game launched.
-- `genre `: genre of the running game, user friendly. null if no game launched.
-- `genreId `: genreId of the running game. null if no game launched. Can be useful for automation where you want to set lights colors depending on type of game for example.
-- `imageUrl `: URL to the image of the current game. null if no game running. The picture exists only if the game has been scrapped.
-- `recalboxVersion` : Version of the Recalbox OS
-- `hardware` : Device running the Recalbox
+> The attributes read by Home Assistant are, through this JSON :
+> - `game `: name of the running game, user friendly. null if no game launched.
+> - `console `: name of the console, user friendly. null if no game launched, or "Kodi"
+> - `rom `: path to the current rom. null if no game launched.
+> - `genre `: genre of the running game, user friendly. null if no game launched.
+> - `genreId `: genreId of the running game. null if no game launched. Can be useful for automation where you want to set lights colors depending on type of game for example.
+> - `imageUrl `: URL to the image of the current game. null if no game running. The picture exists only if the game has been scrapped.
+> - `recalboxVersion` : Version of the Recalbox OS
+> - `hardware` : Device running the Recalbox
 
-On Home Assistant, some buttons can also be used to stop/reboot/take a screenshot of the Recalbox.
-It uses API ou UDP commands.
+### Home Assistant to Recalbox
 
-Assist integration for voice/text control has also been implemented in order to control, get information, or find a game to launch.
+On Home Assistant, orders are sent to Recalbox via API and UDP commands :
+- Stop, reboot, screenshot commands via API
+- Game list via API
+- Launch a game via UDP
+
+Assist integration for voice/text control has also been implemented in order to
+control, get information, or find a game to launch.  
+It uses the same services just listed.
 
 
 
