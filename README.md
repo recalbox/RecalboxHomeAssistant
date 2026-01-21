@@ -2,6 +2,16 @@
 
 By Aurélien Tomassini, 2026.
 
+> This repository allows you to integrate Recalbox in your Home Assistant :
+> - In your dashboard :
+>   - Get status
+>   - Display current game
+>   - Turn off, reboot, take screenshots, ...
+> - Voice/text commands with assistant :
+>   - Launch a game
+>   - Stop current game
+>   - etc
+
 ![](docs/RecalboxHomeAssistantIntegration.png)
 
 <!-- Use "markdown-toc -i README.md --maxdepth 4" to auto update table of content -->
