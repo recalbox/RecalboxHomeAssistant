@@ -265,7 +265,7 @@ intent_script:
 
 script:
   recalbox_take_screenshot:
-    alias: "Logique Screenshot Recalbox (UDP puis API)"
+    alias: "Screenshot Recalbox (UDP puis API)"
     sequence:
       - variables:
           final_msg: "Erreur inconnue"

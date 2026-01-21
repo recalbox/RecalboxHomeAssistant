@@ -209,8 +209,10 @@ This requires the `RecalboxCreateScreenshot` intent in `/config/custom_sentences
 You can make a game screenshot, simply pushing the screenshot button on your dashboard.  
 You can also make a screenshot via Assist, typing or saying "Prends une capture d'écran du jeu", for example.
 
-> Note : on Recalbox 9.2.3 or Raspberry Pi 3, the screenshots are broken, also in the Recalbox Web Manager. Hopefully it will be fixed soon.
-> `fbgrab` command gives better results, but keeps the welcome screen as fixed image, to I can't switch to this command to get better screenshots.
+> Since January 26th 2026, the screenshot is done with a script :
+> - trying first a UDP command screenshot, which is more integrated
+> - if fails because of wrong port, then it tries using API.  
+>   Note about API : on Recalbox 9.2.3 or Raspberry Pi 3, the screenshots via API are broken (also in the Recalbox Web Manager). That's why I chose UDP first.
 
 
 
@@ -225,6 +227,7 @@ You can also make a screenshot via Assist, typing or saying "Prends une capture 
 
 - New screenshot script : it first tries a UDP screenshot. If failed, then it tries a screenshot via API.  
   Used both for voice/text command, and button pressed.
+- Update dashboard card and button icons
 
 
 ### v0.0.2 - 20/01/2026
