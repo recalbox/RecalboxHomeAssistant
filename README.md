@@ -130,9 +130,6 @@ It will be refreshed in real time.
 You can use [recalbox_card.yaml](Home%20Assistant/dashboards/recalbox_card.yaml) to get this example :  
 ![](docs/example.png)
 
-Three action buttons allow you to turn off, reboot, or take a screen short of the Recolbox with their web manager API.
-If one of the services doesn't work as expected (like screenshot on Raspberry Pi 3 on Recalbox 9.2.3) try directly with the web manager.
-
 
 ### Automations
 
@@ -156,6 +153,7 @@ copied to `/config/custom_sentences/<language>/recalbox_intent.yaml`. Update/imp
 
 Since January 11th 2026, the script added a switch template.  
 It allows to control the Recalbox as a switch, and use assist to turn OFF recalbox with voice or assist text :  
+
 Example : 
   - "Eteins Recalbox" will turn off the Recalbox.
 
@@ -163,8 +161,6 @@ Example :
 
 
 #### Get current game
-
-This requires the `RecalboxGameStatus` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
 Examples :
   - "quel est le jeu en cours [sur recalbox]"
@@ -175,10 +171,10 @@ Examples :
 
 ![](docs/currentGameAssist.png)
 
+> It uses the `RecalboxGameStatus` intent from `/config/custom_sentences/<language>/recalbox_intent.yaml`.
+
 
 #### Launch a game
-
-This requires the `RecalboxLaunchGame` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
 Examples :
   - "Recalbox lance Pokemon Jaune sur Game Boy"
@@ -188,6 +184,8 @@ Examples :
   - "Lance Sonic 1 sur megadrive"
 
   ![](docs/launchGame.png)
+
+> It uses the `RecalboxLaunchGame` intent from `/config/custom_sentences/<language>/recalbox_intent.yaml`.
   
 > If needed, update the systems list in `/config/custom_sentences/fr/recalbox_intent.yaml` with the consoles you want to support/recognize in the launch command.  
 > By default, it supports systems recognition for launching command on NES, SNES, Megadrive, PSX, N64, GB, GBA, GBC, Dreamcast, PSP.
@@ -198,22 +196,28 @@ Examples :
 
 #### Stop the current game
 
-> This uses a retroarch UDP command.  
-> It requires to set `network_cmd_enable = true` in `retroarch.cfg`, as [documented in the Recalbox Wiki / GPIO](https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio).
-> Please double check the port configured in your device. This versions uses port 55355 for retroarch UDP commands.
-
-This requires the `RecalboxStopGame` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
 Examples :
   - "Arrête le jeu en cours sur Recalbox"
 
+> It uses the `RecalboxStopGame` intent from `/config/custom_sentences/<language>/recalbox_intent.yaml`.
+
+> This uses a retroarch UDP command.  
+> It requires to set `network_cmd_enable = true` in `retroarch.cfg`, as [documented in the Recalbox Wiki / GPIO](https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio).  
+> Please double check the port configured in your device : this versions uses port 55355 for retroarch UDP commands.
+
 
 #### Take a screenshot
 
-This requires the `RecalboxCreateScreenshot` intent in `/config/custom_sentences/<language>/recalbox_intent.yaml`.
-
 You can make a game screenshot, simply pushing the screenshot button on your dashboard.  
-You can also make a screenshot via Assist, typing or saying "Prends une capture d'écran du jeu", for example.
+You can also make a screenshot via Assist. 
+
+Examples :
+
+  - "Prends une capture d'écran du jeu"
+  - "Fais un screenshot du jeu"
+
+> It uses the `RecalboxCreateScreenshot` intent from `/config/custom_sentences/<language>/recalbox_intent.yaml`.
 
 > Since January 26th 2026, the screenshot is done with a script :
 > - trying first a UDP command screenshot, which is more integrated
