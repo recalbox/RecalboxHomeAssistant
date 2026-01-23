@@ -19,6 +19,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # On enregistre les phrases Assist
     await async_setup_intents(hass)
 
+    # Enregistre le dossier www pour qu'il soit accessible via /recalbox/
+    hass.http.register_static_path(
+        "/recalbox",
+        hass.config.path("custom_components/recalbox/www"),
+        cache_headers=False
+    )
+
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

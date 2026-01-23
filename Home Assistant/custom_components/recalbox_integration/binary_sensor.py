@@ -16,6 +16,7 @@ class RecalboxEntityMQTT(BinarySensorEntity):
         self._ip = config_entry.data.get("host")
         self._attr_unique_id = f"{config_entry.entry_id}_status"
         self._attr_name = f"Recalbox {self._ip}"
+        self._attr_icon = "mdi:gamepad-variant-outline"
         self._attr_is_on = False
         self._attr_extra_state_attributes = {}
         # Attribut volatile (non persisté dans l'objet d'état standard)
@@ -31,10 +32,12 @@ class RecalboxEntityMQTT(BinarySensorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._config_entry.entry_id)},
-            "name": "Recalbox",
-            "manufacturer": "Recalbox",
+            "name": "Recalbox ({self._ip})",
+            "manufacturer": "Aurelien Tomassini",
             "model": "Recalbox OS",
+            "sw_version": self._attr_extra_state_attributes.get("recalboxVersion", "Inconnu"),
             "configuration_url": f"http://{self._ip}",
+            "hw_version": self._attr_extra_state_attributes.get("hardware", "Rpi/PC"),
         }
 
     @property
