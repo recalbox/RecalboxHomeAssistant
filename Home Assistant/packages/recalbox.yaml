@@ -270,18 +270,20 @@ script:
       - variables:
           final_msg: "Erreur inconnue"
           final_success: "false"
-      - # name: "Tentative via UDP"
+      - alias: "Screenshot via UDP"
         action: shell_command.recalbox_screenshot_udp
         continue_on_error: true
         response_variable: udp_result
 
-      - # name: "Vérification et Fallback API"
+      - alias: "Vérification et Fallback API"
         if:
           # On vérifie si l'UDP a échoué (returncode != 0)
           - condition: template
+            alias: "Si la commande UDP n'a pas abouti..."
             value_template: "{{ udp_result is not defined or udp_result.returncode != 0 }}"
         then:
-          - action: rest_command.screenshot_recalbox
+          - alias: "Screenshot via API"
+            action: rest_command.screenshot_recalbox
           - variables:
               final_success: "true"
               final_msg: Screenshot réussi (par API)
@@ -307,6 +309,7 @@ script:
           
       # lister toutes les roms de la console
       - action: rest_command.recalbox_get_roms
+        alias: "Lister toutes les ROMs de la console..."
         data:
           console: "{{ console_id }}"
         response_variable: rom_list
@@ -314,6 +317,7 @@ script:
 
       - if:
           - condition: template
+            alias: "Si le listing a échoué"
             value_template: "{{ rom_list is not defined or rom_list['status'] != 200 }}"
         then:
         
@@ -340,7 +344,16 @@ script:
                 response_variable: reponse_finale
         
       - variables:
-          search_pattern: "{{ game_name | replace(' ', ' .*') }}"
+          alias: "Rechercher le game_name dans la liste des ROMs reçue..."
+          search_pattern: "{{ game_name 
+            | replace('é', 'e') | replace('è', 'e') 
+            | replace('ê', 'e') | replace('ë', 'e')
+            | replace('à', 'a') | replace('â', 'a')
+            | replace('î', 'i') | replace('ï', 'i')
+            | replace('ô', 'o') | replace('ö', 'o')
+            | replace('û', 'u') | replace('ù', 'u')
+            | replace('ç', 'c')
+            | replace(' ', ' .*') }}"
           # rom_list contient un tableau "roms"
           # dans lequel on va chercher si une rom a dans son "name" le nom du jeu à lancer.
           # si on le trouve, on récupère l'objet target_game qui contient le chemin vers la rom "target_game.path"

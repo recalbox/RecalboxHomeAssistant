@@ -9,6 +9,8 @@
   Used both for voice/text command, and button pressed.
 - Update dashboard card and button icons
 - Improve notify automation example, to avoid wrong notification when Home Assistant updates itself while Recalbox is still off.
+- When looking for game name in game launch, remove accents
+- Improve scripts readability with aliases
 
 
 ## v0.0.2 - 20/01/2026
