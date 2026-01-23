@@ -1,0 +1,77 @@
+# /config/custom_sentences/fr/recalbox_intent.yaml
+# Par Aurélien Tomassini
+
+
+language: "fr"
+intents:
+  RecalboxGameStatus:
+    data:
+      - sentences:
+          - "quel est le jeu en cours [sur recalbox]"
+          - "à quoi je joue [sur recalbox]"
+          - "qu'est-ce qui tourne sur [la] recalbox"
+          - "quel jeu est lancé [sur recalbox]"
+          - "quel est le jeu lancé [sur recalbox]"
+  RecalboxCreateScreenshot:
+    data:
+      - sentences:
+          - "(fais | prends) (une capture | un screenshot) [d'écran] [du jeu] [sur recalbox]"
+  RecalboxLaunchGame:
+    data:
+      - sentences:
+          - "(joue à | joue au jeu | lance | lance le jeu | mets | mets le jeu) {game} sur [la] {console} [sur recalbox]"
+          - "recalbox (joue à | joue au jeu | lance | lance le jeu | mets | mets le jeu) {game} sur [la] {console}"
+  RecalboxStopGame:
+    data:
+      - sentences:
+          - "(arrête | stop | quitte) le jeu (actuel | en cours) [sur recalbox]"
+  RecalboxPauseGame:
+    data:
+      - sentences:
+          - "(mets en pause | reprends | arrête la pause) le jeu (actuel | en cours) [sur recalbox]"
+          
+lists:
+  game:
+    wildcard: true
+  console:
+    values:
+      - in: "super nintendo"
+        out: "snes"
+      - in: "super nes"
+        out: "snes"
+      - in: "nes"
+        out: "nes"
+      - in: "nintendo"
+        out: "nes"
+      - in: "megadrive"
+        out: "megadrive"
+      - in: "genesis"
+        out: "megadrive"
+      - in: "sega"
+        out: "megadrive"
+      - in: "sega megadrive"
+        out: "megadrive"
+      - in: "game boy"
+        out: "gb"
+      - in: "game boy color"
+        out: "gbc"
+      - in: "game boy advance"
+        out: "gba"
+      - in: "play"
+        out: "psx"
+      - in: "playstation"
+        out: "psx"
+      - in: "playstation 1"
+        out: "psx"
+      - in: "p s x"
+        out: "psx"
+      - in: "psx"
+        out: "psx"
+      - in: "n 64"
+        out: "n64"
+      - in: "nintendo 64"
+        out: "n64"
+      - in: "dreamcast"
+        out: "dreamcast"
+      - in: "psp"
+        out: "psp"
