@@ -17,8 +17,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # On ajoute "button" à la liste des plateformes
     await hass.config_entries.async_forward_entry_setups(entry, ["binary_sensor", "button"])
 
-    # On enregistre les phrases Assist
-    await async_setup_intents(hass)
+    # On enregistre les phrases Assist (S'assurer que ce n'est fait qu'une fois)
+    if "intents_registered" not in hass.data[DOMAIN]:
+        await async_setup_intents(hass)
+        hass.data[DOMAIN]["intents_registered"] = True
 
     # enregistrement du chemin statique
     await hass.http.async_register_static_paths([

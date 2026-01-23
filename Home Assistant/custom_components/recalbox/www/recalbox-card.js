@@ -15,6 +15,7 @@ class RecalboxCard extends HTMLElement {
 
     const game = state.attributes.game || "-";
     const console = state.attributes.console || "-";
+    const genre = state.attributes.genre || "-";
     const imageUrl = state.attributes.imageUrl || "";
     const isOn = state.state === "on";
 
@@ -38,7 +39,7 @@ class RecalboxCard extends HTMLElement {
       html += `
         <div class="info-row"><ha-icon icon="mdi:sony-playstation"></ha-icon><span>Console: ${console}</span></div>
         <div class="info-row"><ha-icon icon="mdi:gamepad-variant-outline"></ha-icon><span>Jeu: ${game}</span></div>
-        <img class="game-img" src="${imageUrl}">
+        <div class="info-row"><ha-icon icon="mdi:folder-outline"></ha-icon><span>Genre: ${genre}</span></div>
       `;
     }
 
@@ -52,6 +53,12 @@ class RecalboxCard extends HTMLElement {
         <ha-icon-button icon="mdi:power" title="Shutdown" id="btn-stop"></ha-icon-button>
       </div>
     `;
+
+    if (isOn && img.length && img.length > 5) {
+      html += `
+        <img class="game-img" src="${imageUrl}">
+      `;
+    }
 
     this.content.innerHTML = html;
 

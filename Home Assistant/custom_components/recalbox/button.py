@@ -16,20 +16,28 @@ async def async_setup_entry(hass, entry, async_add_entities):
             hass.states.async_set(entity_id, "off", state.attributes)
 
     async_add_entities([
-        RecalboxAPIButton(api, "Shutdown", "/api/system/shutdown", "mdi:power", 80, callback=force_off),
-        RecalboxAPIButton(api, "Reboot", "/api/system/reboot", "mdi:restart", 80),
-        RecalboxScreenshotButton(api, entry.entry_id)
+        RecalboxAPIButton(api, "Shutdown", "/api/system/shutdown", "mdi:power", entry, 80, callback=force_off),
+        RecalboxAPIButton(api, "Reboot", "/api/system/reboot", "mdi:restart", entry, 80),
+        RecalboxScreenshotButton(api, entry)
     ])
 
 class RecalboxAPIButton(ButtonEntity):
-    def __init__(self, api, name, path, icon, port=80, callback=None):
+    def __init__(self, api, name, path, icon, entry, port=80, callback=None):
         self._api = api
         self._path = path
         self._port = port
+        self._config_entry = entry
         self._attr_name = f"Recalbox {name}"
         self._attr_icon = icon
         self._name = name
         self._callback = callback
+
+    @property
+    def device_info(self):
+        """Lien vers l'appareil parent."""
+        return {
+            "identifiers": {(DOMAIN, self._config_entry.entry_id)},
+        }
 
     async def async_press(self):
         # On envoie l'ordre API
@@ -40,11 +48,19 @@ class RecalboxAPIButton(ButtonEntity):
 
 
 class RecalboxScreenshotButton(ButtonEntity):
-    def __init__(self, api, entry_id):
+    def __init__(self, api, entry):
         self._api = api
         self._attr_name = "Recalbox Screenshot"
-        self._attr_unique_id = f"{entry_id}_screenshot"
+        self._attr_unique_id = f"{entry.entry_id}_screenshot"
         self._attr_icon = "mdi:camera"
+        self._config_entry = entry
+
+    @property
+    def device_info(self):
+        """Lien vers l'appareil parent."""
+        return {
+            "identifiers": {(DOMAIN, self._config_entry.entry_id)},
+        }
 
     async def async_press(self):
         print("Screen shot UDP, puis API si échec")
