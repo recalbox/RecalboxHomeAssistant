@@ -29,6 +29,7 @@ class RecalboxAPIButton(ButtonEntity):
         self._config_entry = entry
         self._attr_name = f"Recalbox {name}"
         self._attr_icon = icon
+        self._attr_unique_id = f"{entry.entry_id}_{name}"
         self._name = name
         self._callback = callback
 

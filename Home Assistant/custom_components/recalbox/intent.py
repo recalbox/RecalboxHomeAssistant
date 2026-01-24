@@ -46,7 +46,7 @@ class RecalboxScreenshotHandler(intent.IntentHandler):
         entry_id = list(hass.data[DOMAIN].keys())[0]
         api = hass.data[DOMAIN][entry_id]["api"]
 
-        if await api.screeshot():
+        if await api.screenshot():
             text = "La capture d'écran n'a pas pu être effectuée."
         else:
             text = "La capture d'écran a été demandée à Recalbox !"
@@ -62,7 +62,7 @@ class RecalboxStatusHandler(intent.IntentHandler):
         # On va lire l'état de l'entité binary_sensor pour répondre
         hass = intent_obj.hass
         entry_id = list(hass.data[DOMAIN].keys())[0]
-        recalbox = hass.data[DOMAIN][entry_id]
+        recalbox = hass.states.get(entry_id)
 
         if not recalbox:
             text = "La Recalbox n'a pas été trouvée."
