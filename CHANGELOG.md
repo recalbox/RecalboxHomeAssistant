@@ -3,7 +3,7 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v0.1.1 - Work in progress
+## v0.1.1 - 24/01/2026
 
 - Deep modification to move recalbox actions in the entity, making buttons and intents only proxies
 - Fix shut down with the button, to force and keep status OFF
