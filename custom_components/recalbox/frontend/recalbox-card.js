@@ -8,6 +8,7 @@ class RecalboxCard extends HTMLElement {
       return;
     }
 
+    const needsRestart = state.attributes.needs_restart;
     const shutdownBtn = this.config.shutdown_button || `button.recalbox_shutdown`;
     const rebootBtn = this.config.reboot_button || `button.recalbox_reboot`;
     const screenshotBtn = this.config.screenshot_button || `button.recalbox_screenshot`;
@@ -86,6 +87,21 @@ class RecalboxCard extends HTMLElement {
         ` : ''}
       </div>
     `;
+
+    if (needsRestart) {
+      // On insère un petit bandeau d'alerte en haut de la carte
+      const alertHtml = `
+        <div style="background-color: var(--warning-color); color: white; padding: 8px; border-radius: 4px; margin-bottom: 10px; font-size: 0.8em; display: flex; align-items: center;">
+          <ha-icon icon="mdi:alert" style="margin-right: 8px;"></ha-icon>
+          Nouvelles phrases Assist détectées.
+          Redémarrez une fois de plus pour les activer !
+        </div>
+      `;
+      // Injecter ce HTML dans ta carte
+      this.content.innerHTML += alertHtml;
+    }
+
+
     const contentDiv = this.querySelector('.recalbox-card-content');
     if (contentDiv) {
       contentDiv.style.cursor = 'pointer'; // Pour montrer que c'est cliquable

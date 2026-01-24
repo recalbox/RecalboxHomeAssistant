@@ -8,6 +8,7 @@
   to `custom_sentences`. As this script is launched when the integration starts, you could need two restarts
   to get Assist sentences : a first restart to run the integration, that will copy the sentences ; and a second
   restart, that will read the sentences on start.
+- Display in dashboard if the secondary restart is needed.
 
  
 ## v0.1.2 - 24/01/2026

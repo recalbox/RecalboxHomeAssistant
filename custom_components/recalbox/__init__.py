@@ -18,16 +18,17 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_install_sentences(hass: HomeAssistant):
+async def async_install_sentences(hass: HomeAssistant) -> bool :
     """Copie récursivement les sentences du composant vers le dossier système de HA."""
     # Chemin source : /config/custom_components/recalbox/sentences
     source_root = hass.config.path("custom_components", DOMAIN, "sentences")
     # Chemin destination : /config/custom_sentences
     dest_root = hass.config.path("custom_sentences")
+    changes_made = False
 
     if not os.path.exists(source_root):
         _LOGGER.warning("Dossier source des sentences introuvable : %s", source_root)
-        return
+        return False
 
     try:
         # On parcourt les dossiers de langues (fr, en, es...)
@@ -51,10 +52,13 @@ async def async_install_sentences(hass: HomeAssistant):
                             try:
                                 shutil.copy2(source_file, dest_file)
                                 _LOGGER.info("Mise à jour phrase Assist : %s/%s", lang_dir, file_name)
+                                changes_made = True
                             except Exception as e:
                                 _LOGGER.error("Erreur copie sentence %s: %s", file_name, e)
+        return changes_made
     except Exception as e:
         _LOGGER.error("Erreur lors de l'installation des phrases Assist : %s", e)
+        return False
 
 
 
@@ -93,7 +97,7 @@ async def async_register_frontend(hass: HomeAssistant) -> None:
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     # Etape préliminaire :
     # Installer les phrases Assist automatiquement
-    await async_install_sentences(hass)
+    hass.data[DOMAIN]["needs_restart"] = await async_install_sentences(hass)
 
     # enregistrement du chemin statique
     await hass.http.async_register_static_paths([
