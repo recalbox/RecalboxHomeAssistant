@@ -50,6 +50,7 @@ class RecalboxEntityMQTT(BinarySensorEntity):
     @property
     def extra_state_attributes(self):
         """Retourne les attributs de l'état."""
+        global_data = self.hass.data.get(DOMAIN, {}).get("global", {})
         return {
             **self._attr_extra_state_attributes, # Les persistants (version, hw)
             "game": self.game,
@@ -58,7 +59,7 @@ class RecalboxEntityMQTT(BinarySensorEntity):
             "genreId": self.genreId,
             "rom": self.rom,
             "imageUrl": self.imageUrl,
-            "needs_restart": self.hass.data.get("global", {}).get("needs_restart", False)
+            "needs_restart": global_data.get("needs_restart", False)
         }
 
     async def async_added_to_hass(self):

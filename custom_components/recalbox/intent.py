@@ -66,7 +66,7 @@ class RecalboxStatusHandler(intent.IntentHandler):
         instances = hass.data[DOMAIN].get("instances", {})
         entry_id = list(instances.keys())[0]
         recalboxEntity = instances[entry_id].get("sensor_entity")
-        recalbox = hass.states.get(recalboxEntity.entity_id) #
+        recalbox = hass.states.get(recalboxEntity.entity_id)
 
         if not recalbox:
             text = "La Recalbox n'a pas été trouvée."
