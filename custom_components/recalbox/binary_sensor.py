@@ -1,19 +1,26 @@
 from homeassistant.components.mqtt import async_subscribe
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from .const import DOMAIN
+import unicodedata
+import re
+import homeassistant.helpers.config_validation as cv
 import json
+import asyncio
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Configuration des entités Recalbox à partir de la config entry."""
+    api = hass.data[DOMAIN][config_entry.entry_id]["api"]
     # On crée l'entité en lui passant l'objet config_entry (qui contient l'IP)
-    new_entity = RecalboxEntityMQTT(hass, config_entry)
+    new_entity = RecalboxEntityMQTT(hass, config_entry, api)
+    hass.data[DOMAIN][config_entry.entry_id]["sensor_entity"] = new_entity # pour la retrouver ailleurs plus facilement
     async_add_entities([new_entity])
 
 class RecalboxEntityMQTT(BinarySensorEntity):
-    def __init__(self, hass, config_entry):
+    def __init__(self, hass, config_entry, api):
         self.hass = hass # On récupère l'IP stockée dans la config
         self._config_entry = config_entry
         self._ip = config_entry.data.get("host")
+        self._api = api
         self._attr_unique_id = f"{config_entry.entry_id}_status"
         self._attr_name = f"Recalbox {self._ip}"
         self._attr_icon = "mdi:gamepad-variant-outline"
@@ -115,7 +122,71 @@ class RecalboxEntityMQTT(BinarySensorEntity):
         print("Abonnement à recalbox/notifications/status et recalbox/notifications/game")
 
 
+
+    # Dans binary_sensor.py, classe RecalboxEntityMQTT
+    async def force_status_off(self):
+        """Force l'état à OFF sans attendre MQTT."""
+        self._attr_is_on = False
+        self.async_write_ha_state()
+
+
     # Exemple : Action appelée par un service ou un bouton
-    async def async_turn_on(self, **kwargs):
+    async def request_turn_on(self, **kwargs) -> bool:
         """Appelé quand on clique sur ON dans l'interface."""
-        await self.send_udp_command("POWER_ON")
+        return await self.send_udp_command("POWER_ON")
+
+
+    async def request_shutdown(self) -> bool:
+        if await self._api.post_api("/api/system/shutdown", port=80) :
+            await asyncio.sleep(5)
+            await self.force_status_off()
+            return True
+        else:
+            return False
+
+
+    async def request_reboot(self) -> bool :
+        return await self._api.post_api("/api/system/reboot", port=80)
+
+
+    async def request_screenshot(self) -> bool :
+        print("Screen shot UDP, puis API si échec")
+        # 1. Test UDP
+        success = await self._api.send_udp_command(55355, "SCREENSHOT")
+        # 2. Fallback API
+        if not success:
+            return await self._api.post_api("/api/media/takescreenshot", port=81)
+        else:
+            return True
+
+
+    # Renvoie le texte pour Assist
+    async def search_and_launch_game_by_name(self, console, game_query) -> str :
+        # Récupérer la liste des roms via l'API (HTTP GET)
+        roms = await self._api.get_roms(console)
+        if not roms:
+            return f"Aucun jeu trouvé sur la console {console}."
+
+        def normalize_str(s):
+            if not s: return ""
+            # Supprime les accents et met en minuscule
+            s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('utf-8')
+            return s.lower().strip()
+
+        query_simplified = normalize_str(game_query)
+        pattern = query_simplified.replace(" ", ".*")
+
+        target = None
+        for r in roms:
+            # On simplifie le nom du fichier/jeu pour la comparaison
+            name_simplified = normalize_str(r.get('name', ''))
+            # Recherche RegEx (l'ordre est respecté grâce au .*)
+            if re.search(pattern, name_simplified):
+                target = r
+                break
+
+        if target:
+            await self._api.send_udp_command(1337, f"START|{console}|{target['path']}")
+            return f"Le jeu {target['name']} a bien été trouvé. Lancement sur {console} !"
+        else:
+            return f"Le jeu {game_query} n'a pas été trouvé sur {console}."

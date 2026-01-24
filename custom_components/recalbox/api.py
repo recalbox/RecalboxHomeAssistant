@@ -41,13 +41,3 @@ class RecalboxAPI:
                         return data.get("roms", [])
             except: return []
 
-
-    async def screenshot(self):
-        print("Screen shot UDP, puis API si échec")
-        # 1. Test UDP
-        success = await self.send_udp_command(55355, "SCREENSHOT")
-        # 2. Fallback API
-        if not success:
-            return await self.post_api("/api/media/takescreenshot", port=81)
-        else:
-            return True

@@ -44,9 +44,9 @@ class RecalboxScreenshotHandler(intent.IntentHandler):
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
         entry_id = list(hass.data[DOMAIN].keys())[0]
-        api = hass.data[DOMAIN][entry_id]["api"]
+        recalbox = intent_obj.hass.data[DOMAIN][entry_id].get("sensor_entity")
 
-        if await api.screenshot():
+        if await recalbox.request_screenshot():
             text = "La capture d'écran a été faite, et stockée dans le dossier screenshots de Recalbox !"
         else:
             text = "La capture d'écran n'a pas pu être effectuée."
@@ -61,11 +61,8 @@ class RecalboxStatusHandler(intent.IntentHandler):
     async def async_handle(self, intent_obj):
         # On va lire l'état de l'entité binary_sensor pour répondre
         hass = intent_obj.hass
-        recalbox = next(
-            (state for state in hass.states.async_all("binary_sensor")
-             if state.entity_id.startswith("binary_sensor.recalbox_")),
-            None
-        )
+        entry_id = list(hass.data[DOMAIN].keys())[0]
+        recalbox = intent_obj.hass.data[DOMAIN][entry_id].get("sensor_entity")
 
         if not recalbox:
             text = "La Recalbox n'a pas été trouvée."
@@ -90,49 +87,17 @@ class RecalboxLaunchHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
+        entry_id = list(hass.data[DOMAIN].keys())[0]
+        recalbox = intent_obj.hass.data[DOMAIN][entry_id].get("sensor_entity")
+
         # 1. Récupérer les slots (variables) de la phrase
         slots = intent_obj.slots
         game = slots.get("game", {}).get("value")
         console = slots.get("console", {}).get("value")
 
-        # On récupère la première Recalbox configurée (ou on filtre par nom)
-        entry_id = list(hass.data[DOMAIN].keys())[0]
-        api = hass.data[DOMAIN][entry_id]["api"]
-
         # Appeler la fonction de recherche
-        result_text = await self.search_and_launch(api, console, game)
+        result_text = await recalbox.search_and_launch_game_by_name(console, game)
 
         response = intent_obj.create_response()
         response.async_set_speech(result_text)
         return response
-
-
-    async def search_and_launch(self, api, console, game_query):
-        # Récupérer la liste des roms via l'API (HTTP GET)
-        roms = await api.get_roms(console)
-        if not roms:
-            return f"Aucun jeu trouvé sur la console {console}."
-
-        def normalize_str(s):
-            if not s: return ""
-            # Supprime les accents et met en minuscule
-            s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('utf-8')
-            return s.lower().strip()
-
-        query_simplified = normalize_str(game_query)
-        pattern = query_simplified.replace(" ", ".*")
-
-        target = None
-        for r in roms:
-            # On simplifie le nom du fichier/jeu pour la comparaison
-            name_simplified = normalize_str(r.get('name', ''))
-            # Recherche RegEx (l'ordre est respecté grâce au .*)
-            if re.search(pattern, name_simplified):
-                target = r
-                break
-
-        if target:
-            await api.send_udp_command(1337, f"START|{console}|{target['path']}")
-            return f"Le jeu {target['name']} a bien été trouvé. Lancement sur {console} !"
-        else:
-            return f"Le jeu {game_query} n'a pas été trouvé sur {console}."

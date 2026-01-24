@@ -101,7 +101,9 @@ class RecalboxCard extends HTMLElement {
 
     // Image
     this.picture.innerHTML = `
-        ${isOn && isAGameRunning && imageUrl && imageUrl.length > 5 ? `<div class="game-preview"><img src="${imageUrl}"></div>` : ''}
+        ${isOn && isAGameRunning && imageUrl && imageUrl.length > 5 ? `<div class="game-preview">
+            <img src="${imageUrl}" onerror="this.style.display='none'; this.style.height='0px';">
+        </div>` : ''}
     `
 
     // 2. Boutons d'actions

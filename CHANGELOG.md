@@ -3,6 +3,13 @@
 > By Aurélien Tomassini, 2026.
 
 
+## v0.1.1 - Work in progress
+
+- Deep modification to move recalbox actions in the entity, making buttons and intents only proxies
+- Fix shut down with the button, to force and keep status OFF
+- If an image path exists, but not the image, do not display the broken image
+
+
 ## v0.1.0 - 24/01/2026
 
 - Changes from Yaml version to Python custom integration
