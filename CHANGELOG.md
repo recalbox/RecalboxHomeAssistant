@@ -2,6 +2,10 @@
 
 > By Aurélien Tomassini, 2026.
 
+## v0.1.2 - Work in progress
+
+- Try to force HACS to copy `custom_sentences` folder, thanks to `extra_folders` key
+
 
 ## v0.1.1 - 24/01/2026
 
