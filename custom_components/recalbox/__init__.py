@@ -16,51 +16,6 @@ import logging
 
 
 
-_LOGGER = logging.getLogger(__name__)
-
-async def async_install_sentences(hass: HomeAssistant) -> bool :
-    """Copie récursivement les sentences du composant vers le dossier système de HA."""
-    # Chemin source : /config/custom_components/recalbox/sentences
-    source_root = hass.config.path("custom_components", DOMAIN, "sentences")
-    # Chemin destination : /config/custom_sentences
-    dest_root = hass.config.path("custom_sentences")
-    changes_made = False
-
-    if not os.path.exists(source_root):
-        _LOGGER.warning("Dossier source des sentences introuvable : %s", source_root)
-        return False
-
-    try:
-        # On parcourt les dossiers de langues (fr, en, es...)
-        for lang_dir in os.listdir(source_root):
-            source_lang_path = os.path.join(source_root, lang_dir)
-
-            if os.path.isdir(source_lang_path):
-                dest_lang_path = os.path.join(dest_root, lang_dir)
-                os.makedirs(dest_lang_path, exist_ok=True)
-
-                # On copie chaque fichier YAML
-                for file_name in os.listdir(source_lang_path):
-                    if file_name.endswith(".yaml"):
-                        source_file = os.path.join(source_lang_path, file_name)
-                        dest_file = os.path.join(dest_lang_path, file_name)
-
-                        # STRATÉGIE DE COPIE :
-                        # On copie si le fichier n'existe pas
-                        # OU si la date de modification est différente (mise à jour du code)
-                        if not os.path.exists(dest_file) or (os.path.getmtime(source_file) != os.path.getmtime(dest_file)):
-                            try:
-                                shutil.copy2(source_file, dest_file)
-                                _LOGGER.info("Mise à jour phrase Assist : %s/%s", lang_dir, file_name)
-                                changes_made = True
-                            except Exception as e:
-                                _LOGGER.error("Erreur copie sentence %s: %s", file_name, e)
-        return changes_made
-    except Exception as e:
-        _LOGGER.error("Erreur lors de l'installation des phrases Assist : %s", e)
-        return False
-
-
 
 
 
@@ -134,16 +89,17 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_install_sentences(hass: HomeAssistant):
+async def async_install_sentences(hass: HomeAssistant) -> bool :
     """Copie récursivement les sentences du composant vers le dossier système de HA."""
     # Chemin source : /config/custom_components/recalbox/sentences
-    source_root = hass.config.path("custom_components", DOMAIN, "custom_sentences")
+    source_root = hass.config.path("custom_components", DOMAIN, "sentences")
     # Chemin destination : /config/custom_sentences
     dest_root = hass.config.path("custom_sentences")
+    changes_made = False
 
     if not os.path.exists(source_root):
-        _LOGGER.info("Dossier source des sentences introuvable : %s . Il a peut-être déjà été migré.", source_root)
-        return
+        _LOGGER.warning("Dossier source des sentences introuvable : %s", source_root)
+        return False
 
     try:
         # On parcourt les dossiers de langues (fr, en, es...)
@@ -160,11 +116,19 @@ async def async_install_sentences(hass: HomeAssistant):
                         source_file = os.path.join(source_lang_path, file_name)
                         dest_file = os.path.join(dest_lang_path, file_name)
 
-                        # Copie seulement si le fichier est différent ou absent
-                        # (évite de réécrire inutilement à chaque redémarrage)
-                        if not os.path.exists(dest_file):
-                            shutil.copy(source_file, dest_file)
-                            _LOGGER.info("Phrase Assist installée : %s/%s", lang_dir, file_name)
+                        # STRATÉGIE DE COPIE :
+                        # On copie si le fichier n'existe pas
+                        # OU si la date de modification est différente (mise à jour du code)
+                        if not os.path.exists(dest_file) or (os.path.getmtime(source_file) != os.path.getmtime(dest_file)):
+                            try:
+                                shutil.copy2(source_file, dest_file)
+                                _LOGGER.info("Mise à jour phrase Assist : %s/%s", lang_dir, file_name)
+                                changes_made = True
+                            except Exception as e:
+                                _LOGGER.error("Erreur copie sentence %s: %s", file_name, e)
+        return changes_made
     except Exception as e:
         _LOGGER.error("Erreur lors de l'installation des phrases Assist : %s", e)
+        return False
+
 
