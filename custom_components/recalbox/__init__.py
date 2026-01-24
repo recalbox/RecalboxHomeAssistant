@@ -49,10 +49,12 @@ async def async_register_frontend(hass: HomeAssistant) -> None:
     await module_register.async_register()
 
 
-async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:# 1. INITIALISER le dictionnaire pour éviter le KeyError
+    hass.data.setdefault(DOMAIN, {})
+
     # Etape préliminaire :
     # Installer les phrases Assist automatiquement
-    hass.data[DOMAIN]["needs_restart"] = await async_install_sentences(hass)
+    hass.data["global"]["needs_restart"] = await async_install_sentences(hass)
 
     # enregistrement du chemin statique
     await hass.http.async_register_static_paths([
@@ -92,7 +94,7 @@ _LOGGER = logging.getLogger(__name__)
 async def async_install_sentences(hass: HomeAssistant) -> bool :
     """Copie récursivement les sentences du composant vers le dossier système de HA."""
     # Chemin source : /config/custom_components/recalbox/sentences
-    source_root = hass.config.path("custom_components", DOMAIN, "sentences")
+    source_root = hass.config.path("custom_components", DOMAIN, "custom_sentences")
     # Chemin destination : /config/custom_sentences
     dest_root = hass.config.path("custom_sentences")
     changes_made = False

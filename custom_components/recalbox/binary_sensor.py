@@ -58,7 +58,7 @@ class RecalboxEntityMQTT(BinarySensorEntity):
             "genreId": self.genreId,
             "rom": self.rom,
             "imageUrl": self.imageUrl,
-            "needs_restart": self.hass.data.get(DOMAIN, {}).get("needs_restart", False)
+            "needs_restart": self.hass.data.get("global", {}).get("needs_restart", False)
         }
 
     async def async_added_to_hass(self):
