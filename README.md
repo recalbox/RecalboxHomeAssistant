@@ -111,9 +111,10 @@ It uses the same services just listed.
      
    - Install Recalbox Integration
    
-     - Install HACS
+     - Install HACS, and then click below
      
-     - Add `https://github.com/tototo23/RecalboxHomeAssistant` as repository, as Integration.
+     - [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=tototo23&repository=RecalboxHomeAssistant&category=integration)  
+       Or manually, add `https://github.com/tototo23/RecalboxHomeAssistant` as repository, as Integration.
        Press download, and then accept to restart.
        It will automatically add Recalbox to your Home Assistant, with device creation
        (new "Recalbox" Integration will be available after restart), the custom_sentences recognition for assist, and a custom dashboard card.
