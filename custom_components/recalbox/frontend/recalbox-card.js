@@ -33,7 +33,7 @@ class RecalboxCard extends HTMLElement {
             .game-preview { text-align: center; padding: 10px 0; margin: 10px -16px; }
             .game-preview img { max-width: 90%; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
-            .card-actions { display: flex; gap: 8px; justify-content: center; padding: 12px; background-color: var(--secondary-background-color); border-top: 1px solid var(--divider-color); }
+            .card-actions { display: flex; gap: 8px; justify-content: center; padding: 12px; background-color: var(--secondary-background-color); border-top: 1px solid var(--divider-color); border-radius: 0 0 12px 12px; }
             .action-button { display: flex; flex-direction: row; gap: 6px; border-radius: 20px; padding: 2px 12px; align-items: center; cursor: pointer; font-size: 10px; text-transform: uppercase; color: var(--primary-text-color); background-color: var(--chip-background-color); }
             .action-button ha-icon { color: var(--_leading-icon-color); margin-bottom: 4px; --mdc-icon-size: 18px; }
 
