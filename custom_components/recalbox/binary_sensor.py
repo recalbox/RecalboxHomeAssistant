@@ -9,10 +9,10 @@ import asyncio
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Configuration des entités Recalbox à partir de la config entry."""
-    api = hass.data[DOMAIN][config_entry.entry_id]["api"]
+    api = hass.data[DOMAIN]["instances"][config_entry.entry_id]["api"]
     # On crée l'entité en lui passant l'objet config_entry (qui contient l'IP)
     new_entity = RecalboxEntityMQTT(hass, config_entry, api)
-    hass.data[DOMAIN][config_entry.entry_id]["sensor_entity"] = new_entity # pour la retrouver ailleurs plus facilement
+    hass.data[DOMAIN]["instances"][config_entry.entry_id]["sensor_entity"] = new_entity # pour la retrouver ailleurs plus facilement
     async_add_entities([new_entity])
 
 class RecalboxEntityMQTT(BinarySensorEntity):
@@ -147,7 +147,12 @@ class RecalboxEntityMQTT(BinarySensorEntity):
 
 
     async def request_reboot(self) -> bool :
-        return await self._api.post_api("/api/system/reboot", port=80)
+        if await self._api.post_api("/api/system/reboot", port=80) :
+            await asyncio.sleep(5)
+            await self.force_status_off()
+            return True
+        else:
+            return False
 
 
     async def request_screenshot(self) -> bool :

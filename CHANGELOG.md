@@ -10,6 +10,8 @@
   restart, that will read the sentences on start.
 - Display in dashboard if the secondary restart is needed.
 - Fill the default host when creating your Recalbox, with `recalbox.local`
+- Move recalbox entities to "instances" in order to be able to store other "global" variables, like "needs_restart"
+  to show info in the dashboard.
 
  
 ## v0.1.2 - 24/01/2026

@@ -30,8 +30,9 @@ class RecalboxActionHandler(intent.IntentHandler):
         self._reply = reply
 
     async def async_handle(self, intent_obj):
-        entry_id = list(intent_obj.hass.data[DOMAIN].keys())[0]
-        api = intent_obj.hass.data[DOMAIN][entry_id]["api"]
+        instances = intent_obj.hass.data[DOMAIN].get("instances", {})
+        entry_id = list(instances.keys())[0]
+        api = instances[entry_id]["api"]
         await api.send_udp_command(self._port, self._command)
 
         response = intent_obj.create_response()
@@ -43,8 +44,9 @@ class RecalboxScreenshotHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        entry_id = list(hass.data[DOMAIN].keys())[0]
-        recalbox = intent_obj.hass.data[DOMAIN][entry_id].get("sensor_entity")
+        instances = hass.data[DOMAIN].get("instances", {})
+        entry_id = list(instances.keys())[0]
+        recalbox = instances[entry_id].get("sensor_entity")
 
         if await recalbox.request_screenshot():
             text = "La capture d'écran a été faite, et stockée dans le dossier screenshots de Recalbox !"
@@ -61,8 +63,10 @@ class RecalboxStatusHandler(intent.IntentHandler):
     async def async_handle(self, intent_obj):
         # On va lire l'état de l'entité binary_sensor pour répondre
         hass = intent_obj.hass
-        entry_id = list(hass.data[DOMAIN].keys())[0]
-        recalbox = intent_obj.hass.data[DOMAIN][entry_id].get("sensor_entity")
+        instances = hass.data[DOMAIN].get("instances", {})
+        entry_id = list(instances.keys())[0]
+        recalboxEntity = instances[entry_id].get("sensor_entity")
+        recalbox = hass.states.get(recalboxEntity.entity_id) #
 
         if not recalbox:
             text = "La Recalbox n'a pas été trouvée."
@@ -87,8 +91,9 @@ class RecalboxLaunchHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        entry_id = list(hass.data[DOMAIN].keys())[0]
-        recalbox = intent_obj.hass.data[DOMAIN][entry_id].get("sensor_entity")
+        instances = hass.data[DOMAIN].get("instances", {})
+        entry_id = list(instances.keys())[0]
+        recalbox = instances[entry_id].get("sensor_entity")
 
         # 1. Récupérer les slots (variables) de la phrase
         slots = intent_obj.slots

@@ -20,11 +20,12 @@ import logging
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    hass.data.setdefault(DOMAIN, {"instances": {}, "global": {}})
     host = entry.data.get("host")
 
     # On stocke l'API pour que button.py puisse la récupérer
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = {
+    hass.data[DOMAIN]["instances"][entry.entry_id] = {
         "api": RecalboxAPI(host)
     }
 
@@ -50,11 +51,14 @@ async def async_register_frontend(hass: HomeAssistant) -> None:
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:# 1. INITIALISER le dictionnaire pour éviter le KeyError
-    hass.data.setdefault(DOMAIN, {})
+    hass.data.setdefault(DOMAIN, {
+        "instances": {}, # Contiendra les entry_id (dictionnaires)
+        "global": {}     # Contiendra les flags (booléens)
+    })
 
     # Etape préliminaire :
     # Installer les phrases Assist automatiquement
-    hass.data["global"]["needs_restart"] = await async_install_sentences(hass)
+    hass.data[DOMAIN]["global"]["needs_restart"] = await async_install_sentences(hass)
 
     # enregistrement du chemin statique
     await hass.http.async_register_static_paths([

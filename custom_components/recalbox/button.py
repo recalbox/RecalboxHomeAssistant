@@ -26,7 +26,7 @@ class RecalboxProxyButton(ButtonEntity):
         }
 
     async def async_press(self):
-        entity = self.hass.data[DOMAIN][self._entry.entry_id].get("sensor_entity")
+        entity = self.hass.data[DOMAIN]["instances"][self._entry.entry_id].get("sensor_entity")
         if not entity:
             return
 
