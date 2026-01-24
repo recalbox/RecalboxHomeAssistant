@@ -12,10 +12,7 @@ from .frontend import JSModuleRegistration
 import os
 import shutil
 import logging
-
-
-
-
+import hashlib
 
 
 
@@ -95,6 +92,20 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 _LOGGER = logging.getLogger(__name__)
 
+
+
+def get_file_hash(filename):
+    """Calcule le hash MD5 d'un fichier."""
+    hash_md5 = hashlib.md5()
+    try:
+        with open(filename, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+    except FileNotFoundError:
+        return None
+
+
 async def async_install_sentences(hass: HomeAssistant) -> bool :
     """Copie récursivement les sentences du composant vers le dossier système de HA."""
     # Chemin source : /config/custom_components/recalbox/sentences
@@ -122,10 +133,12 @@ async def async_install_sentences(hass: HomeAssistant) -> bool :
                         source_file = os.path.join(source_lang_path, file_name)
                         dest_file = os.path.join(dest_lang_path, file_name)
 
-                        # STRATÉGIE DE COPIE :
-                        # On copie si le fichier n'existe pas
-                        # OU si la date de modification est différente (mise à jour du code)
-                        if not os.path.exists(dest_file) or (os.path.getmtime(source_file) != os.path.getmtime(dest_file)):
+                        # LOGIQUE PAR HASH
+                        source_hash = get_file_hash(source_file)
+                        dest_hash = get_file_hash(dest_file)
+
+                        # Si le fichier destination n'existe pas ou si le contenu diffère
+                        if source_hash != dest_hash:
                             try:
                                 shutil.copy2(source_file, dest_file)
                                 _LOGGER.info("Mise à jour phrase Assist : %s/%s", lang_dir, file_name)

@@ -2,6 +2,13 @@
 
 > By Aurélien Tomassini, 2026.
 
+## v0.2.1 - Work in progress
+
+- Compare MD5 of sentences files, in order to update them only when required.
+  It avoids to show double restart required when the update doesn't change the sentences.
+
+
+
 ## v0.2.0 - 24/01/2026
 
 - As `extra_folders` is not working, added a script to copy the `custom_components/recalbox/custom_sentences`
