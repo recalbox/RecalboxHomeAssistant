@@ -145,9 +145,8 @@ in `configuration.yaml`, to allow Home Assistant to read yaml files in `automati
 
 ### Assist (text/voice)
 
-If HACS didn' copy by itself the `custom_sentences` in your config folder, you will have to copy
-the `fr` and/or `en` folders your self (with their content), from this repository to your `config/custom_sentences` folder.
-It is required to make Home Assistant recognize the intents.
+> Since Janvuary 24th, a script auto installs the sentences and sentences updates.
+> Check the dashboard custom card to see if the HA needs a restarts to update the sentences.
 
 
 #### Get current game
