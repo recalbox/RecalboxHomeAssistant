@@ -103,14 +103,15 @@ def get_file_hash(filename):
     """Calcule le hash MD5 d'un fichier."""
     hash_md5 = hashlib.md5()
     try:
-        with open(filename, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                hash_md5.update(chunk)
+        with open(filename, "r", encoding="utf-8", newline=None) as f:
+            for line in f:
+                # On encode chaque ligne en utf-8 pour le hash
+                hash_md5.update(line.encode("utf-8"))
         hashValue = hash_md5.hexdigest()
-        _LOGGER.info("The file %s hash is %s", filename, hashValue)
+        _LOGGER.debug("The file %s hash is %s", filename, hashValue)
         return hashValue
     except FileNotFoundError:
-        _LOGGER.info("The file %s doesnt exist", filename)
+        _LOGGER.debug("The file %s doesnt exist", filename)
         return None
 
 
