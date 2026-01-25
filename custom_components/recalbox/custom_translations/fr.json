@@ -37,6 +37,9 @@
     ],
     "game_launched_success": [
       "Le jeu {game} a bien été trouvé. Lancement sur {console} !"
+    ],
+    "list_roms_failed": [
+      "Impossible de récupérer les roms de la Recalbox. Vérifiez qu'elle est bien allumée, et connectée au réseau."
     ]
   }
 }

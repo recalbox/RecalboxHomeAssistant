@@ -49,7 +49,7 @@ class RecalboxAPI:
                         return data.get("roms", [])
             except:
                 _LOGGER.error(f"Failed to get roms list on {url}")
-                return []
+                raise
 
 
     async def ping(self) -> bool:

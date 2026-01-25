@@ -190,12 +190,16 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
         translator = self.hass.data[DOMAIN]["translator"]
         # Récupérer la liste des roms via l'API (HTTP GET)
-        roms = await self._api.get_roms(console)
-        if not roms:
-            return translator.translate(
-                "intent_response.no_game_on_system",
-                {"console": console}
-            )
+        try:
+            roms = await self._api.get_roms(console)
+            if not roms:
+                return translator.translate(
+                    "intent_response.no_game_on_system",
+                    {"console": console}
+                )
+        except:
+            return translator.translate("intent_response.list_roms_failed")
+
 
         def normalize_str(s):
             if not s: return ""

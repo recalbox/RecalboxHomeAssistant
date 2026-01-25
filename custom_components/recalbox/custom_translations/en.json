@@ -37,6 +37,9 @@
     ],
     "game_launched_success": [
       "The game {game} was found. Launching on the {console}!"
+    ],
+    "list_roms_failed": [
+      "Cannot get roms list from Recalbox. Double check it is turned ON, and connected to network."
     ]
   }
 }
