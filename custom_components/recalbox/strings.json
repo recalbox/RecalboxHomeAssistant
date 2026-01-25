@@ -1,0 +1,26 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Recalbox",
+        "data": {
+          "host": "IP Address or Hostname"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to Recalbox"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "status": {
+        "name": "Status"
+      }
+    },
+    "button": {
+      "shutdown": { "name": "Shutdown" },
+      "reboot": { "name": "Reboot" }
+    }
+  }
+}

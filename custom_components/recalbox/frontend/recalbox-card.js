@@ -1,7 +1,47 @@
+// Traductions
+const TRANSLATIONS = {
+  "fr": {
+    "subtitle": "Console rétrogaming tout en un",
+    "system": "Console",
+    "game": "Jeu en cours",
+    "genre": "Genre",
+    "rebootRequired": "De nouvelles phrases Assist ont été détectées et installées. Redémarrez une fois de plus pour les activer et avoir accès aux nouvelles commandes vocales/textuelles.",
+    "buttons": {
+      "shutdown": "Éteindre",
+      "reboot": "Redémarrer",
+      "screenshot": "Capture",
+      "stop": "Stop"
+    },
+    "footer": {
+        "onHardware": "sur"
+    }
+  },
+  "en": {
+    "subtitle": "All-in-one retro-gaming console",
+    "system": "System",
+    "game": "Current game",
+    "genre": "Genre",
+    "rebootRequired": "New Assist sentences have been installed. You will have to restart Home Assistant again to have access to the new intents on text/voice commands.",
+    "buttons": {
+      "shutdown": "Shutdown",
+      "reboot": "Reboot",
+      "screenshot": "Screenshot",
+      "stop": "Stop"
+    },
+    "footer": {
+        "onHardware": "on"
+    }
+  }
+};
+
 class RecalboxCard extends HTMLElement {
+
   set hass(hass) {
     const entityId = this.config.entity;
     const state = hass.states[entityId];
+
+    const lang = (hass.language || 'en').split('-')[0];
+    const i18n = TRANSLATIONS[lang] || TRANSLATIONS['en'];
 
     if (!state) {
       this.innerHTML = `<ha-card><div style="padding:16px; color:red;">Entité non trouvée : ${entityId}</div></ha-card>`;
@@ -59,8 +99,8 @@ class RecalboxCard extends HTMLElement {
 
     const isOn = state.state === "on";
     const game = state.attributes.game || "-";
-    const isAGameRunning = game && game!="-" && game!="None";
     const consoleName = state.attributes.console || "-";
+    const isAGameRunning = game && game!="-" && game!="None" && consoleName!="Kodi";
     const genre = state.attributes.genre || "-";
     const imageUrl = state.attributes.imageUrl || "";
     const needsRestart = state.attributes.needs_restart || false;
@@ -77,14 +117,14 @@ class RecalboxCard extends HTMLElement {
       <div class="recalbox-card-content">
         <div class="info-row">
           <ha-icon icon="mdi:gamepad-variant-outline"></ha-icon>
-          <div class="info-text"><div>${this.config.title || "Recalbox"}</div><div class="info-value">Console rétrogaming tout en un</div></div>
+          <div class="info-text"><div>${this.config.title || "Recalbox"}</div><div class="info-value">${i18n.subtitle}</div></div>
           <span class="status-badge ${isOn ? 'status-on' : ''}">${state.state.toUpperCase()}</span>
         </div>
         ${isOn ? `
           <hr/>
-          <div class="info-row"><ha-icon icon="mdi:sony-playstation"></ha-icon><div class="info-text one-line"><div>${consoleName}</div><div class="info-value">Console</div></div></div>
-          <div class="info-row"><ha-icon icon="mdi:gamepad-variant-outline"></ha-icon><div class="info-text one-line"><div>${game}</div><div class="info-value">Game</div></div></div>
-          <div class="info-row"><ha-icon icon="mdi:folder-outline"></ha-icon><div class="info-text one-line"><div>${genre}</div><div class="info-value">Genre</div></div></div>
+          <div class="info-row"><ha-icon icon="mdi:sony-playstation"></ha-icon><div class="info-text one-line"><div>${consoleName}</div><div class="info-value">${i18n.system}</div></div></div>
+          <div class="info-row"><ha-icon icon="mdi:gamepad-variant-outline"></ha-icon><div class="info-text one-line"><div>${game}</div><div class="info-value">${i18n.game}</div></div></div>
+          <div class="info-row"><ha-icon icon="mdi:folder-outline"></ha-icon><div class="info-text one-line"><div>${genre}</div><div class="info-value">${i18n.genre}</div></div></div>
         ` : ''}
       </div>
     `;
@@ -92,10 +132,9 @@ class RecalboxCard extends HTMLElement {
     if (needsRestart) {
       // On insère un petit bandeau d'alerte en haut de la carte
       const alertHtml = `
-        <div style="background-color: var(--warning-color); color: white; padding: 8px; border-radius: 4px; margin-bottom: 10px; font-size: 0.8em; display: flex; align-items: center;">
+        <div style="background-color: var(--warning-color); color: white; padding: 8px; border-radius: 4px; margin: 10px; font-size: 0.8em; display: flex; align-items: center;">
           <ha-icon icon="mdi:alert" style="margin-right: 8px;"></ha-icon>
-          De nouvelles phrases Assist ont été détectées et installées.
-          Redémarrez une fois de plus pour les activer et avoir accèa aux nouvelles commandes vocales/textuelles.
+          ${i18n.rebootRequired}
         </div>
       `;
       // Injecter ce HTML dans ta carte
@@ -127,10 +166,10 @@ class RecalboxCard extends HTMLElement {
     if (isOn) {
       this.actions.style.display = "flex";
       this.actions.innerHTML = `
-        <div class="action-button" id="btn-power-off"><ha-icon icon="mdi:power"></ha-icon>Turn Off</div>
-        <div class="action-button" id="btn-reboot"><ha-icon icon="mdi:restart"></ha-icon>Reboot</div>
-        <div class="action-button" id="btn-snap" ` + (isAGameRunning ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:camera"></ha-icon>Screenshot</div>
-        <div class="action-button" id="btn-stop" ` + (isAGameRunning ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:location-exit"></ha-icon>Stop</div>
+        <div class="action-button" id="btn-power-off"><ha-icon icon="mdi:power"></ha-icon>${i18n.buttons.shutdown}</div>
+        <div class="action-button" id="btn-reboot"><ha-icon icon="mdi:restart"></ha-icon>${i18n.buttons.reboot}</div>
+        <div class="action-button" id="btn-snap" ` + (isAGameRunning ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:camera"></ha-icon>${i18n.buttons.screenshot}</div>
+        <div class="action-button" id="btn-stop" ` + (isAGameRunning ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:location-exit"></ha-icon>${i18n.buttons.stop}</div>
       `;
       this.actions.querySelector('#btn-power-off').onclick = () => hass.callService('button', 'press', { entity_id: shutdownBtn });
       this.actions.querySelector('#btn-reboot').onclick = () => hass.callService('button', 'press', { entity_id: rebootBtn });
@@ -149,7 +188,7 @@ class RecalboxCard extends HTMLElement {
 
     this.footer.innerHTML = `
       <div>
-        Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, sur ${hardware}` : ''}
+        Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, ${i18n.footer.onHardware} ${hardware}` : ''}
         <br>
         <a href="http://${host}:81" target="_blank">Web manager Recalbox</a> |
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> |

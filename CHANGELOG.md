@@ -2,6 +2,18 @@
 
 > By Aurélien Tomassini, 2026.
 
+
+## v1.0.1 - 25/01/2026
+
+- Add a coordinator, which pings the Recalbox every 1min, to check if it is still ON
+- Add HACS integration button in the Github page
+- Improve logs
+- Internationalisation FR/EN of the Dashboard card
+- Set "Recalbox" notification channel on automation example
+- Remove screenshot button when Kodi is running
+
+
+
 ## v1.0.0 - 25/01/2026 - First stable version
 
 - Add a quit current game button, when a game is running
