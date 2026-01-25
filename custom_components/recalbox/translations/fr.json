@@ -1,1 +1,25 @@
-{}
+{
+  "intent_response": {
+    "game_status_playing": {
+      "default": "Tu joues à {game}, sur {console}. (FR)"
+    },
+    "game_status_none": {
+      "default": "La Recalbox est allumée, mais aucun jeu n'est lancé. (FR)"
+    },
+    "screenshot_success": {
+      "default": "La capture d'écran a été faite ! (FR)"
+    },
+    "screenshot_fail": {
+      "default": "La capture d'écran a échoué. (FR)"
+    },
+    "recalbox_not_found": {
+      "default": "La Recalbox n'a pas été trouvée. (FR)"
+    },
+    "recalbox_offline": {
+      "default": [
+        "La Recalbox est éteinte. (FR)",
+        "La Recalbox semble être hors ligne. (FR)"
+      ]
+    }
+  }
+}
