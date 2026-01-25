@@ -27,7 +27,7 @@ async def prepare_ping_coordinator(hass, api) -> DataUpdateCoordinator:
         """Vérifie si la Recalbox répond toujours sur son API."""
         try:
             async with async_timeout.timeout(5):
-                return api.ping()
+                return await api.ping()
         except Exception as err:
             # Si échec de connexion, on considère qu'elle est OFF
             return False
