@@ -34,7 +34,7 @@ class RecalboxActionHandler(intent.IntentHandler):
         entry_id = list(instances.keys())[0]
         api = instances[entry_id]["api"]
         await api.send_udp_command(self._port, self._command)
-        translator = hass.data[DOMAIN]["translator"]
+        translator = intent_obj.hass.data[DOMAIN]["translator"]
 
         response = intent_obj.create_response()
         response.async_set_speech(translator.translate(self._responseKey, lang=intent_obj.language))
