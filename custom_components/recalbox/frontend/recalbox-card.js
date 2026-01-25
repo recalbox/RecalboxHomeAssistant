@@ -9,8 +9,11 @@ const TRANSLATIONS = {
     "buttons": {
       "shutdown": "Éteindre",
       "reboot": "Redémarrer",
-      "screenshot": "Capture d'écran",
-      "stop": "Quitter le jeu"
+      "screenshot": "Capture",
+      "stop": "Stop"
+    },
+    "footer": {
+        "onHardware": "sur"
     }
   },
   "en": {
@@ -23,7 +26,10 @@ const TRANSLATIONS = {
       "shutdown": "Shutdown",
       "reboot": "Reboot",
       "screenshot": "Screenshot",
-      "stop": "Quit Game"
+      "stop": "Stop"
+    },
+    "footer": {
+        "onHardware": "on"
     }
   }
 };
@@ -182,7 +188,7 @@ class RecalboxCard extends HTMLElement {
 
     this.footer.innerHTML = `
       <div>
-        Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, sur ${hardware}` : ''}
+        Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, ${i18n.footer.onHardware} ${hardware}` : ''}
         <br>
         <a href="http://${host}:81" target="_blank">Web manager Recalbox</a> |
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> |
