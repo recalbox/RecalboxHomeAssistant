@@ -92,8 +92,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
         return {
             "identifiers": {(DOMAIN, self._config_entry.entry_id)},
             "name": f"Recalbox ({self._ip})",
-            "manufacturer": "Aurelien Tomassini",
-            "model": "Recalbox Integration",
+            "manufacturer": "Aurélien Tomassini for Recalbox",
+            "model": "Recalbox OS Integration",
             "configuration_url": f"http://{self._ip}",
             "sw_version": self._attr_extra_state_attributes.get("recalboxVersion", "-"),
             "hw_version": self._attr_extra_state_attributes.get("hardware", "-"),
@@ -120,9 +120,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
     #################################
 
     # Dans binary_sensor.py, classe RecalboxEntityMQTT
-    async def force_status_off(self):
-        _LOGGER.debug("Forcing Recalbox status OFF")
-        """Force l'état à OFF sans attendre MQTT."""
+    async def _force_status_off(self):
+        _LOGGER.debug("Forcing Recalbox status OFF (sans attendre MQTT)")
         self._attr_is_on = False
         self.async_write_ha_state()
 
@@ -137,7 +136,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
         _LOGGER.debug("Shut down Recalbox via API")
         if await self._api.post_api("/api/system/shutdown", port=80) :
             await asyncio.sleep(5)
-            await self.force_status_off()
+            await self._force_status_off()
             return True
         else:
             return False
@@ -147,7 +146,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
         _LOGGER.debug("Reboot Recalbox via API")
         if await self._api.post_api("/api/system/reboot", port=80) :
             await asyncio.sleep(5)
-            await self.force_status_off()
+            await self._force_status_off()
             return True
         else:
             return False

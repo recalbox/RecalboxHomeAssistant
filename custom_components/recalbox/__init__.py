@@ -15,6 +15,7 @@ import shutil
 import logging
 import hashlib
 
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -96,8 +97,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 # Tools : installer les custom_sentences
 
-_LOGGER = logging.getLogger(__name__)
-
 
 
 def get_file_hash(filename):
@@ -132,12 +131,14 @@ async def async_install_sentences(hass: HomeAssistant) -> bool :
             if os.path.isdir(source_lang_path):
                 dest_lang_path = os.path.join(dest_root, lang_dir)
                 os.makedirs(dest_lang_path, exist_ok=True)
+                _LOGGER.debug("Comparing folders %s and %s ...", source_lang_path, dest_lang_path)
 
                 # On copie chaque fichier YAML
                 for file_name in os.listdir(source_lang_path):
                     if file_name.endswith(".yaml"):
                         source_file = os.path.join(source_lang_path, file_name)
                         dest_file = os.path.join(dest_lang_path, file_name)
+                        _LOGGER.debug("Check if should copy %s to %s ...", source_file, dest_file)
 
                         # LOGIQUE PAR HASH
                         source_hash = get_file_hash(source_file)
@@ -145,12 +146,15 @@ async def async_install_sentences(hass: HomeAssistant) -> bool :
 
                         # Si le fichier destination n'existe pas ou si le contenu diffère
                         if source_hash != dest_hash:
+                            _LOGGER.debug("Hashes are different")
                             try:
                                 shutil.copy2(source_file, dest_file)
-                                _LOGGER.info("Mise à jour phrase Assist : %s/%s", lang_dir, file_name)
+                                _LOGGER.info("Mise à jour phrase Assist : %s", dest_file)
                                 changes_made = True
                             except Exception as e:
-                                _LOGGER.error("Erreur copie sentence %s: %s", file_name, e)
+                                _LOGGER.error("Failed to copy file to %s: %s", dest_file, e)
+                        else:
+                            _LOGGER.debug("Hashes are equals, no need to copy again this file.")
         return changes_made
     except Exception as e:
         _LOGGER.error("Erreur lors de l'installation des phrases Assist : %s", e)

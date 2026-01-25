@@ -3,6 +3,9 @@ import unicodedata
 import re
 import homeassistant.helpers.config_validation as cv
 from .const import DOMAIN
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_intents(hass):
     """Enregistre les handlers d'intentions seulement s'ils n'existent pas."""

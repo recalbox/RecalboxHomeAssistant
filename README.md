@@ -115,25 +115,39 @@ It uses the same services just listed.
      
    - Install Recalbox Integration
    
-     - Install HACS
+     - If not installed yet, install HACS
      
      - Install this repository via this button :  
        [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=tototo23&repository=RecalboxHomeAssistant&category=integration)  
        Or manually, add `https://github.com/tototo23/RecalboxHomeAssistant` as repository, as Integration.
        Press download, and then accept to restart.
-       It will automatically add Recalbox to your Home Assistant, with device creation
-       (new "Recalbox" Integration will be available after restart), the custom_sentences recognition for assist, and a custom dashboard card.
-       A second reboot could be necessary, depending on what's shown on dashboard custom card.
+       It will automatically add Recalbox integration to your Home Assistant
+       (new "Recalbox" Integration will be available after restart in the Devices & Service menu).
+      
+     - Go to Devices & Services menu, "+ add integration", and search for "Recalbox".
+       Add the IP of your Recalbox, or let the default "recalbox.local".
+       
+       > A second reboot could be necessary, depending on what's shown on dashboard custom card,
+       > to apply the newly installed custom_sentences for Assist.
+
+      
 
 
 ## Usage 
 
 ### Dashboard card
 
-You can add a card to your Home Assistant dashboard, in order to display the Recalbox status, game info, picture, etc.  
-It will be refreshed in real time.  
-Simply add to your dashboard a `"type: custom:recalbox-card"` with your Recalbox entity :
-`entity: binary_sensor.recalbox_recalbox_local` (or similar)  
+You can add a Recalbox card to your Home Assistant dashboard, in order to display the Recalbox status, game info, picture, etc.  
+It will be refreshed in real time.
+
+Go to your dashboard in edit mode, "+ add card", scroll down to Custom Cards : "Recalbox Card".
+Fill the yaml :
+```yaml
+type: custom:recalbox-card
+entity: binary_sensor.recalbox_recalbox_local
+```
+And you will get this (in French or English, depending on your user language)
+
 ![](docs/example.png)
 
 

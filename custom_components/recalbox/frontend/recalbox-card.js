@@ -13,7 +13,9 @@ const TRANSLATIONS = {
       "stop": "Stop"
     },
     "footer": {
-        "onHardware": "sur"
+        "onHardware": "sur",
+        "webManagerLabel": "Web manager Recalbox",
+        "integrationLabel": "GitHub de l'intégration"
     }
   },
   "en": {
@@ -29,7 +31,9 @@ const TRANSLATIONS = {
       "stop": "Stop"
     },
     "footer": {
-        "onHardware": "on"
+        "onHardware": "on",
+        "webManagerLabel": "Recalbox web manager",
+        "integrationLabel": "GitHub integration"
     }
   }
 };
@@ -190,9 +194,9 @@ class RecalboxCard extends HTMLElement {
       <div>
         Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, ${i18n.footer.onHardware} ${hardware}` : ''}
         <br>
-        <a href="http://${host}:81" target="_blank">Web manager Recalbox</a> |
-        <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> |
-        <a href="https://github.com/tototo23/RecalboxHomeAssistant" target="_blank">GitHub intégration</a>
+        <a href="http://${host}:81" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
+        <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
+        <a href="https://github.com/tototo23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a>
       </div>
     `;
   }
@@ -207,9 +211,14 @@ class RecalboxCard extends HTMLElement {
 
 customElements.define('recalbox-card', RecalboxCard);
 
+const isFrench = navigator.language.startsWith('fr');
+const cardDescription = isFrench
+  ? "Carte complète avec gestion des jeux, actions et informations système."
+  : "Complete card with game management, actions, and system information.";
+
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: "recalbox-card",
   name: "Recalbox Card",
-  description: "Carte complète avec gestion des jeux, actions et informations système."
+  description: cardDescription
 });
