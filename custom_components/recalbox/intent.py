@@ -67,25 +67,25 @@ class RecalboxStatusHandler(intent.IntentHandler):
         entry_id = list(instances.keys())[0]
         recalboxEntity = instances[entry_id].get("sensor_entity")
         recalbox = hass.states.get(recalboxEntity.entity_id)
-
-        response = intent_obj.create_response()
+        translator = hass.data[DOMAIN]["translator"]
 
         if not recalbox:
-            response.async_set_speech("La Recalbox n'a pas été trouvée (DEFAULT).", "recalbox_not_found")
+            text = translator.translate("recalbox_not_found")
         elif recalbox.state == "off":
-            response.async_set_speech("La Recalbox est éteinte (DEFAULT).", "recalbox_offline")
+            text = translator.translate("recalbox_offline")
         else:
             game = recalbox.attributes.get("game", "-")
             if game is not None and game != "None" and game != "-" :
                 console = recalbox.attributes.get("console", "")
-                response.async_set_speech(
-                    f"Tu joues à {game}, sur {console} (DEFAULT).",
+                text = translator.translate(
                     "game_status_playing",
                     {"game": game, "console": console}
                 )
             else:
-                response.async_set_speech("Aucun jeu lancé (DEFAULT).", "game_status_none")
+                text = translator.translate("game_status_none")
 
+        response = intent_obj.create_response()
+        response.async_set_speech(text)
         return response
 
 

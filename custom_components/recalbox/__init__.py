@@ -9,6 +9,7 @@ from .const import DOMAIN
 from .api import RecalboxAPI
 from .intent import async_setup_intents # Pour charger les phrases Assist
 from .frontend import JSModuleRegistration
+from .translations import RecalboxTranslator
 import os
 import shutil
 import logging
@@ -19,6 +20,10 @@ import hashlib
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {"instances": {}, "global": {}})
     host = entry.data.get("host")
+
+    # Traducteur : accessible partout
+    translator = RecalboxTranslator(hass, DOMAIN)
+    hass.data[DOMAIN]["translator"] = translator
 
     # On stocke l'API pour que button.py puisse la récupérer
     hass.data.setdefault(DOMAIN, {})
