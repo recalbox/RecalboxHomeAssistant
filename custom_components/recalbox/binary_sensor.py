@@ -1,22 +1,55 @@
 from homeassistant.components.mqtt import async_subscribe
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from .const import DOMAIN
 import unicodedata
 import re
 import homeassistant.helpers.config_validation as cv
 import json
 import asyncio
+import logging
+import async_timeout
+from datetime import timedelta
+
+_LOGGER = logging.getLogger(__name__)
+
+
+
+async def prepare_ping_coordinator(api) -> DataUpdateCoordinator:
+    # 1. On définit le coordinateur pour le "Ping"
+    async def async_update_data():
+        """Vérifie si la Recalbox répond toujours sur son API."""
+        try:
+            async with async_timeout.timeout(5):
+                return api.ping()
+        except Exception as err:
+            # Si échec de connexion, on considère qu'elle est OFF
+            return False
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name="Recalbox Availability",
+        update_method=async_update_data,
+        update_interval=timedelta(seconds=60), # Fréquence du check (ex: 30s)
+    )
+
+    # On lance le premier rafraîchissement
+    await coordinator.async_config_entry_first_refresh()
+    return coordinator
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Configuration des entités Recalbox à partir de la config entry."""
     api = hass.data[DOMAIN]["instances"][config_entry.entry_id]["api"]
+    coordinator = await prepare_ping_coordinator(api)
     # On crée l'entité en lui passant l'objet config_entry (qui contient l'IP)
-    new_entity = RecalboxEntityMQTT(hass, config_entry, api)
+    new_entity = RecalboxEntityMQTT(hass, config_entry, api, coordinator)
     hass.data[DOMAIN]["instances"][config_entry.entry_id]["sensor_entity"] = new_entity # pour la retrouver ailleurs plus facilement
     async_add_entities([new_entity])
 
 class RecalboxEntityMQTT(BinarySensorEntity):
-    def __init__(self, hass, config_entry, api):
+    def __init__(self, hass, config_entry, api, coordinator):
+        super().__init__(coordinator)
         self.hass = hass # On récupère l'IP stockée dans la config
         self._config_entry = config_entry
         self._ip = config_entry.data.get("host")
@@ -33,6 +66,13 @@ class RecalboxEntityMQTT(BinarySensorEntity):
         self.genre = "-"
         self.genreId = "-"
         self.imageUrl = "-"
+
+    @property
+    def is_on(self) -> bool:
+        """L'entité est ON si MQTT dit ON ET que le dernier ping a réussi."""
+        if not self.coordinator.data:
+            return False
+        return self._attr_is_on
 
     # Dans binary_sensor.py
     @property
@@ -64,6 +104,7 @@ class RecalboxEntityMQTT(BinarySensorEntity):
 
     async def async_added_to_hass(self):
         """Appelé quand l'entité est ajoutée à HA."""
+        await super().async_added_to_hass()
 
         async def message_received(msg):
             """Logique lors de la réception d'un message MQTT."""
@@ -168,17 +209,28 @@ class RecalboxEntityMQTT(BinarySensorEntity):
 
 
     async def request_quit_current_game(self) -> bool :
-        print("Quit current game via UDP")
+        _LOGGER.debug("Quit current game via UDP")
         return await self._api.send_udp_command(55355, "QUIT")
 
 
     async def request_pause_game(self) -> bool :
-        print("(Un)Pause current game via UDP")
+        _LOGGER.debug("(Un)Pause current game via UDP")
         return await self._api.send_udp_command(55355, "PAUSE_TOGGLE")
+
+
+    async def ping_recalbox(self) -> bool :
+        _LOGGER.debug("Ping recalbox")
+        try:
+            async with async_timeout.timeout(5):
+                return await self._api.ping()
+        except Exception as err:
+            return False
+
 
 
     # Renvoie le texte pour Assist
     async def search_and_launch_game_by_name(self, console, game_query) -> str :
+        _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
         # Récupérer la liste des roms via l'API (HTTP GET)
         roms = await self._api.get_roms(console)
         if not roms:
@@ -203,7 +255,14 @@ class RecalboxEntityMQTT(BinarySensorEntity):
                 break
 
         if target:
-            await self._api.send_udp_command(1337, f"START|{console}|{target['path']}")
-            return f"Le jeu {target['name']} a bien été trouvé. Lancement sur {console} !"
+            _LOGGER.debug(f"Game found, with name {target['name']}, on system {console}. Try to launch via UDP command...")
+            try:
+                await self._api.send_udp_command(1337, f"START|{console}|{target['path']}")
+                _LOGGER.debug(f"Game launched !")
+                return f"Le jeu {target['name']} a bien été trouvé. Lancement sur {console} !"
+            except Exception as err:
+                _LOGGER.error(f"Failed to launch game {target['name']} on {console} : {err}")
+                return False
         else:
+            _LOGGER.info(f"No game matching {game_query} on {console} !")
             return f"Le jeu {game_query} n'a pas été trouvé sur {console}."
