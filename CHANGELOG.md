@@ -15,6 +15,7 @@
   in order to not ask to reboot if the sentences have no real change
 - Improve french custom sentences for intents (more natural)
 - Improve dashboard layout and texts
+- Remove buttons entities, now using services to avoid Recalbox instance confusion
 
 
 ## v1.1.0 - 25/01/2026

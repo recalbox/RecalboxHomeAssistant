@@ -52,11 +52,6 @@ class RecalboxCard extends HTMLElement {
       return;
     }
 
-    const shutdownBtn = this.config.shutdown_button || `button.recalbox_shutdown`;
-    const rebootBtn = this.config.reboot_button || `button.recalbox_reboot`;
-    const screenshotBtn = this.config.screenshot_button || `button.recalbox_screenshot`;
-    const stopBtn = this.config.quit_button || `button.recalbox_stop`;
-
     if (!this.content) {
       this.innerHTML = `
         <div id="title"></div>
@@ -120,7 +115,6 @@ class RecalboxCard extends HTMLElement {
         <div class="info-row">
           <ha-icon icon="mdi:gamepad-variant-outline"></ha-icon>
           <div class="info-text"><div>${this.config.title || "Recalbox"}</div><div class="info-value">${i18n.subtitle}</div></div>
-          <span class="status-badge ${isOn ? 'status-on' : ''}">${state.state.toUpperCase()}</span>
           <ha-switch
             ${isOn ? '' : 'disabled'}
             ${isOn ? 'checked' : ''}
@@ -178,10 +172,10 @@ class RecalboxCard extends HTMLElement {
         <div class="action-button" id="btn-snap" ` + (isAGameRunning ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:camera"></ha-icon>${i18n.buttons.screenshot}</div>
         <div class="action-button" id="btn-stop" ` + (isAGameRunning ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:location-exit"></ha-icon>${i18n.buttons.stop}</div>
       `;
-      this.actions.querySelector('#btn-power-off').onclick = () => hass.callService('button', 'press', { entity_id: shutdownBtn });
-      this.actions.querySelector('#btn-reboot').onclick = () => hass.callService('button', 'press', { entity_id: rebootBtn });
-      this.actions.querySelector('#btn-snap').onclick = () => hass.callService('button', 'press', { entity_id: screenshotBtn });
-      this.actions.querySelector('#btn-stop').onclick = () => hass.callService('button', 'press', { entity_id: stopBtn });
+      this.actions.querySelector('#btn-power-off').onclick = () => hass.callService('recalbox', 'shutdown', { entity_id: entityId });
+      this.actions.querySelector('#btn-reboot').onclick = () => hass.callService('recalbox', 'reboot', { entity_id: entityId });
+      this.actions.querySelector('#btn-snap').onclick = () => hass.callService('recalbox', 'screenshot', { entity_id: entityId });
+      this.actions.querySelector('#btn-stop').onclick = () => hass.callService('recalbox', 'quit_game', { entity_id: entityId });
     } else {
       this.actions.style.display = "none";
     }
