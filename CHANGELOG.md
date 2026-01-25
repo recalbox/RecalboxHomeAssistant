@@ -2,6 +2,12 @@
 
 > By Aurélien Tomassini, 2026.
 
+## v1.0.1 - Work in progress...
+
+- ...
+
+
+
 ## v1.0.0 - 25/01/2026 - First stable version
 
 - Add a quit current game button, when a game is running
