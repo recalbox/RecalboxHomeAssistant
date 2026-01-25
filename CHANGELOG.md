@@ -4,7 +4,9 @@
 
 ## v1.0.1 - Work in progress...
 
-- ...
+- Add a coordinator, which pings the Recalbox every 1min, to check if it is still ON
+- Add HACS integration button in the Github page
+- Improve logs
 
 
 

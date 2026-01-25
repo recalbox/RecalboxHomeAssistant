@@ -41,3 +41,14 @@ class RecalboxAPI:
                         return data.get("roms", [])
             except: return []
 
+
+    async def ping(self) -> bool:
+        """Exécute un ping système vers l'hôte."""
+        command = f"ping -c 1 -W 1 {self.host} > /dev/null 2>&1"
+
+        # On exécute la commande système de façon asynchrone
+        process = await asyncio.create_subprocess_shell(command)
+        await process.wait()
+
+        # Si le code de retour est 0, l'hôte a répondu
+        return process.returncode == 0

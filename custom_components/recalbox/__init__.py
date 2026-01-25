@@ -26,7 +26,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "api": RecalboxAPI(host)
     }
 
-    # On enregistre les phrases Assist (S'assurer que ce n'est fait qu'une fois)
+    # On enregistre les phrases Assist
     if "intents_registered" not in hass.data[DOMAIN]:
         await async_setup_intents(hass)
         hass.data[DOMAIN]["intents_registered"] = True
@@ -47,7 +47,8 @@ async def async_register_frontend(hass: HomeAssistant) -> None:
     await module_register.async_register()
 
 
-async def async_setup(hass: HomeAssistant, config: dict) -> bool:# 1. INITIALISER le dictionnaire pour éviter le KeyError
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    # 1. INITIALISER le dictionnaire pour éviter le KeyError
     hass.data.setdefault(DOMAIN, {
         "instances": {}, # Contiendra les entry_id (dictionnaires)
         "global": {}     # Contiendra les flags (booléens)
