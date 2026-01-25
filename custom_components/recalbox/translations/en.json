@@ -1,42 +1,42 @@
 {
   "intent_response": {
     "game_status_playing": [
-      "You are playing {game} on {console}. (EN)"
+      "You are playing {game} on {console}."
     ],
     "game_status_none": [
-      "The Recalbox is on, but no game is currently running. (EN)"
+      "The Recalbox is on, but no game is currently running."
     ],
     "recalbox_not_found": [
-      "The Recalbox could not be found. (EN)"
+      "The Recalbox could not be found."
     ],
     "recalbox_offline": [
-      "The Recalbox is powered off. (EN)",
-      "The Recalbox seems to be offline. (EN)"
+      "The Recalbox is powered off.",
+      "The Recalbox seems to be offline."
     ],
     "screenshot_success": [
-      "Screenshot taken and saved in the Recalbox screenshots folder! (EN)"
+      "Screenshot taken and saved in the Recalbox screenshots folder!"
     ],
     "screenshot_fail": [
-      "The screenshot could not be taken. (EN)"
+      "The screenshot could not be taken."
     ],
     "quit_game_requested": [
-      "Returning to the menu (EN)"
+      "Returning to the menu"
     ],
     "pause_game_requested": [
-      "Pause requested (EN)"
+      "Pause requested"
     ],
     "no_game_on_system": [
-      "No games found on the {console}. (EN)",
-      "Unfortunately, no games were found on the {console}. (EN)"
+      "No games found on the {console}.",
+      "Unfortunately, no games were found on the {console}."
     ],
     "game_not_found_on_console": [
-      "The game {game} was not found on the {console}. (EN)"
+      "The game {game} was not found on the {console}."
     ],
     "game_launched_error": [
-      "The game {game} was found on the {console}, but the launch command failed. (EN)"
+      "The game {game} was found on the {console}, but the launch command failed."
     ],
     "game_launched_success": [
-      "The game {game} was found. Launching on the {console}! (EN)"
+      "The game {game} was found. Launching on the {console}!"
     ]
   }
 }

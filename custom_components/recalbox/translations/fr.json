@@ -1,33 +1,33 @@
 {
   "intent_response": {
     "game_status_playing": [
-      "Tu joues à {game}, sur {console}. (FR)"
+      "Tu joues à {game}, sur {console}."
     ],
     "game_status_none": [
-      "La Recalbox est allumée, mais aucun jeu n'est lancé. (FR)"
+      "La Recalbox est allumée, mais aucun jeu n'est lancé."
     ],
     "recalbox_not_found": [
-      "La Recalbox n'a pas été trouvée. (FR)"
+      "La Recalbox n'a pas été trouvée."
     ],
     "recalbox_offline": [
-      "La Recalbox est éteinte. (FR)",
-      "La Recalbox semble être hors ligne. (FR)"
+      "La Recalbox est éteinte.",
+      "La Recalbox semble être hors ligne."
     ],
     "screenshot_success": [
-      "La capture d'écran a été faite, et stockée dans le dossier screenshots de Recalbox ! (FR)"
+      "La capture d'écran a été faite, et stockée dans le dossier screenshots de Recalbox !"
     ],
     "screenshot_fail": [
-      "La capture d'écran n'a pas pu être effectuée. (FR)"
+      "La capture d'écran n'a pas pu être effectuée."
     ],
     "quit_game_requested": [
-      "Retour au menu (FR)"
+      "Retour au menu"
     ],
     "pause_game_requested": [
-      "Pause demandée (FR)"
+      "Pause demandée"
     ],
     "no_game_on_system": [
-      "Aucun jeu trouvé sur la console {console}. (FR)",
-      "Malheureusement, aucun jeu n'a été trouvé sur {console}. (FR)"
+      "Aucun jeu trouvé sur la console {console}.",
+      "Malheureusement, aucun jeu n'a été trouvé sur {console}."
     ],
     "game_not_found_on_console": [
       "Le jeu {game} n'a pas été trouvé sur {console}."
@@ -36,7 +36,7 @@
       "Le jeu {game} a bien été trouvé sur {console}, mais la commande de lancement a échoué."
     ],
     "game_launched_success": [
-      "Le jeu {game} a bien été trouvé. Lancement sur {console} ! (FR)"
+      "Le jeu {game} a bien été trouvé. Lancement sur {console} !"
     ]
   }
 }
