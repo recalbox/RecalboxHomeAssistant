@@ -30,4 +30,7 @@
         {%- if trigger.to_state.attributes.genre %} ({{ trigger.to_state.attributes.genre
         }}){% endif %}.'
         title: Jeu sur Recalbox
+        data:
+          # for Android only
+          channel: Recalbox
   mode: single
