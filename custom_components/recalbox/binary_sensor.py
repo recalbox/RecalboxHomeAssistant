@@ -1,6 +1,7 @@
 from homeassistant.components.mqtt import async_subscribe
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed, CoordinatorEntity
+from homeassistant.helpers import device_registry as dr
 from .const import DOMAIN
 import unicodedata
 import re
@@ -14,6 +15,11 @@ from datetime import timedelta
 _LOGGER = logging.getLogger(__name__)
 
 
+############################################
+# Coordinateur                             #
+# Pour vérifier toutes les 60 sec          #
+# Si la Recalbox est encore ON par un ping #
+############################################
 
 async def prepare_ping_coordinator(hass, api) -> DataUpdateCoordinator:
     # 1. On définit le coordinateur pour le "Ping"
@@ -38,6 +44,9 @@ async def prepare_ping_coordinator(hass, api) -> DataUpdateCoordinator:
     await coordinator.async_config_entry_first_refresh()
     return coordinator
 
+
+
+
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Configuration des entités Recalbox à partir de la config entry."""
     api = hass.data[DOMAIN]["instances"][config_entry.entry_id]["api"]
@@ -47,7 +56,10 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     hass.data[DOMAIN]["instances"][config_entry.entry_id]["sensor_entity"] = new_entity # pour la retrouver ailleurs plus facilement
     async_add_entities([new_entity])
 
-class RecalboxEntityMQTT(BinarySensorEntity):
+
+
+
+class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
     def __init__(self, hass, config_entry, api, coordinator):
         super().__init__(coordinator)
         self.hass = hass # On récupère l'IP stockée dans la config
@@ -102,69 +114,10 @@ class RecalboxEntityMQTT(BinarySensorEntity):
             "needs_restart": global_data.get("needs_restart", False)
         }
 
-    async def async_added_to_hass(self):
-        """Appelé quand l'entité est ajoutée à HA."""
-        await super().async_added_to_hass()
 
-        async def message_received(msg):
-            """Logique lors de la réception d'un message MQTT."""
-            topic = msg.topic
-            payload = msg.payload
-
-            # 1. Gestion du Status (ON/OFF)
-            if topic == "recalbox/notifications/status":
-                print('Updating recalbox status')
-                self._attr_is_on = (payload == "ON")
-
-            # 2. Gestion des infos du Jeu (JSON)
-            elif topic == "recalbox/notifications/game":
-                print('Updating recalbox current game')
-                try:
-                    data = json.loads(payload)
-
-                    # 1. Mise à jour des attributs internes
-                    v_sw = data.get("recalboxVersion")
-                    v_hw = data.get("hardware")
-
-                    self._attr_extra_state_attributes.update({
-                        "hardware": v_hw,
-                        "recalboxVersion": v_sw
-                    })
-
-                    self.game = data.get("game", "-")
-                    self.console = data.get("console", "-")
-                    self.genre = data.get("genre", "-")
-                    self.genreId = data.get("genreId", "-")
-                    self.rom = data.get("rom", "-")
-                    self.imageUrl = data.get("imageUrl", "-")
-
-
-                    print('Updating device version/hardware')
-                    # On signale à HA que les infos du device ont pu changer
-                    from homeassistant.helpers import device_registry as dr
-                    device_registry = dr.async_get(self.hass)
-                    device = device_registry.async_get_device(
-                        identifiers={(DOMAIN, self._config_entry.entry_id)}
-                    )
-                    if device:
-                        device_registry.async_update_device(
-                            device.id,
-                            sw_version=v_sw,
-                            hw_version=v_hw
-                        )
-
-                except json.JSONDecodeError:
-                    pass
-
-            # Notifier HA du changement
-            self.async_write_ha_state()
-
-        # Abonnement au topic
-        await async_subscribe(self.hass, "recalbox/notifications/status", message_received)
-        await async_subscribe(self.hass, "recalbox/notifications/game", message_received)
-        print("Abonnement à recalbox/notifications/status et recalbox/notifications/game")
-
-
+    #################################
+    #             ACTIONS           #
+    #################################
 
     # Dans binary_sensor.py, classe RecalboxEntityMQTT
     async def force_status_off(self):
@@ -232,7 +185,6 @@ class RecalboxEntityMQTT(BinarySensorEntity):
             return False
 
 
-
     # Renvoie le texte pour Assist
     async def search_and_launch_game_by_name(self, console, game_query) -> str :
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
@@ -271,3 +223,74 @@ class RecalboxEntityMQTT(BinarySensorEntity):
         else:
             _LOGGER.info(f"No game matching {game_query} on {console} !")
             return f"Le jeu {game_query} n'a pas été trouvé sur {console}."
+
+
+    ##########################
+    #       Ecoute MQTT      #
+    ##########################
+
+    # Callback, une fois ajouté à HASS
+    # on souscrit aux files MQTT
+    # pour mettre à jour la Recalbox selon
+    # les messages reçus
+    async def async_added_to_hass(self):
+        """Appelé quand l'entité est ajoutée à HA."""
+        await super().async_added_to_hass()
+
+        async def message_received(msg):
+            """Logique lors de la réception d'un message MQTT."""
+            topic = msg.topic
+            payload = msg.payload
+
+            # 1. Gestion du Status (ON/OFF)
+            if topic == "recalbox/notifications/status":
+                print('Updating recalbox status')
+                self._attr_is_on = (payload == "ON")
+
+            # 2. Gestion des infos du Jeu (JSON)
+            elif topic == "recalbox/notifications/game":
+                print('Updating recalbox current game')
+                try:
+                    data = json.loads(payload)
+
+                    # 1. Mise à jour des attributs internes
+                    v_sw = data.get("recalboxVersion")
+                    v_hw = data.get("hardware")
+
+                    self._attr_extra_state_attributes.update({
+                        "hardware": v_hw,
+                        "recalboxVersion": v_sw
+                    })
+
+                    self.game = data.get("game", "-")
+                    self.console = data.get("console", "-")
+                    self.genre = data.get("genre", "-")
+                    self.genreId = data.get("genreId", "-")
+                    self.rom = data.get("rom", "-")
+                    self.imageUrl = data.get("imageUrl", "-")
+
+
+                    print('Updating device version/hardware')
+                    # On signale à HA que les infos du device ont pu changer
+                    device_registry = dr.async_get(self.hass)
+                    device = device_registry.async_get_device(
+                        identifiers={(DOMAIN, self._config_entry.entry_id)}
+                    )
+                    if device:
+                        device_registry.async_update_device(
+                            device.id,
+                            sw_version=v_sw,
+                            hw_version=v_hw
+                        )
+
+                except json.JSONDecodeError:
+                    pass
+
+            # Notifier HA du changement
+            self.async_write_ha_state()
+
+        # Abonnement au topic
+        await async_subscribe(self.hass, "recalbox/notifications/status", message_received)
+        await async_subscribe(self.hass, "recalbox/notifications/game", message_received)
+        print("Abonnement à recalbox/notifications/status et recalbox/notifications/game")
+
