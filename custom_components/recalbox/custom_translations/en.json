@@ -22,8 +22,14 @@
     "quit_game_requested": [
       "Returning to the menu"
     ],
+    "quit_game_failed": [
+      "Menu request failed."
+    ],
     "pause_game_requested": [
-      "Pause requested"
+      "Pause/Resume requested"
+    ],
+    "pause_game_failed": [
+      "Cannot request pause/resume."
     ],
     "no_game_on_system": [
       "No games found on the {console}.",

@@ -7,7 +7,7 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-def async_setup_intents(hass):
+async def async_setup_intents(hass):
     """Enregistre les handlers d'intentions seulement s'ils n'existent pas."""
 
     if "intents_registered" in hass.data[DOMAIN]:
