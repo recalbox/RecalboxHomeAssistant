@@ -3,10 +3,9 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v1.2.3 - 
+## v1.2.3 - 26/01/2026
 
-
-- ...
+- Update docs and code, because I changed my Github username to `ooree23`.
 
 
 

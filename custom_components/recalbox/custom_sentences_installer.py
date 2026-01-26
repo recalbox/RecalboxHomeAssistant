@@ -5,7 +5,7 @@ import hashlib
 from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 
-# by Aurélien Tomassini - tototo23
+# by Aurélien Tomassini - ooree23
 # Tools : installer les custom_sentences
 
 

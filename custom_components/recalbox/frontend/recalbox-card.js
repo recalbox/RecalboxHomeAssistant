@@ -193,7 +193,7 @@ class RecalboxCard extends HTMLElement {
         <br>
         <a href="http://${host}:81" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
-        <a href="https://github.com/tototo23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a>
+        <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a>
       </div>
     `;
   }
