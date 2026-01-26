@@ -133,7 +133,7 @@ class RecalboxCard extends HTMLElement {
     if (needsRestart) {
       // On insère un petit bandeau d'alerte en haut de la carte
       const alertHtml = `
-        <div style="background-color: var(--secondary-background-color); color: white; padding: 12px; border-radius: 4px; margin: 10px; font-size: 0.8em; display: flex; align-items: center;">
+        <div style="background-color: var(--secondary-background-color); color: white; padding: 12px; border-radius: 6px; border: solid 1px grey; margin: 10px; font-size: 0.8em; display: flex; align-items: center;">
           <ha-icon icon="mdi:alert" style="margin-right: 16px;"></ha-icon>
           ${i18n.rebootRequired}
         </div>

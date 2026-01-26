@@ -13,6 +13,7 @@
 - Improve code and logs on assist sentences and intents registration
 - For Voice/Text assis, now looks for the Recalbox that are ON, instead of using the 1st one by default.
   Preparing also commands to specify a Recalbox target by name.
+- Improve french pausing/resuming sentences
 
 
 
