@@ -41,7 +41,9 @@ This repository allows you to integrate Recalbox in your Home Assistant :
     + [Get current game](#get-current-game)
     + [Launch a game](#launch-a-game)
     + [Stop the current game](#stop-the-current-game)
+    + [Pause/Resume the current game](#pauseresume-the-current-game)
     + [Take a screenshot](#take-a-screenshot)
+    + [Turn OFF recalbox](#turn-off-recalbox)
 - [Releases notes](#releases-notes)
 
 <!-- tocstop -->
