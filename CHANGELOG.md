@@ -3,12 +3,12 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v2.0.0 - ...
+## v2.0.0 - 26/01/2026 Breaking change
 
-> This versions changes the entity from binary sensor to switch.
+> This versions changes the entity from `binary sensor` to `switch`.
 > If you installed the previous version, you will need to remove the
-> binary sensor entity, and use the switch in your dashboard, and
-> automations.
+> existing binary sensor entity, and use the `switch` in your dashboard
+> entity field, and your automations.
 
 - Transforms the binary sensor to a switch entity
 - Improve custom_sentences update check algorithm, 
@@ -16,6 +16,9 @@
 - Improve french custom sentences for intents (more natural)
 - Improve dashboard layout and texts
 - Remove buttons entities, now using services to avoid Recalbox instance confusion
+- User can change the card title with `title` card attribute
+- The Recalbox name (inside card) is now friendly name, or entity name, or "Recalbox".
+  It allows to know which name should be said to Assist to trun off the switch
 
 
 ## v1.1.0 - 25/01/2026

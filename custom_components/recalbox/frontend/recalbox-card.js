@@ -59,10 +59,10 @@ class RecalboxCard extends HTMLElement {
           <style>
             .card-header { padding: 24px 16px 16px; margin-block-start: 0px; margin-block-end: 0px; font-weight: var(--ha-font-weight-normal); font-family: var(--ha-card-header-font-family, inherit); font-size: var(--ha-card-header-font-size, var(--ha-font-size-2xl)); line-height: var(--ha-line-height-condensed); }
 
-            .recalbox-card-content { padding: 16px; }
+            .recalbox-card-content { padding: 16px 20px; }
             .recalbox-card-content hr { margin: 12px 0; border: 0; border-top: 1px solid var(--divider-color); margin: 8px 0; }
             .info-row { display: flex; align-items: center; padding: 8px 0; }
-            .info-row ha-icon { color: var(--state-icon-color); margin-right: 20px; margin-left: 4px; }
+            .info-row ha-icon { color: var(--state-icon-color); margin-right: 24px; margin-left: 4px; }
             .info-text { flex-grow: 1; }
             .info-value { color: var(--secondary-text-color); font-size: 0.9em; }
             .one-line { display: flex; flex-direction: row-reverse; gap: 20px; justify-content: space-between; vertical-align: middle; margin: 6px 0; }
@@ -94,6 +94,7 @@ class RecalboxCard extends HTMLElement {
       this.footer = this.querySelector('#markdown-footer');
     }
 
+    const recalboxName = state.attributes.friendly_name || state.attributes.entity_name || "Recalbox";
     const isOn = state.state === "on";
     const game = state.attributes.game || "-";
     const consoleName = state.attributes.console || "-";
@@ -105,7 +106,7 @@ class RecalboxCard extends HTMLElement {
     // 0. titre
     this.card_title.innerHTML = `
       <h1 class="card-header">
-        Recalbox
+        ${this.config.title || "Recalbox"}
       </h1>
     `
 
@@ -114,11 +115,11 @@ class RecalboxCard extends HTMLElement {
       <div class="recalbox-card-content">
         <div class="info-row">
           <ha-icon icon="mdi:gamepad-variant-outline"></ha-icon>
-          <div class="info-text"><div>${this.config.title || "Recalbox"}</div><div class="info-value">${i18n.subtitle}</div></div>
+          <div class="info-text"><div>${recalboxName}</div><div class="info-value">${i18n.subtitle}</div></div>
           <ha-switch
             ${isOn ? '' : 'disabled'}
             ${isOn ? 'checked' : ''}
-            @click="${(e) => this._handleSwitch(e, state)}"
+            style="pointer-events: none;"
           ></ha-switch>
         </div>
         ${isOn ? `
@@ -198,17 +199,6 @@ class RecalboxCard extends HTMLElement {
     `;
   }
 
-  _handleSwitch(ev, state) {
-      // Empêche le switch de basculer visuellement si on veut gérer l'action nous-même
-      ev.stopPropagation();
-
-      if (state.state === 'on') {
-          // Appelle le service d'extinction
-          this._hass.callService('switch', 'turn_off', {
-              entity_id: state.entity_id
-          });
-      }
-  }
 
   setConfig(config) {
     if (!config.entity) throw new Error("Entité manquante");

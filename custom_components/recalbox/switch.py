@@ -114,7 +114,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
             "genreId": self.genreId,
             "rom": self.rom,
             "imageUrl": self.imageUrl,
-            "needs_restart": global_data.get("needs_restart", False)
+            "needs_restart": global_data.get("needs_restart", False),
+            "entity_name": self._attr_name,
         }
 
     async def async_turn_off(self, **kwargs):
