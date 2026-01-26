@@ -2,6 +2,7 @@ from homeassistant.components.mqtt import async_subscribe
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed, CoordinatorEntity
 from homeassistant.helpers import device_registry as dr
+from homeassistant.exceptions import HomeAssistantError
 from .const import DOMAIN
 import unicodedata
 import re
@@ -126,7 +127,9 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
 
     async def async_turn_on(self, **kwargs):
-        _LOGGER.error("L'allumage de la Recalbox n'est pas supporté à distance.")
+        translator = self.hass.data[DOMAIN]["translator"]
+        power_off_not_implemented_message = translator.translate("errors.power_off_not_implemented_message")
+        raise HomeAssistantError(power_off_not_implemented_message)
 
 
     #################################
@@ -137,12 +140,6 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         _LOGGER.debug("Forcing Recalbox status OFF (sans attendre MQTT)")
         self._attr_is_on = False
         self.async_write_ha_state()
-
-
-    # Exemple : Action appelée par un service ou un bouton
-    async def request_turn_on(self, **kwargs) -> bool:
-        """Appelé quand on clique sur ON dans l'interface."""
-        return await self.send_udp_command("POWER_ON")
 
 
     async def request_shutdown(self) -> bool:

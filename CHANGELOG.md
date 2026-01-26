@@ -6,8 +6,8 @@
 ## v1.2.1 - ...
 
 
-- ...
 - In the dashboard card, remove the interactive switch, to a simple power state icon
+- Add an exception when trying to turn on Recalbox remotely (only turn off is supported)
 
 
 
