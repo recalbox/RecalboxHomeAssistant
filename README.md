@@ -144,7 +144,7 @@ Go to your dashboard in edit mode, "+ add card", scroll down to Custom Cards : "
 Fill the yaml :
 ```yaml
 type: custom:recalbox-card
-entity: binary_sensor.recalbox_recalbox_local
+entity: switch.recalbox_recalbox_local
 ```
 And you will get this (in French or English, depending on your user language)
 

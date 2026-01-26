@@ -38,13 +38,47 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN]["intents_registered"] = True
 
     # On ajoute "button" à la liste des plateformes
-    await hass.config_entries.async_forward_entry_setups(entry, ["binary_sensor", "button"])
+    await hass.config_entries.async_forward_entry_setups(entry, ["switch"])
+
+
+
+    # services appelés par le JS
+
+    async def handle_shutdown(call):
+        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        if recalbox_entity: await recalbox_entity.request_shutdown()
+    async def handle_reboot(call):
+        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        if recalbox_entity: await recalbox_entity.request_reboot()
+    async def handle_screenshot(call):
+        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        if recalbox_entity: await recalbox_entity.request_screenshot()
+    async def handle_quit_game(call):
+        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        if recalbox_entity: await recalbox_entity.request_quit_current_game()
+    async def handle_launch_game(call):
+        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        game = call.data.get("game")
+        console = call.data.get("console")
+        if recalbox_entity:
+            await recalbox_entity.search_and_launch_game_by_name(console, game)
+
+    # Enregistrement du service recalbox.screen
+    hass.services.async_register(DOMAIN, "shutdown", handle_shutdown)
+    hass.services.async_register(DOMAIN, "reboot", handle_reboot)
+    hass.services.async_register(DOMAIN, "screenshot", handle_screenshot)
+    hass.services.async_register(DOMAIN, "quit_game", handle_quit_game)
+    hass.services.async_register(DOMAIN, "launch_game", handle_launch_game)
 
     return True
 
 
-
-
+def findRecalboxEntity(hass: HomeAssistant, entity_id: str):
+    for instance in hass.data[DOMAIN]["instances"].values():
+        entity = instance.get("sensor_entity")
+        if entity and entity.entity_id == entity_id:
+            return entity
+    return None
 
 
 async def async_register_frontend(hass: HomeAssistant) -> None:

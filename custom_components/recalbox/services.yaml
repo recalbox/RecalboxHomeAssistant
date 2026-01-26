@@ -1,0 +1,69 @@
+shutdown:
+  name: "Éteindre la Recalbox"
+  description: "Envoie une commande d'arrêt propre à la Recalbox via l'API."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
+      required: true
+      example: "1234abcd5678efgh"
+      selector:
+        text:
+
+reboot:
+  name: "Redémarrer la Recalbox"
+  description: "Redémarre le système Recalbox."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
+      required: true
+      selector:
+        text:
+
+screenshot:
+  name: "Prendre une capture d'écran"
+  description: "Prend une capture d'écran de ce qui est affiché sur la Recalbox."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
+      required: true
+      selector:
+        text:
+
+quit_game:
+  name: "Quitter le jeu"
+  description: "Ferme le jeu en cours et retourne à l'interface EmulationStation."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
+      required: true
+      selector:
+        text:
+
+launch_game:
+  name: "Lancer un jeu"
+  description: "Recherche et lance un jeu sur la Recalbox par son nom et sa console, puis le lance."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox."
+      required: true
+      selector:
+        text:
+    game:
+      name: "Nom du jeu"
+      description: "Le nom du jeu à rechercher (ex: Super Mario World)."
+      required: true
+      example: "Super Mario World"
+      selector:
+        text:
+    console:
+      name: "Console"
+      description: "Le nom du système (ex: snes, megadrive, psx)."
+      required: true
+      example: "snes"
+      selector:
+        text:

@@ -1,5 +1,5 @@
 from homeassistant.components.mqtt import async_subscribe
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.switch import SwitchEntity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed, CoordinatorEntity
 from homeassistant.helpers import device_registry as dr
 from .const import DOMAIN
@@ -59,7 +59,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 
 
-class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
+class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     def __init__(self, hass, config_entry, api, coordinator):
         super().__init__(coordinator)
         self.hass = hass # On récupère l'IP stockée dans la config
@@ -79,6 +79,10 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
         self.genreId = "-"
         self.imageUrl = "-"
 
+    #@property
+    #def icon(self):
+    #    return "mdi:controller" if self.is_on else "mdi:controller-off"
+
     @property
     def is_on(self) -> bool:
         """L'entité est ON si MQTT dit ON ET que le dernier ping a réussi."""
@@ -86,7 +90,6 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
             return False
         return self._attr_is_on
 
-    # Dans binary_sensor.py
     @property
     def device_info(self):
         return {
@@ -111,15 +114,25 @@ class RecalboxEntityMQTT(CoordinatorEntity, BinarySensorEntity):
             "genreId": self.genreId,
             "rom": self.rom,
             "imageUrl": self.imageUrl,
-            "needs_restart": global_data.get("needs_restart", False)
+            "needs_restart": global_data.get("needs_restart", False),
+            "entity_name": self._attr_name,
         }
+
+    async def async_turn_off(self, **kwargs):
+        """Action déclenchée par l'intent d'extinction ou le bouton de l'UI."""
+        _LOGGER.info("Extinction de la Recalbox via le Switch")
+        await self.request_shutdown()
+        self.async_write_ha_state()
+
+
+    async def async_turn_on(self, **kwargs):
+        _LOGGER.error("L'allumage de la Recalbox n'est pas supporté à distance.")
 
 
     #################################
     #             ACTIONS           #
     #################################
 
-    # Dans binary_sensor.py, classe RecalboxEntityMQTT
     async def _force_status_off(self):
         _LOGGER.debug("Forcing Recalbox status OFF (sans attendre MQTT)")
         self._attr_is_on = False

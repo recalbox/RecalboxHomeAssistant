@@ -7,7 +7,7 @@
   triggers:
     - trigger: state
       entity_id:
-        - binary_sensor.recalbox_recalbox_local
+        - switch.recalbox_recalbox_local
       attribute: game
   conditions:
     - condition: template
