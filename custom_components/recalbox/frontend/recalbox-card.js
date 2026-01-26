@@ -116,11 +116,10 @@ class RecalboxCard extends HTMLElement {
         <div class="info-row">
           <ha-icon icon="mdi:gamepad-variant-outline"></ha-icon>
           <div class="info-text"><div>${recalboxName}</div><div class="info-value">${i18n.subtitle}</div></div>
-          <ha-switch
-            ${isOn ? '' : 'disabled'}
-            ${isOn ? 'checked' : ''}
-            style="pointer-events: none;"
-          ></ha-switch>
+          <ha-icon
+            icon="mdi:power"
+            style="color: ${isOn ? 'var(--state-icon-color)' : 'var(--state-unavailable-color)'}; margin: 0;">
+          </ha-icon>
         </div>
         ${isOn ? `
           <hr/>

@@ -7,6 +7,7 @@
 
 
 - ...
+- In the dashboard card, remove the interactive switch, to a simple power state icon
 
 
 
