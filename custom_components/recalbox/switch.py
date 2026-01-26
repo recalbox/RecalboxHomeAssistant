@@ -11,40 +11,12 @@ import homeassistant.helpers.config_validation as cv
 import json
 import asyncio
 import logging
-import async_timeout
-from datetime import timedelta
+from collections import deque
+from .recalbox_offline_watcher import prepare_ping_coordinator
 
 _LOGGER = logging.getLogger(__name__)
 
 
-############################################
-# Coordinateur                             #
-# Pour vérifier toutes les 60 sec          #
-# Si la Recalbox est encore ON par un ping #
-############################################
-
-async def prepare_ping_coordinator(hass, api) -> DataUpdateCoordinator:
-    # 1. On définit le coordinateur pour le "Ping"
-    async def async_update_data():
-        """Vérifie si la Recalbox répond toujours sur son API."""
-        try:
-            async with async_timeout.timeout(5):
-                return await api.ping()
-        except Exception as err:
-            # Si échec de connexion, on considère qu'elle est OFF
-            return False
-
-    coordinator = DataUpdateCoordinator(
-        hass,
-        _LOGGER,
-        name="Recalbox Availability",
-        update_method=async_update_data,
-        update_interval=timedelta(seconds=30), # Fréquence du check (ici: 30s)
-    )
-
-    # On lance le premier rafraîchissement
-    await coordinator.async_config_entry_first_refresh()
-    return coordinator
 
 
 
@@ -128,6 +100,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
 
     async def async_turn_on(self, **kwargs):
+        _LOGGER.info("Allumage de la Recalbox via le Switch -> impossible")
         translator:RecalboxTranslator = self.hass.data[DOMAIN]["translator"]
         power_off_not_implemented_message = translator.translate("errors.power_off_not_implemented_message")
         raise HomeAssistantError(power_off_not_implemented_message)
@@ -140,6 +113,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     async def _force_status_off(self):
         _LOGGER.debug("Forcing Recalbox status OFF (sans attendre MQTT)")
         self._attr_is_on = False
+        self.reset_game_attributes()
         self.async_write_ha_state()
 
 
@@ -186,15 +160,6 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         return await self._api.send_udp_command(55355, "PAUSE_TOGGLE")
 
 
-    async def ping_recalbox(self) -> bool :
-        _LOGGER.debug("Ping recalbox")
-        try:
-            async with async_timeout.timeout(5):
-                return await self._api.ping()
-        except Exception as err:
-            return False
-
-
     # Renvoie le texte pour Assist
     async def search_and_launch_game_by_name(self, console, game_query, lang=None) -> str :
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
@@ -212,6 +177,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
             return translator.translate("intent_response.list_roms_failed", lang=lang)
 
 
+        # enlève les accents, et passe en minuscles
         def normalize_str(s):
             if not s: return ""
             # Supprime les accents et met en minuscule
@@ -256,6 +222,15 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
             )
 
 
+    def reset_game_attributes(self):
+        self.game = "-"
+        self.console = "-"
+        self.genre = "-"
+        self.genreId = "-"
+        self.rom = "-"
+        self.imageUrl = "-"
+        _LOGGER.debug("Recalbox game attributes cleaned")
+
     ##########################
     #       Ecoute MQTT      #
     ##########################
@@ -275,12 +250,14 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
             # 1. Gestion du Status (ON/OFF)
             if topic == "recalbox/notifications/status":
-                print('Updating recalbox status')
+                _LOGGER.debug(f"MQTT status message received ! Updating recalbox status to : {payload}")
                 self._attr_is_on = (payload == "ON")
+                if not self._attr_is_on:
+                    self.reset_game_attributes()
 
             # 2. Gestion des infos du Jeu (JSON)
             elif topic == "recalbox/notifications/game":
-                print('Updating recalbox current game')
+                _LOGGER.debug(f"MQTT game message received ! Updating data with JSON : {payload}")
                 try:
                     data = json.loads(payload)
 
@@ -301,7 +278,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                     self.imageUrl = data.get("imageUrl", "-")
 
 
-                    print('Updating device version/hardware')
+                    _LOGGER.debug('Updating device version/hardware')
                     # On signale à HA que les infos du device ont pu changer
                     device_registry = dr.async_get(self.hass)
                     device = device_registry.async_get_device(
@@ -323,5 +300,5 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         # Abonnement au topic
         await async_subscribe(self.hass, "recalbox/notifications/status", message_received)
         await async_subscribe(self.hass, "recalbox/notifications/game", message_received)
-        print("Abonnement à recalbox/notifications/status et recalbox/notifications/game")
+        _LOGGER.info("Subscribed to MQTT topics recalbox/notifications/status and recalbox/notifications/game")
 
