@@ -21,6 +21,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border: 1px solid #d0d7de;
+            max-width: calc(100% - 4rem);
         }
         h1 { color: #24292f; }
         a {
@@ -31,11 +32,15 @@
         a > h1 {
             margin-bottom: 2px;
         }
+        a > .logo {
+            margin: auto;
+            display: block;
+        }
         a > p {
             margin-top: 2px;
             margin-bottom: 40px;
         }
-        a.button {
+        a.github-button {
             display: inline-block;
             margin: 16px auto;
             padding: 10px 20px;
@@ -44,7 +49,7 @@
             border-radius: 6px;
             font-weight: bold;
         }
-        a.button:hover { background-color: #2c974b; }
+        a.github-button:hover { background-color: #2c974b; }
         .description, ul {
             max-width: 350px;
             text-align: left;
@@ -52,8 +57,9 @@
         ul > li {
             margin-top: 10px;
         }
-        .preview, img {
+        .preview, .preview > img {
             max-width: 380px;
+            width: min(100%, 380px);
             display: block;
             background-color: none;
         }
@@ -62,8 +68,9 @@
             margin-bottom: 12px;
         }
         .hacs-button {
-            margin: 16px;
             text-align: -webkit-center;
+            display: block;
+            margin-top: 16px;
         }
     </style>
 </head>
@@ -73,7 +80,7 @@
         <a href="https://github.com/ooree23/RecalboxHomeAssistant">
             <h1>Recalbox Home Assistant</h1>
             <p class="small-text">by Aurélien Tomassini, 2026</p>
-            <img src="logo.png" height="96px">
+            <img class="logo" src="logo.png" height="96px">
         </a>
         <p class="description">This repository allows you to integrate Recalbox in your Home Assistant :</p>
         <ul>
@@ -110,7 +117,7 @@
         <a class="hacs-button" href="https://my.home-assistant.io/redirect/hacs_repository/?owner=ooree23&amp;repository=RecalboxHomeAssistant&amp;category=integration" rel="nofollow">
             <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store." style="max-width: 100%;">
         </a>
-        <a class="button" href="https://github.com/ooree23/RecalboxHomeAssistant">
+        <a class="github-button" href="https://github.com/ooree23/RecalboxHomeAssistant">
             View documentation and sources on GitHub
         </a>
     </div>
