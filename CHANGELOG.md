@@ -9,6 +9,9 @@
   So it will be available to display in the entity, or to use in scripts / automations.
 - Add IP Address/Host as a Diagnostic entity, to be more visible in the device page
 - Improve device infos box
+- [#2](https://github.com/ooree23/RecalboxHomeAssistant/issues/2) :
+  Add settings to let the user choose different ports for API and UDP, if he configured different ones on Recalbox.
+  User can change later the host and ports of the device, it will update the entities.
 
 
 

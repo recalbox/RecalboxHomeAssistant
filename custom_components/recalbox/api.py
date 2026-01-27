@@ -6,8 +6,18 @@ import logging
 _LOGGER = logging.getLogger(__name__)
 
 class RecalboxAPI:
-    def __init__(self, host):
+    def __init__(self,
+                 host: str = "recalbox.local",
+                 api_port_os: int = 80,
+                 api_port_emulstation: int = 81,
+                 udp_recalbox: int = 1337,
+                 udp_emulstation: int = 55355
+                 ):
         self.host = host
+        self.api_port_os = api_port_os
+        self.api_port_emulstation = api_port_emulstation
+        self.udp_recalbox = udp_recalbox
+        self.udp_emulstation = udp_emulstation
 
     async def send_udp_command(self, port, message):
         _LOGGER.debug(f"Envoi UDP {port}: {message}")
@@ -38,8 +48,8 @@ class RecalboxAPI:
                 raise
 
 
-    async def get_roms(self, console):
-        url = f"http://{self.host}:81/api/systems/{console}/roms"
+    async def get_roms(self, console, port=81):
+        url = f"http://{self.host}:{port}/api/systems/{console}/roms"
         _LOGGER.debug(f"API GET roms from {url}")
         async with aiohttp.ClientSession() as session:
             try:

@@ -5,6 +5,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.exceptions import HomeAssistantError
 from .const import DOMAIN
 from .translations_service import RecalboxTranslator
+from .api import RecalboxAPI
 import unicodedata
 import re
 import homeassistant.helpers.config_validation as cv
@@ -34,14 +35,13 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 
 class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
-    def __init__(self, hass, config_entry, api, coordinator):
+    def __init__(self, hass, config_entry, api:RecalboxAPI, coordinator):
         super().__init__(coordinator)
         self.hass = hass # On récupère l'IP stockée dans la config
         self._config_entry = config_entry
-        self._ip = config_entry.data.get("host")
         self._api = api
         self._attr_unique_id = f"{config_entry.entry_id}_status"
-        self._attr_name = f"Recalbox {self._ip}"
+        self._attr_name = f"Recalbox {self._api.host}"
         self._attr_icon = "mdi:gamepad-variant-outline"
         self._attr_is_on = False
         self._attr_extra_state_attributes = {}
@@ -68,10 +68,10 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._config_entry.entry_id)},
-            "name": f"Recalbox ({self._ip})",
+            "name": f"Recalbox ({self._api.host})",
             "manufacturer": "Recalbox",
-            "model": f"Recalbox OS, at {self._ip}",
-            "configuration_url": f"http://{self._ip}",
+            "model": f"Recalbox OS, at {self._api.host}",
+            "configuration_url": f"http://{self._api.host}",
             "sw_version": self._attr_extra_state_attributes.get("recalboxVersion", "-"),
             "hw_version": self._attr_extra_state_attributes.get("hardware", "-")
         }
@@ -82,7 +82,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         global_data = self.hass.data.get(DOMAIN, {}).get("global", {})
         return {
             **self._attr_extra_state_attributes, # Les persistants (version, hw)
-            "ip_address": self._ip,
+            "ip_address": self._api.host,
             "game": self.game,
             "console": self.console,
             "genre": self.genre,
@@ -120,7 +120,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_shutdown(self) -> bool:
         _LOGGER.debug("Shut down Recalbox via API")
-        if await self._api.post_api("/api/system/shutdown", port=80) :
+        port_api = self._api.api_port_os
+        if await self._api.post_api("/api/system/shutdown", port=port_api) :
             await asyncio.sleep(5)
             await self._force_status_off()
             return True
@@ -130,7 +131,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_reboot(self) -> bool :
         _LOGGER.debug("Reboot Recalbox via API")
-        if await self._api.post_api("/api/system/reboot", port=80) :
+        port_api = self._api.api_port_os
+        if await self._api.post_api("/api/system/reboot", port=port_api) :
             await asyncio.sleep(5)
             await self._force_status_off()
             return True
@@ -140,12 +142,14 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_screenshot(self) -> bool :
         _LOGGER.debug("Screenshot UDP, puis API si échec")
+        port_api = self._api.api_port_emulstation
+        port_udp = self._api.udp_emulstation
         # 1. Test UDP
-        success = await self._api.send_udp_command(55355, "SCREENSHOT")
+        success = await self._api.send_udp_command(port_udp, "SCREENSHOT")
         # 2. Fallback API
         if not success:
-            _LOGGER.warning("Screenshot UDP command not sent on port 55355. Please check your Recalbox is has this port running. Will now try a screenshot via API...")
-            return await self._api.post_api("/api/media/takescreenshot", port=81)
+            _LOGGER.warning(f"Screenshot UDP command not sent on port {port_udp}. Please check your Recalbox is has this port running. Will now try a screenshot via API...")
+            return await self._api.post_api("/api/media/takescreenshot", port=port_api)
         else:
             _LOGGER.debug("Screenshot UDP command sent successfully to Recalbox")
             return True
@@ -153,21 +157,25 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_quit_current_game(self) -> bool :
         _LOGGER.debug("Quit current game via UDP")
-        return await self._api.send_udp_command(55355, "QUIT")
+        port_udp = self._api.udp_emulstation
+        return await self._api.send_udp_command(port_udp, "QUIT")
 
 
     async def request_pause_game(self) -> bool :
         _LOGGER.debug("(Un)Pause current game via UDP")
-        return await self._api.send_udp_command(55355, "PAUSE_TOGGLE")
+        port_udp = self._api.udp_emulstation
+        return await self._api.send_udp_command(port_udp, "PAUSE_TOGGLE")
 
 
     # Renvoie le texte pour Assist
     async def search_and_launch_game_by_name(self, console, game_query, lang=None) -> str :
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
         translator:RecalboxTranslator = self.hass.data[DOMAIN]["translator"]
+        port_api = self._api.api_port_emulstation
+        port_udp = self._api.udp_recalbox
         # Récupérer la liste des roms via l'API (HTTP GET)
         try:
-            roms = await self._api.get_roms(console)
+            roms = await self._api.get_roms(console, port_api)
             if not roms:
                 return translator.translate(
                     "intent_response.no_game_on_system",
@@ -200,7 +208,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         if target:
             _LOGGER.debug(f"Game found, with name {target['name']}, on system {console}. Try to launch via UDP command...")
             try:
-                await self._api.send_udp_command(1337, f"START|{console}|{target['path']}")
+                await self._api.send_udp_command(port_udp, f"START|{console}|{target['path']}")
                 _LOGGER.debug(f"Game launched !")
                 return translator.translate(
                     "intent_response.game_launched_success",
