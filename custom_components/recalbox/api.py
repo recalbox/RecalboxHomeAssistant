@@ -7,7 +7,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class RecalboxAPI:
     def __init__(self,
-                 host: str,
+                 host: str = "recalbox.local",
                  api_port_os: int = 80,
                  api_port_emulstation: int = 81,
                  udp_recalbox: int = 1337,

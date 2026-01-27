@@ -5,6 +5,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.exceptions import HomeAssistantError
 from .const import DOMAIN
 from .translations_service import RecalboxTranslator
+from .api import RecalboxAPI
 import unicodedata
 import re
 import homeassistant.helpers.config_validation as cv
@@ -34,14 +35,13 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 
 class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
-    def __init__(self, hass, config_entry, api, coordinator):
+    def __init__(self, hass, config_entry, api:RecalboxAPI, coordinator):
         super().__init__(coordinator)
         self.hass = hass # On récupère l'IP stockée dans la config
         self._config_entry = config_entry
-        self._ip = config_entry.data.get("host")
         self._api = api
         self._attr_unique_id = f"{config_entry.entry_id}_status"
-        self._attr_name = f"Recalbox {self._ip}"
+        self._attr_name = f"Recalbox {self._api.host}"
         self._attr_icon = "mdi:gamepad-variant-outline"
         self._attr_is_on = False
         self._attr_extra_state_attributes = {}
@@ -68,10 +68,10 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self._config_entry.entry_id)},
-            "name": f"Recalbox ({self._ip})",
+            "name": f"Recalbox ({self._api.host})",
             "manufacturer": "Recalbox",
-            "model": f"Recalbox OS, at {self._ip}",
-            "configuration_url": f"http://{self._ip}",
+            "model": f"Recalbox OS, at {self._api.host}",
+            "configuration_url": f"http://{self._api.host}",
             "sw_version": self._attr_extra_state_attributes.get("recalboxVersion", "-"),
             "hw_version": self._attr_extra_state_attributes.get("hardware", "-")
         }
@@ -82,7 +82,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         global_data = self.hass.data.get(DOMAIN, {}).get("global", {})
         return {
             **self._attr_extra_state_attributes, # Les persistants (version, hw)
-            "ip_address": self._ip,
+            "ip_address": self._api.host,
             "game": self.game,
             "console": self.console,
             "genre": self.genre,
@@ -120,7 +120,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_shutdown(self) -> bool:
         _LOGGER.debug("Shut down Recalbox via API")
-        port_api = self._config_entry.options.get("api_port_os", 80)
+        port_api = self._api.api_port_os
         if await self._api.post_api("/api/system/shutdown", port=port_api) :
             await asyncio.sleep(5)
             await self._force_status_off()
@@ -131,7 +131,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_reboot(self) -> bool :
         _LOGGER.debug("Reboot Recalbox via API")
-        port_api = self._config_entry.options.get("api_port_os", 80)
+        port_api = self._api.api_port_os
         if await self._api.post_api("/api/system/reboot", port=port_api) :
             await asyncio.sleep(5)
             await self._force_status_off()
