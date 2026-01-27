@@ -120,7 +120,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_shutdown(self) -> bool:
         _LOGGER.debug("Shut down Recalbox via API")
-        port_api = self._config_entry.options.get("api_port_1", 80)
+        port_api = self._config_entry.options.get("api_port_os", 80)
         if await self._api.post_api("/api/system/shutdown", port=port_api) :
             await asyncio.sleep(5)
             await self._force_status_off()
@@ -131,7 +131,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_reboot(self) -> bool :
         _LOGGER.debug("Reboot Recalbox via API")
-        port_api = self._config_entry.options.get("api_port_1", 80)
+        port_api = self._config_entry.options.get("api_port_os", 80)
         if await self._api.post_api("/api/system/reboot", port=port_api) :
             await asyncio.sleep(5)
             await self._force_status_off()
@@ -142,7 +142,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
     async def request_screenshot(self) -> bool :
         _LOGGER.debug("Screenshot UDP, puis API si échec")
-        port_api = self._config_entry.options.get("api_port_2", 81)
+        port_api = self._config_entry.options.get("api_port_emulstation", 81)
         port_udp = self._config_entry.options.get("udp_emulstation", 55355)
         # 1. Test UDP
         success = await self._api.send_udp_command(port_udp, "SCREENSHOT")
@@ -171,7 +171,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     async def search_and_launch_game_by_name(self, console, game_query, lang=None) -> str :
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
         translator:RecalboxTranslator = self.hass.data[DOMAIN]["translator"]
-        port_api = self._config_entry.options.get("api_port_2", 81)
+        port_api = self._config_entry.options.get("api_port_emulstation", 81)
         port_udp = self._config_entry.options.get("udp_recalbox", 1337)
         # Récupérer la liste des roms via l'API (HTTP GET)
         try:

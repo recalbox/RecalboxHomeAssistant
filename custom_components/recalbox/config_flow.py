@@ -7,8 +7,8 @@ from .const import DOMAIN
 # Schéma par défaut réutilisable
 DATA_SCHEMA = vol.Schema({
     vol.Required("host", default="recalbox.local"): str,
-    vol.Required("api_port_1", default=80): int,
-    vol.Required("api_port_2", default=81): int,
+    vol.Required("api_port_os", default=80): int,
+    vol.Required("api_port_emulstation", default=81): int,
     vol.Required("udp_recalbox", default=1337): int,
     vol.Required("udp_emulstation", default=55355): int,
 })
@@ -51,8 +51,8 @@ class RecalboxOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="init",
             data_schema=vol.Schema({
                 vol.Required("host", default=current_config.get("host")): str,
-                vol.Required("api_port_1", default=current_config.get("api_port_1", 80)): int,
-                vol.Required("api_port_2", default=current_config.get("api_port_2", 81)): int,
+                vol.Required("api_port_os", default=current_config.get("api_port_os", 80)): int,
+                vol.Required("api_port_emulstation", default=current_config.get("api_port_emulstation", 81)): int,
                 vol.Required("udp_recalbox", default=current_config.get("udp_recalbox", 1337)): int,
                 vol.Required("udp_emulstation", default=current_config.get("udp_emulstation", 55355)): int,
             }),

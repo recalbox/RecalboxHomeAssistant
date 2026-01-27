@@ -23,15 +23,23 @@ PLATFORMS = ["switch", "sensor"]
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {"instances": {}, "global": {}})
-    host = entry.data.get("host")
-    hass.data.setdefault(DOMAIN, {})
+    # Fusionner data et options pour avoir les valeurs à jour
+    config = {**entry.data, **entry.options}
+    host = config.get("host")
+    hass.data.setdefault(DOMAIN, {"instances": {}, "global": {}})
 
     # Ajout du service de traductions : accessible partout (genre de singleton)
     hass.data[DOMAIN]["translator"] = RecalboxTranslator(hass, DOMAIN)
 
     # On stocke l'API pour que button.py puisse la récupérer
     hass.data[DOMAIN]["instances"][entry.entry_id] = {
-        "api": RecalboxAPI(host)
+        "api": RecalboxAPI(
+            host,
+            api_port_os=config.get("api_port_os"),
+            api_port_emulstation=config.get("api_port_emulstation"),
+            udp_recalbox=config.get("udp_recalbox"),
+            udp_emulstation=config.get("udp_emulstation")
+        )
     }
 
     # On enregistre les phrases Assist
@@ -47,6 +55,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.debug(f"Entry {entry.entry_id} setup complete")
     return True
 
+
+async def update_listener(hass: HomeAssistant, entry: ConfigEntry):
+    """Met à jour l'entrée si les options changent."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_register_frontend(hass: HomeAssistant) -> None:
