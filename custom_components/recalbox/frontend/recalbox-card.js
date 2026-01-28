@@ -47,6 +47,8 @@ class RecalboxCard extends HTMLElement {
     const lang = (hass.language || 'en').split('-')[0];
     const i18n = TRANSLATIONS[lang] || TRANSLATIONS['en'];
 
+    const showGameGenre = this.config.showGameGenre ?? true;
+    const showRestartRequiredSuggestion = this.config.showRestartRequiredSuggestion ?? true;
     const showTurnOffButton = this.config.showTurnOffButton ?? true;
     const showRebootButton = this.config.showRebootButton ?? true;
     const showScreenshotButton = this.config.showScreenshotButton ?? true;
@@ -130,12 +132,12 @@ class RecalboxCard extends HTMLElement {
           <hr/>
           <div class="info-row"><ha-icon icon="mdi:sony-playstation"></ha-icon><div class="info-text one-line"><div>${consoleName}</div><div class="info-value">${i18n.system}</div></div></div>
           <div class="info-row"><ha-icon icon="mdi:gamepad-variant-outline"></ha-icon><div class="info-text one-line"><div>${game}</div><div class="info-value">${i18n.game}</div></div></div>
-          <div class="info-row"><ha-icon icon="mdi:folder-outline"></ha-icon><div class="info-text one-line"><div>${genre}</div><div class="info-value">${i18n.genre}</div></div></div>
+          <div class="info-row" ` + (showGameGenre ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:folder-outline"></ha-icon><div class="info-text one-line"><div>${genre}</div><div class="info-value">${i18n.genre}</div></div></div>
         ` : ''}
       </div>
     `;
 
-    if (needsRestart) {
+    if (needsRestart && showRestartRequiredSuggestion) {
       // On insère un petit bandeau d'alerte en haut de la carte
       const alertHtml = `
         <div style="background-color: var(--secondary-background-color); color: white; padding: 12px; border-radius: 6px; border: solid 1px grey; margin: 10px; font-size: 0.8em; display: flex; align-items: center;">
@@ -214,6 +216,8 @@ class RecalboxCard extends HTMLElement {
       entity: "",
       title: "Recalbox",
       subtitle: "",
+      showGameGenre: true,
+      showRestartRequiredSuggestion: true,
       showTurnOffButton: true,
       showRebootButton: true,
       showScreenshotButton: true,
