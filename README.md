@@ -259,6 +259,7 @@ Examples :
 - "Save my game state on Recalbox"
 - "Enregistre la partie en cours"
 - "Enregistre mon jeu"
+- "Sauvegarde ma partie"
 
 
 #### Load last game state

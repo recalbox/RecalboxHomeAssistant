@@ -14,6 +14,7 @@
 - Ajout des fonctions de sauvegarde/chargement du dernier state
 - Exposition des services à Home Assistant
 - Ajout des intents par la voix/text pour Assist
+- Ajout des boutons pause, load state, et save state sur le dashboard (optionnel)
 
 
 ## v1.2.6 - 28/01/2026

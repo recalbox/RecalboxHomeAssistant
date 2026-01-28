@@ -35,8 +35,8 @@ intents:
   RecalboxSaveState:
     data:
       - sentences:
-          - "enregistre (le | mon) jeu [(actuel | en cours)] [sur [la] recalbox]"
-          - "enregistre (la | ma) partie [(actuelle | en cours)] [sur [la] recalbox]"
+          - "(enregistre | sauvegarde) (le | mon) jeu [(actuel | en cours)] [sur [la] recalbox]"
+          - "(enregistre | sauvegarde) (la | ma) partie [(actuelle | en cours)] [sur [la] recalbox]"
   RecalboxLoadState:
     data:
       - sentences:
