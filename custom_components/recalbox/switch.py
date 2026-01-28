@@ -167,6 +167,18 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         return await self._api.send_udp_command(port_udp, "PAUSE_TOGGLE")
 
 
+    async def request_save_state(self) -> bool :
+        _LOGGER.debug("Saving state game via UDP")
+        port_udp = self._api.udp_emulstation
+        return await self._api.send_udp_command(port_udp, "SAVE_STATE")
+
+
+    async def request_load_state(self) -> bool :
+        _LOGGER.debug("Loading state game via UDP")
+        port_udp = self._api.udp_emulstation
+        return await self._api.send_udp_command(port_udp, "LOAD_STATE")
+
+
     # Renvoie le texte pour Assist
     async def search_and_launch_game_by_name(self, console, game_query, lang=None) -> str :
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
