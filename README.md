@@ -8,9 +8,12 @@ This repository allows you to integrate Recalbox in your Home Assistant :
 - In your dashboard :
   - Get status
   - Display current game
+  - Stop current game
+  - Take a screenshot
+  - Pause/resume game
+  - Save/Load game state
   - Turn off
   - Reboot
-  - Take screenshots
   - etc
 - Trigger any automation you want.  
   For example, change light color according to the game launched, send notifications, etc.
@@ -19,6 +22,8 @@ This repository allows you to integrate Recalbox in your Home Assistant :
   - Ask what is the current game
   - Stop current game
   - Take a screenshot
+  - Pause/resume game
+  - Save/Load game state
   - Turn off Recalbox
   - etc
 
@@ -132,6 +137,8 @@ It uses the same services just listed.
      - Go to Devices & Services menu, "+ add integration", and search for "Recalbox".
        You will be asked for Host/IP of your Recalbox (you should let the default "recalbox.local"), and ports can be changed if needed.
        If you can, have your Recalbox ON, and then let the "Test connection" checkbox checked to test host and ports.
+       
+       ![](docs/RecalboxSettings.png)
        
        > A second reboot could be necessary, depending on what's shown on dashboard custom card,
        > to apply the newly installed custom_sentences for Assist.
