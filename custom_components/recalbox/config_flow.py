@@ -2,15 +2,18 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from .const import DOMAIN
+from .api import RecalboxAPI
 
 
 # Schéma par défaut réutilisable
-DATA_SCHEMA = vol.Schema({
+DATA_SCHEMA_CREATION = vol.Schema({
     vol.Required("host", default="recalbox.local"): str,
     vol.Required("api_port_os", default=80): int,
     vol.Required("api_port_gamesmanager", default=81): int,
     vol.Required("udp_recalbox", default=1337): int,
     vol.Required("udp_emulstation", default=55355): int,
+    vol.Required("udp_emulstation", default=55355): int,
+    vol.Required("test_connection", default=True): bool,
 })
 
 class RecalboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -21,15 +24,33 @@ class RecalboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Etape lancée quand l'utilisateur ajoute l'intégration."""
         errors = {}
         if user_input is not None:
-            # Ici tu pourrais ajouter un test de connexion à l'IP
-            return self.async_create_entry(title=f"Recalbox ({user_input['host']})", data=user_input)
+            if (user_input["test_connection"]):
+                # tester un ping sur cette IP/host??
+                api_temp = RecalboxAPI(
+                    host=user_input["host"],
+                    api_port_os=user_input["api_port_os"],
+                    api_port_gamesmanager=user_input["api_port_gamesmanager"],
+                    udp_recalbox=user_input["udp_recalbox"],
+                    udp_emulstation=user_input["udp_emulstation"]
+                )
+                is_valid = await api_temp.ping()
+            else:
+                is_valid = True
+
+            if is_valid:
+                user_input.pop("test_connection", None)
+                return self.async_create_entry(
+                    title=f"Recalbox ({user_input['host']})",
+                    data=user_input
+                )
+            else:
+                # Si on n'arrive pas à ping la recalbox, erreur
+                errors["base"] = "cannot_connect"
+
 
         return self.async_show_form(
             step_id="user",
-            data_schema=DATA_SCHEMA,
-            sections={
-                "advanced_settings": ("api_port_os", "api_port_gamesmanager", "udp_recalbox", "udp_emulstation")
-            },
+            data_schema=DATA_SCHEMA_CREATION,
             errors=errors,
         )
 
@@ -57,7 +78,4 @@ class RecalboxOptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Required("udp_recalbox", default=current_config.get("udp_recalbox", 1337)): int,
                 vol.Required("udp_emulstation", default=current_config.get("udp_emulstation", 55355)): int,
             }),
-            sections={
-                "advanced_settings": ("api_port_os", "api_port_gamesmanager", "udp_recalbox", "udp_emulstation")
-            },
         )

@@ -76,4 +76,4 @@ class RecalboxAPI:
             return process.returncode == 0
         except:
             _LOGGER.debug(f"Failed to PING {self.host}")
-            return False;
+            return False

@@ -8,9 +8,13 @@
           "api_port_os": "Port API Système (arrêt, redémarrage)",
           "api_port_gamesmanager": "Port API Jeux (liste de roms, captures)",
           "udp_recalbox": "Port UDP Recalbox",
-          "udp_emulstation": "Port UDP EmulationStation"
+          "udp_emulstation": "Port UDP EmulationStation",
+          "test_connection": "Tester la connexion"
         }
       }
+    },
+    "error": {
+      "cannot_connect": "Impossible de se connecter à la Recalbox que vous avez définie (échec du ping)."
     }
   },
   "options": {

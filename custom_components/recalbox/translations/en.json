@@ -8,9 +8,13 @@
           "api_port_os": "Web API Port for OS (shutdown, reboot)",
           "api_port_gamesmanager": "Web API Port for games (list roms, screenshot)",
           "udp_recalbox": "UDP Port for Recalbox",
-          "udp_emulstation": "UDP Port for EmulationStation"
+          "udp_emulstation": "UDP Port for EmulationStation",
+          "test_connection": "Test connection"
         }
       }
+    },
+    "error": {
+      "cannot_connect": "Connot reach the configured Recalbox (ping failed)."
     }
   },
   "options": {
