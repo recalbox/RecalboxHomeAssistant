@@ -3,7 +3,7 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v1.2.5 - ...
+## v1.2.5 - 28/01/2026
 
 
 - Rename `api_port_webmanager` configuration attribute
