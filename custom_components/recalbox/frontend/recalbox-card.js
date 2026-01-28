@@ -342,7 +342,12 @@ class RecalboxCardEditor extends HTMLElement {
   _getSchema() {
     return [
       { name: "title", selector: { text: {} } },
-      { name: "entity", required: true, selector: { entity: { domain: "switch" } } }, // https://www.home-assistant.io/docs/blueprint/selectors/#entity-selector
+      { name: "entity", required: true, selector: { 
+		entity: {
+			domain: "switch",
+			integration: "recalbox"
+		}
+	  }}, // https://www.home-assistant.io/docs/blueprint/selectors/#entity-selector
       { name: "subtitle", selector: { text: {} } },
       {
         type: "expandable",
