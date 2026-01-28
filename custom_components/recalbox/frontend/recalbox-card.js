@@ -192,7 +192,7 @@ class RecalboxCard extends HTMLElement {
       <div>
         Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, ${i18n.footer.onHardware} ${hardware}` : ''}
         <br>
-        <a href="http://${host}:{api_port_webmanager}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
+        <a href="http://${host}:${api_port_webmanager}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
         <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a>
       </div>
