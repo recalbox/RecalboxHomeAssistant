@@ -31,6 +31,7 @@ intents:
           - "(mets en pause | reprends) le jeu (actuel | en cours) [sur [la] recalbox]"
           - "(arrête la pause | enlève la pause) [(du | sur le) jeu] (actuel | en cours) [sur [la] recalbox]"
           - "mets le jeu en pause [sur [la] recalbox]"
+          - "(enlève | arrête) la pause [(du | sur le) jeu] [sur [la] recalbox]"
   RecalboxSaveState:
     data:
       - sentences:

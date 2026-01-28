@@ -1,7 +1,7 @@
 {
   "intent_response": {
     "game_status_playing": [
-      "Tu joues à {game}, sur {console}.",
+      "Vous jouez à {game}, sur {console}.",
       "Le jeu {game} est lancé sur {console}.",
       "{game} est lancé sur {console}."
     ],
@@ -53,6 +53,20 @@
     ],
     "list_roms_failed": [
       "Impossible de récupérer les roms de la Recalbox. Vérifiez qu'elle est bien allumée, et connectée au réseau."
+    ],
+    "load_state_requested": [
+      "J'ai demandé à Recalbox de recharger la dernière sauvegarde'",
+      "Chargement de la dernière sauvegarde !"
+    ],
+    "load_state_failed": [
+      "Echec de la demande de rechargement"
+    ],
+    "save_state_requested": [
+      "Enregistrement de la partie !",
+      "J'ai demandé à Recalbox d'enregistrer la partie !"
+    ],
+    "save_state_failed": [
+      "Echec de la demande de sauvegarde"
     ]
   },
   "errors": {

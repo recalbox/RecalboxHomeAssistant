@@ -46,6 +46,18 @@
     ],
     "list_roms_failed": [
       "Cannot get roms list from Recalbox. Double check it is turned ON, and connected to network."
+    ],
+    "load_state_requested": [
+      "Loading the last state"
+    ],
+    "load_state_failed": [
+      "Loading the last state failed"
+    ],
+    "save_state_requested": [
+      "Saving the current state !"
+    ],
+    "save_state_failed": [
+      "Saving the current state failed"
     ]
   },
   "errors": {
