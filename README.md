@@ -43,6 +43,8 @@ This repository allows you to integrate Recalbox in your Home Assistant :
     + [Stop the current game](#stop-the-current-game)
     + [Pause/Resume the current game](#pauseresume-the-current-game)
     + [Take a screenshot](#take-a-screenshot)
+    + [Save current game state](#save-current-game-state)
+    + [Load last game state](#load-last-game-state)
     + [Turn OFF recalbox](#turn-off-recalbox)
 - [Releases notes](#releases-notes)
 
@@ -248,6 +250,24 @@ Examples :
 > - trying first a UDP command screenshot, which is more integrated
 > - if fails because of wrong port, then it tries using API.  
 >   Note about API : on Recalbox 9.2.3 or Raspberry Pi 3, the screenshots via API are broken (also in the Recalbox Web Manager). That's why I chose UDP first.
+
+
+#### Save current game state
+
+Examples :
+- "Save the current game"
+- "Save my game state on Recalbox"
+- "Enregistre la partie en cours"
+- "Enregistre mon jeu"
+
+
+#### Load last game state
+
+Examples :
+- "Load my last game state"
+- "Load the last save"
+- "Recharge ma sauvegarde du jeu"
+- "Recharge la dernière partie"
 
 
 #### Turn OFF recalbox

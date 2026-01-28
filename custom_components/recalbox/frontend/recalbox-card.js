@@ -143,14 +143,15 @@ class RecalboxCard extends HTMLElement {
     `;
 
     if (needsRestart && showRestartRequiredSuggestion) {
-      // On insère un petit bandeau d'alerte en haut de la carte
+      // insertions d'un petit bandeau d'alerte en haut de la carte
+      // Uniquement si on a effectué une mise à jour des sentences,
+      // et que l'utilisateur a accepté d'afficher ces alertes
       const alertHtml = `
         <div style="background-color: var(--secondary-background-color); color: white; padding: 12px; border-radius: 6px; border: solid 1px grey; margin: 10px; font-size: 0.8em; display: flex; align-items: center;">
           <ha-icon icon="mdi:alert" style="margin-right: 16px;"></ha-icon>
           ${i18n.rebootRequired}
         </div>
       `;
-      // Injecter ce HTML dans ta carte
       this.content.innerHTML += alertHtml;
     }
 

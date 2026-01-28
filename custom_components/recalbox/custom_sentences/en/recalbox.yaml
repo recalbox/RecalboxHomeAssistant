@@ -37,8 +37,9 @@ intents:
   RecalboxLoadState:
     data:
       - sentences:
-          - "(load | reload) (my | the) [last] game [state] [on [the] recalbox]"
-          
+          - "(load | reload) (my | the) [last] game [(state | saved)] [on [the] recalbox]"
+          - "(load | reload) (my | the) [last] save [on [the] recalbox]"
+
 lists:
   game:
     wildcard: true
