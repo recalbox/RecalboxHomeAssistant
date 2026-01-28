@@ -9,13 +9,13 @@ class RecalboxAPI:
     def __init__(self,
                  host: str = "recalbox.local",
                  api_port_os: int = 80,
-                 api_port_emulstation: int = 81,
+                 api_port_webmanager: int = 81,
                  udp_recalbox: int = 1337,
                  udp_emulstation: int = 55355
                  ):
         self.host = host
         self.api_port_os = api_port_os
-        self.api_port_emulstation = api_port_emulstation
+        self.api_port_webmanager = api_port_webmanager
         self.udp_recalbox = udp_recalbox
         self.udp_emulstation = udp_emulstation
 

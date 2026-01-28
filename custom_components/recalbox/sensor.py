@@ -10,7 +10,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     entities = [
         RecalboxDiagnosticSensor(config_entry, "host", "Host", "mdi:ip-network"),
         RecalboxDiagnosticSensor(config_entry, "api_port_os", "Port API OS", "mdi:api", 80),
-        RecalboxDiagnosticSensor(config_entry, "api_port_emulstation", "Port API EmulationStation", "mdi:api", 81),
+        RecalboxDiagnosticSensor(config_entry, "api_port_webmanager", "Port API WebManager", "mdi:api", 81),
         RecalboxDiagnosticSensor(config_entry, "udp_recalbox", "Port UDP Recalbox", "mdi:remote", 1337),
         RecalboxDiagnosticSensor(config_entry, "udp_emulstation", "Port UDP EmulationStation", "mdi:remote", 55355),
     ]

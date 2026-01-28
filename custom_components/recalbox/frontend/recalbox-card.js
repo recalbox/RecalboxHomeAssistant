@@ -186,12 +186,13 @@ class RecalboxCard extends HTMLElement {
     const recalboxVersion = state.attributes.recalboxVersion || "x.x";
     const hardware = state.attributes.hardware;
     const host = state.attributes.ip_address;
+    // const api_port_webmanager = state.attributes.api_port_webmanager;
 
     this.footer.innerHTML = `
       <div>
         Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, ${i18n.footer.onHardware} ${hardware}` : ''}
         <br>
-        <a href="http://${host}:81" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
+        <a href="http://${host}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
         <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a>
       </div>
