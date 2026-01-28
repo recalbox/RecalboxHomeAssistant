@@ -22,7 +22,9 @@ async def async_setup_intents(hass):
         RecalboxStatusHandler(),
         RecalboxQuitGameHandler(),
         RecalboxPauseGameHandler(),
-        RecalboxScreenshotHandler()
+        RecalboxScreenshotHandler(),
+        RecalboxLoadStateHandler(),
+        RecalboxSaveStateHandler(),
     ]
 
     for handler in intents_to_register:
@@ -110,6 +112,9 @@ def get_translator(hass: HomeAssistant) -> RecalboxTranslator:
 #        return response
 
 
+
+# ----- Handlers basiques : trouvent l'entité et appellent une fonction --------
+
 class RecalboxScreenshotHandler(intent.IntentHandler):
     intent_type = "RecalboxCreateScreenshot"
 
@@ -166,6 +171,68 @@ class RecalboxPauseGameHandler(intent.IntentHandler):
         return response
 
 
+class RecalboxSaveStateHandler(intent.IntentHandler):
+    intent_type = "RecalboxSaveState"
+
+    async def async_handle(self, intent_obj):
+        hass = intent_obj.hass
+        recalbox:RecalboxEntityMQTT = find_recalbox_entity(hass, intent_obj)
+        translator:RecalboxTranslator = get_translator(hass)
+
+        if await recalbox.request_save_state():
+            text = translator.translate("intent_response.save_state_requested", lang=intent_obj.language)
+        else:
+            text = translator.translate("intent_response.save_state_failed", lang=intent_obj.language)
+
+        response = intent_obj.create_response()
+        response.async_set_speech(text)
+        return response
+
+
+class RecalboxLoadStateHandler(intent.IntentHandler):
+    intent_type = "RecalboxLoadState"
+
+    async def async_handle(self, intent_obj):
+        hass = intent_obj.hass
+        recalbox:RecalboxEntityMQTT = find_recalbox_entity(hass, intent_obj)
+        translator:RecalboxTranslator = get_translator(hass)
+
+        if await recalbox.request_load_state():
+            text = translator.translate("intent_response.load_state_requested", lang=intent_obj.language)
+        else:
+            text = translator.translate("intent_response.load_state_failed", lang=intent_obj.language)
+
+        response = intent_obj.create_response()
+        response.async_set_speech(text)
+        return response
+
+
+# ---- handler qui lit plus de paramètres ------
+
+class RecalboxLaunchHandler(intent.IntentHandler):
+    """Handler pour lancer un jeu."""
+    intent_type = "RecalboxLaunchGame" # Doit correspondre au nom dans ton YAML
+
+    async def async_handle(self, intent_obj:intent.Intent):
+        hass = intent_obj.hass
+        # 1. Récupérer les slots (variables) de la phrase
+        slots = intent_obj.slots
+        game = slots.get("game", {}).get("value")
+        console = slots.get("console", {}).get("value")
+        # recalboxEntityId = slots.get("recalboxEntityId", {}).get("value")
+
+        recalbox = find_recalbox_entity(hass, intent_obj)
+
+        # Appeler la fonction de recherche
+        result_text = await recalbox.search_and_launch_game_by_name(console, game, lang=intent_obj.language)
+
+        response = intent_obj.create_response()
+        response.async_set_speech(result_text)
+        return response
+
+
+
+# -------- Handler qui a se base sur le state, contrairement aux autres -------------
 
 class RecalboxStatusHandler(intent.IntentHandler):
     intent_type = "RecalboxGameStatus"
@@ -194,26 +261,4 @@ class RecalboxStatusHandler(intent.IntentHandler):
 
         response = intent_obj.create_response()
         response.async_set_speech(text)
-        return response
-
-
-class RecalboxLaunchHandler(intent.IntentHandler):
-    """Handler pour lancer un jeu."""
-    intent_type = "RecalboxLaunchGame" # Doit correspondre au nom dans ton YAML
-
-    async def async_handle(self, intent_obj:intent.Intent):
-        hass = intent_obj.hass
-        # 1. Récupérer les slots (variables) de la phrase
-        slots = intent_obj.slots
-        game = slots.get("game", {}).get("value")
-        console = slots.get("console", {}).get("value")
-        # recalboxEntityId = slots.get("recalboxEntityId", {}).get("value")
-
-        recalbox = find_recalbox_entity(hass, intent_obj)
-
-        # Appeler la fonction de recherche
-        result_text = await recalbox.search_and_launch_game_by_name(console, game, lang=intent_obj.language)
-
-        response = intent_obj.create_response()
-        response.async_set_speech(result_text)
         return response
