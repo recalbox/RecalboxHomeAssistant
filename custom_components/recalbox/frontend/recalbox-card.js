@@ -5,6 +5,7 @@ const TRANSLATIONS = {
     "system": "Console",
     "game": "Jeu en cours",
     "genre": "Genre",
+    "romPath": "Rom",
     "rebootRequired": "De nouvelles phrases Assist ont été détectées et installées. Redémarrez Home Assistant une nouvelle fois pour les activer et avoir accès aux nouvelles commandes vocales/textuelles.",
     "buttons": {
       "shutdown": "Éteindre",
@@ -23,6 +24,7 @@ const TRANSLATIONS = {
     "system": "System",
     "game": "Current game",
     "genre": "Genre",
+    "romPath": "Rom",
     "rebootRequired": "New Assist sentences have been installed. You will have to restart Home Assistant again to have access to the new intents on text/voice commands.",
     "buttons": {
       "shutdown": "Shutdown",
@@ -48,6 +50,7 @@ class RecalboxCard extends HTMLElement {
     const i18n = TRANSLATIONS[lang] || TRANSLATIONS['en'];
 
     const showGameGenre = this.config.showGameGenre ?? true;
+    const showRomPath = this.config.showRomPath ?? false;
     const showRestartRequiredSuggestion = this.config.showRestartRequiredSuggestion ?? true;
     const showTurnOffButton = this.config.showTurnOffButton ?? true;
     const showRebootButton = this.config.showRebootButton ?? true;
@@ -107,6 +110,7 @@ class RecalboxCard extends HTMLElement {
     const consoleName = state.attributes.console || "-";
     const isAGameRunning = game && game!="-" && game!="None" && consoleName!="Kodi";
     const genre = state.attributes.genre || "-";
+    const romPath = state.attributes.rom || "-";
     const imageUrl = state.attributes.imageUrl || "";
     const needsRestart = state.attributes.needs_restart || false;
 
@@ -133,6 +137,7 @@ class RecalboxCard extends HTMLElement {
           <div class="info-row"><ha-icon icon="mdi:sony-playstation"></ha-icon><div class="info-text one-line"><div>${consoleName}</div><div class="info-value">${i18n.system}</div></div></div>
           <div class="info-row"><ha-icon icon="mdi:gamepad-variant-outline"></ha-icon><div class="info-text one-line"><div>${game}</div><div class="info-value">${i18n.game}</div></div></div>
           <div class="info-row" ` + (showGameGenre ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:folder-outline"></ha-icon><div class="info-text one-line"><div>${genre}</div><div class="info-value">${i18n.genre}</div></div></div>
+          <div class="info-row" ` + (showRomPath ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:file-outline"></ha-icon><div class="info-text one-line"><div>${romPath}</div><div class="info-value">${i18n.romPath}</div></div></div>
         ` : ''}
       </div>
     `;
@@ -217,6 +222,7 @@ class RecalboxCard extends HTMLElement {
       title: "Recalbox",
       subtitle: "",
       showGameGenre: true,
+      showRomPath: false,
       showRestartRequiredSuggestion: true,
       showTurnOffButton: true,
       showRebootButton: true,
