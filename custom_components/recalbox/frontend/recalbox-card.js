@@ -1,11 +1,3 @@
-import "https://unpkg.com/wired-card@0.8.1/wired-card.js?module";
-import "https://unpkg.com/wired-toggle@0.8.0/wired-toggle.js?module";
-import {
-  LitElement,
-  html,
-  css,
-} from "https://unpkg.com/lit-element@2.0.1/lit-element.js?module";
-
 // Traductions
 const TRANSLATIONS = {
   "fr": {
@@ -288,29 +280,75 @@ class RecalboxCard extends HTMLElement {
 // Pour afficher un éditeur inteactif plutot que du yaml pur
 // https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card/
 
-class RecalboxCardEditor extends LitElement {
-  setConfig(config) {
-    this._config = config;
+class RecalboxCardEditor extends HTMLElement {
+	
+  set hass(hass) {
+    this._hass = hass;
+    if (this._form) {
+      this._form.hass = hass;
+    }
   }
 
-  configChanged(newConfig) {
-    const event = new Event("config-changed", {
-      bubbles: true,
-      composed: true,
+  setConfig(config) {
+    this._config = config;
+    if (this._form) {
+      this._form.data = config;
+    }
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    if (this._form) return;
+    this._form = document.createElement("ha-form");
+    this._form.hass = this._hass;
+    this._form.data = this._config;
+    this._form.schema = this._getSchema();
+    this._form.computeLabel = (s) => this._computeLabel(s);
+    this._form.addEventListener("value-changed", (ev) => {
+      const event = new CustomEvent("config-changed", {
+        detail: { config: ev.detail.value },
+        bubbles: true,
+        composed: true,
+      });
+      this.dispatchEvent(event);
     });
-    event.detail = { config: newConfig };
-    this.dispatchEvent(event);
+    this.appendChild(this._form);
+  }
+
+  _computeLabel(schema) {
+    const labels = {
+      entity: "Entité Recalbox",
+      title: "Titre de la carte",
+      subtitle: "Sous-titre",
+      showGameGenre: "Afficher le genre",
+      showRomPath: "Afficher le chemin de la ROM",
+      showRestartRequiredSuggestion: "Suggérer le redémarrage",
+      showTurnOffButton: "Bouton Éteindre",
+      showRebootButton: "Bouton Redémarrer",
+      showScreenshotButton: "Bouton Capture",
+      showPauseGameButton: "Bouton Pause",
+      showLoadGameButton: "Bouton Restaurer",
+      showSaveGameButton: "Bouton Sauvegarder",
+      showQuitGameButton: "Bouton Quitter le jeu",
+    };
+    return labels[schema.name] || schema.name;
   }
   
+  
   // Le schéma définit les champs de l'interface visuelle
-  static _getSchema() {
+  _getSchema() {
     return [
       { name: "title", selector: { text: {} } },
-      { name: "entity", required: true, selector: { entity: { domain: "switch" } } },
+      { name: "entity", required: true, selector: { entity: { domain: "switch" } } }, // https://www.home-assistant.io/docs/blueprint/selectors/#entity-selector
       { name: "subtitle", selector: { text: {} } },
       {
-        type: "grid",
+        type: "expandable",
         name: "",
+		title: "Informations",
+		flatten: true,
         schema: [
           { name: "showGameGenre", selector: { boolean: {} } },
           { name: "showRomPath", selector: { boolean: {} } },
@@ -318,8 +356,10 @@ class RecalboxCardEditor extends LitElement {
         ],
       },
       {
-        name: "Actions",
+        name: "",
+		title: isFrench ? "Affichage des boutons" : "Buttons display",
         type: "expandable",
+		flatten: true,
         schema: [
             { name: "showTurnOffButton", selector: { boolean: {} } },
             { name: "showRebootButton", selector: { boolean: {} } },
@@ -331,31 +371,6 @@ class RecalboxCardEditor extends LitElement {
         ]
       }
     ];
-  }
-  
-  
-  static getConfigForm() {
-    return {
-      schema: _getSchema(),
-      //computeLabel: (schema) => {
-      //  if (schema.name === "icon") return "Special Icon";
-      //  return undefined;
-      //},
-      //computeHelper: (schema) => {
-      //  switch (schema.name) {
-      //    case "entity":
-      //      return "This text describes the function of the entity selector";
-      //    case "unit":
-      //      return "The unit of measurement for this card";
-      //  }
-      //  return undefined;
-      //},
-      //assertConfig: (config) => {
-      //  if (config.other_option) {
-      //    throw new Error("'other_option' is unexpected.");
-      //  }
-      //},
-    };
   }
   
 }
