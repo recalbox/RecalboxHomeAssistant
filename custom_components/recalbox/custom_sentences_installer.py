@@ -29,6 +29,8 @@ def _get_file_hash(filename):
         return None
 
 
+# Renvoie True si un redémarrage est nécessaire à cause d'un changement de phrases assist.
+# Si des mises à jour ont étén faites, mais Assist a rechargé, on renvoie False car pas besoin de restart.
 def install_sentences(hass: HomeAssistant) -> bool :
     _LOGGER.debug("Checking for Recalbox custom_sentences (re)installation...")
     """Copie récursivement les sentences du composant vers le dossier système de HA."""
@@ -76,7 +78,17 @@ def install_sentences(hass: HomeAssistant) -> bool :
                             _LOGGER.debug("Hashes are equals, no need to copy again this file.")
         if not changes_made:
             _LOGGER.info("Pas de mise à jour nécessaire des phrases Assist")
-        return changes_made
+            return False
+        else:
+            # on va essayer d'appliquer les mises à jour en live sans restart
+            _LOGGER.info("Les phrases Assist ont été mises à jour. Essai de reload de Assist sans redémarrage...")
+            try:
+                hass.services.call("conversation", "reload", blocking=True)
+                _LOGGER.info("Les phrases Assist ont été rechargées avec succès.")
+                return False
+            except Exception as e:
+                _LOGGER.warning("Impossible de rafraichir tout seul les phrases assist. Redémarrage nécessaire.")
+                return True
     except Exception as e:
         _LOGGER.error("Erreur lors de l'installation des phrases Assist : %s", e)
         return False

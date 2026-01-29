@@ -14,7 +14,7 @@ intents:
   RecalboxCreateScreenshot:
     data:
       - sentences:
-          - "(fais | prends) (une capture | un screenshot) [d'écran] [du jeu] [sur [la] recalbox]"
+          - "(fais | prends | crée) (une capture | un screenshot) [d'écran] [du jeu] [sur [la] recalbox]"
   RecalboxLaunchGame:
     data:
       - sentences:
@@ -23,7 +23,7 @@ intents:
   RecalboxStopGame:
     data:
       - sentences:
-          - "(arrête | stop | quitte) le jeu (actuel | en cours) [sur [la] recalbox]"
+          - "(arrête | stop | stoppe | quitte) le jeu (actuel | en cours) [sur [la] recalbox]"
           - "(retourne | retour | va) (au | sur le) menu [sur [la] recalbox]"
   RecalboxPauseGame:
     data:
