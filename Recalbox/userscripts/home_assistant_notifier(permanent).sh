@@ -19,7 +19,7 @@ exec > "$LOG_FILE" 2>&1 # Redirige les sorties vers le fichier
 # MQTT localpour écouter les événements Recalbox
 MQTT_LOCAL_HOST="127.0.0.1"
 MQTT_LOCAL_PORT=1883
-TOPIC_LOCAL="/Recalbox/EmulationStation/Event"
+TOPIC_LOCAL="Recalbox/EmulationStation/Event"
 
 # Variables d'état
 RECALBOX_VERSION=$(cat /recalbox/recalbox.version 2>/dev/null || echo "Inconnue")
@@ -78,6 +78,7 @@ send_mqtt() {
 
   [ "$3" == "true" ] && retain_flag="-r"
   mosquitto_pub -h "$HA_IP" -u "$MQTT_USER" -P "$MQTT_PASS" -t "$TOPIC/$sub_topic" -m "$message" $retain_flag
+  echo "Message MQTT envoyé à $HA_IP, sur $TOPIC/$sub_topic : $message" >&2
 }
 
 
@@ -114,6 +115,7 @@ wait_for_file_updated() {
 # voir les logs de cet outil:     tail -f "/recalbox/share/saves/home_assistant_notifier.log"
 
 echo "Démarrage du démon de notification Home Assistant par MQTT..." >&2
+ALLOWED_EVENTS="start|systembrowsing|endgame|runkodi|stop|shutdown|reboot|wakeup|rungame"
 
 while true; do
 
@@ -121,19 +123,17 @@ while true; do
   # mosquitto_pub -h 127.0.0.1 -t "/Recalbox/EmulationStation/Event" -m "start"
   # pour déclencher un événement MQTT
   echo "En attente d'un nouvel événement..." >&2
-  # EVENT=$(mosquitto_sub -h "$MQTT_LOCAL_HOST" -p $MQTT_LOCAL_PORT -q 0 -t "$TOPIC_LOCAL" -C 1)
-  # Le MQTT ne fonctionne pas, on attend donc un changement du fichier $STATE_FILE
-  wait_for_file_updated "$STATE_FILE"
-  echo "Evénement reçu : $EVENT" >&2
+  EVENT=$(mosquitto_sub -h "$MQTT_LOCAL_HOST" -p $MQTT_LOCAL_PORT -q 0 -t "$TOPIC_LOCAL" -C 1)
 
-  # Vérifier/Récupérer l'IP si on ne l'a pas encore
-  update_ha_ip
-
-  # Si toujours pas d'IP, on ignore l'événement pour l'instant
-  if [ -z "$HA_IP" ]; then
-    echo "Message ignoré. En attente du réseau/mDNS..." >&2
-    continue
-  fi
+  case "$EVENT" in
+    $ALLOWED_KEYS)
+      echo "Evénement reçu : $EVENT" >&2
+      ;;
+    *)
+      echo "Événement '$EVENT' ignoré." >&2
+      continue
+      ;;
+  esac
 
   # Arrivés ici, on a du réseau et on a récupéré l'IP de Home Assistant
 
@@ -192,6 +192,15 @@ while true; do
 }
 EOF
 )
+
+  # Vérifier/Récupérer l'IP si on ne l'a pas encore
+  update_ha_ip
+
+  # Si toujours pas d'IP, on ignore l'événement pour l'instant
+  if [ -z "$HA_IP" ]; then
+    echo "Message non envoyé. En attente du réseau/mDNS..." >&2
+    continue
+  fi
 
   # 5. Envoi
   send_mqtt "status" "$STATUS" "false"
