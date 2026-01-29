@@ -256,6 +256,15 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     #       Ecoute MQTT      #
     ##########################
 
+
+
+    def generateImageUrlFromPath(self, path:str) -> str:
+        if path and path != "-":
+            return f"http://{self._api.host}:{self._api.api_port_gamesmanager}/{path}"
+        else:
+            return "-"
+
+
     # Callback, une fois ajouté à HASS
     # on souscrit aux files MQTT
     # pour mettre à jour la Recalbox selon
@@ -296,7 +305,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                     self.genre = data.get("genre", "-")
                     self.genreId = data.get("genreId", "-")
                     self.rom = data.get("rom", "-")
-                    self.imageUrl = data.get("imageUrl", "-")
+                    self.imageUrl = self.generateImageUrlFromPath(data.get("imagePath", "-"))
 
 
                     _LOGGER.debug('Updating device version/hardware')

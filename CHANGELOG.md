@@ -10,6 +10,10 @@
   tries to reload Home Assistant Assist sentences without asking for a new restart.  
   Only if fails to reload, it will ask the user to restart.
 - Reorder settings buttons, because save/load were not in the same order that in the card
+- Change JSON sent from Recalbox to Home Assistant, from `imageUrl` to `imagePath`.
+  Home Assistant will recompose the full URL on his own, because he knowns the host+port of this Recalbox.
+- Make Recalbox script "permanent". It is way more optimized, and waits to be connected to network
+  to send MQTT messages.
 
 
 ## v1.3.0 - 29/01/2026 - Recalbox card visual editor 
