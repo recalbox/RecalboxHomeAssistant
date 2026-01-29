@@ -13,9 +13,14 @@
 - Change JSON sent from Recalbox to Home Assistant, from `imageUrl` to `imagePath`.
   Home Assistant will recompose the full URL on his own, because he knowns the host+port of this Recalbox.
   Integration is still compatible with older versions, it reads `imageUrl` is existing in JSON, else it composes itself the URL with `imagePath`.
-- Make Recalbox script "permanent". It is way more optimized, and waits to be connected to network
-  to send MQTT messages. As the MQTT listener cannot work yet, this version waits for `/tmp/es_state.inf` file modifications
-- Add `shutdown` and `reboot` events in Recalbox script, to say to Home Assistant that the Recalbox is turning off (was only listing `stop` until that)
+- Split Recalbox script in two versions (only one required) :
+  - `Recalbox/userscripts/home_assistant_notifier.sh`:
+    - Improve to get Home Assistant IP adress only if the event is useful
+    - Add `shutdown` and `reboot` events in Recalbox script, to say to Home Assistant that the Recalbox is turning off (was only listing `stop` until that)
+  - `Recalbox/userscripts/home_assistant_notifier(permanent).sh` :
+    - New version, that is permanent : the script is launched only once, and loops on events.
+    - It should be way more optimized, and waits to be connected to network to send MQTT messages.
+    - As the MQTT listener cannot work yet, this version waits for `/tmp/es_state.inf` file modifications
 
 
 ## v1.3.0 - 29/01/2026 - Recalbox card visual editor 
