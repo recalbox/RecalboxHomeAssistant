@@ -12,7 +12,7 @@
 - Reorder settings buttons, because save/load were not in the same order that in the card
 
 
-## v1.3.0 - 29/01/2026
+## v1.3.0 - 29/01/2026 - Recalbox card visual editor 
 
 
 - Implements a visual editor for Recalbox Card on dashboard.  
