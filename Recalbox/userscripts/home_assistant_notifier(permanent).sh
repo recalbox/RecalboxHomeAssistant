@@ -33,6 +33,11 @@ HA_IP=""
 
 #------ Outils ------
 
+# Ecriture dans les logs
+log() {
+  echo "[ $(date '+%Y-%m-%d %H:%M:%S') ] $1" >&2
+}
+
 # Fonction pour extraire une valeur par sa clé
 get_val() {
   # Cherche la ligne commençant par la clé, extrait ce qui est après le premier =
@@ -54,7 +59,7 @@ update_ha_ip() {
     # On vérifie si le réseau est là en tentant une résolution
     HA_IP=$(avahi-resolve -n "$HOME_ASSISTANT_DOMAIN" -4 | cut -f2)
     if [ -n "$HA_IP" ]; then
-      echo "Home Assistant accessible via $HA_IP" >&2
+      log "Home Assistant accessible via $HA_IP"
     fi
   fi
 }
@@ -78,32 +83,7 @@ send_mqtt() {
 
   [ "$3" == "true" ] && retain_flag="-r"
   mosquitto_pub -h "$HA_IP" -u "$MQTT_USER" -P "$MQTT_PASS" -t "$TOPIC/$sub_topic" -m "$message" $retain_flag
-  echo "Message MQTT envoyé à $HA_IP, sur $TOPIC/$sub_topic : $message" >&2
-}
-
-
-
-#------ Contournement du MQTT -------
-wait_for_file_updated() {
-  local file="$1"
-  local last_mod
-  last_mod=$(stat -t "$file" 2>/dev/null)
-
-  while true; do
-    local current_mod
-    current_mod=$(stat -t "$file" 2>/dev/null)
-
-    # Si la date a changé, on sort de la fonction
-    if [ "$current_mod" != "$last_mod" ]; then
-      echo "STATEFILE has been updated ! Simulating an event in 0.2 sec." >&2
-      # Petit délai pour laisser Recalbox finir d'écrire le fichier
-      sleep 0.2
-      return 0
-    fi
-
-    # On attend 1 seconde avant la prochaine vérification pour économiser le CPU
-    sleep 1
-  done
+  log "Message MQTT envoyé à $HA_IP, sur $TOPIC/$sub_topic : $message"
 }
 
 
@@ -114,22 +94,22 @@ wait_for_file_updated() {
 # générer un événement fake:      mosquitto_pub -h 127.0.0.1 -t "/Recalbox/EmulationStation/Event" -m "start"
 # voir les logs de cet outil:     tail -f "/recalbox/share/saves/home_assistant_notifier.log"
 
-echo "Démarrage du démon de notification Home Assistant par MQTT..." >&2
+log "Démarrage du démon de notification Home Assistant par MQTT..."
 
 while true; do
 
   # Débloquer avec
   # mosquitto_pub -h 127.0.0.1 -t "/Recalbox/EmulationStation/Event" -m "start"
   # pour déclencher un événement MQTT
-  echo "En attente d'un nouvel événement..." >&2
+  log "En attente d'un nouvel événement..."
   EVENT=$(mosquitto_sub -h "$MQTT_LOCAL_HOST" -p $MQTT_LOCAL_PORT -q 0 -t "$TOPIC_LOCAL" -C 1)
 
   case "$EVENT" in
     start|systembrowsing|endgame|runkodi|stop|shutdown|reboot|wakeup|rungame)
-      echo "Evénement reçu : $EVENT" >&2
+      log "Evénement reçu : $EVENT"
       ;;
     *)
-      echo "Événement '$EVENT' ignoré." >&2
+      log "Événement '$EVENT' ignoré."
       continue
       ;;
   esac
@@ -163,7 +143,7 @@ while true; do
     wakeup|rungame)
       ;;
     *)
-      echo "! Ignoring command \"$ACTION\" !"
+      log "Ignoring command \"$ACTION\" !"
       continue # On ignore les autres types d'événements
       ;;
   esac
@@ -195,7 +175,7 @@ EOF
 
   # Si toujours pas d'IP, on ignore l'événement pour l'instant
   if [ -z "$HA_IP" ]; then
-    echo "Message non envoyé. En attente du réseau/mDNS..." >&2
+    log "Message non envoyé. En attente du réseau/mDNS..."
     continue
   fi
 
