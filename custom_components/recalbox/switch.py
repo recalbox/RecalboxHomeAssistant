@@ -277,6 +277,12 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         """Appelé quand l'entité est ajoutée à HA."""
         await super().async_added_to_hass()
 
+        # Initialisation du 1er status pour savoir si on est ON ou OFF
+        await self.coordinator.async_config_entry_first_refresh()
+        if self.coordinator.data is True:
+            _LOGGER.debug("Premier ping réussi au démarrage : on met la recalbox sur ON")
+            self._attr_is_on = True
+
         async def message_received(msg):
             """Logique lors de la réception d'un message MQTT."""
             topic = msg.topic

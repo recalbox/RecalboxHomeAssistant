@@ -24,8 +24,10 @@
     - Create a timestamped logs file : `/recalbox/share/system/logs/home_assistant_integration/*`
 - Both scripts now send their version to Home Assistant, in the JSON message, 
   `"scriptVersion": "home_assistant_notifier.sh:v1.3.1"` or `"scriptVersion": "home_assistant_notifier(permanent).sh:v1.3.1"`
+- Persist `scriptVersion` as Recalbox extra state attribute
 - Added `host` attribute, so the REcalbox card uses the configured host to access webmanager, instead of `ip_adress` that doesn't exist yet
 - Make `ip_adress` attribut as "//TODO", instead of setting as the host
+- When Home Assistant (re)starts, pings the Recalbox to directly set as ON or OFF, instead of waiting for the first ON MQQT message
 
 
 ## v1.3.0 - 29/01/2026 - Recalbox card visual editor 
