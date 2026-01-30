@@ -4,9 +4,11 @@
 # A placer dans le dossier userscripts
 # Par Aurélien Tomassini
 
+SCRIPT_VERSION="home_assistant_notifier.sh:v1.3.1"
+
 # Configuration
 HOME_ASSISTANT_DOMAIN="homeassistant.local"
-
+HOME_ASSISTANT_IP_CACHE_FILE="/tmp/ha_ip_address.txt"
 #Adresse IP de Recalbox. Sera récupérée plus bas pour optimiser
 HA_IP=""
 MQTT_USER="recalbox"
@@ -110,9 +112,20 @@ esac
 
 log "Generating data for received command $ACTION"
 
-# Récupérer l'IP via mDNS
-HA_IP=$(avahi-resolve -n $HOME_ASSISTANT_DOMAIN -4 | cut -f2)
-log "IP Home Assistant : $HA_IP"
+
+# Chemin du cache pour l'IP
+if [ -f "$HOME_ASSISTANT_IP_CACHE_FILE" ]; then
+    # Récupérer l'IP via le cache
+    HA_IP=$(cat "$HOME_ASSISTANT_IP_CACHE_FILE")
+    log "IP récupérée du cache : $HA_IP"
+else
+    # Récupérer l'IP via mDNS
+    HA_IP=$(avahi-resolve -n $HOME_ASSISTANT_DOMAIN -4 | cut -f2)
+    if [ -n "$HA_IP" ]; then
+        echo "$HA_IP" > "$HOME_ASSISTANT_IP_CACHE_FILE"
+        log "IP résolue via mDNS et mise en cache : $HA_IP"
+    fi
+fi
 
 # Extraction de la version et du hardware
 RECALBOX_VERSION=$(cat /recalbox/recalbox.version 2>/dev/null || echo "Inconnue")
@@ -138,7 +151,7 @@ gen_game_json() {
   "imagePath": $imagePath,
   "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
   "hardware": $(clean_json_val "$HARDWARE_MODEL"),
-  "scriptVersion": "home_assistant_notifier.sh:v1.3.1"
+  "scriptVersion": "$SCRIPT_VERSION"
 }
 EOF
 }

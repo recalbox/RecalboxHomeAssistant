@@ -4,6 +4,8 @@
 # A placer dans le dossier userscripts
 # Par Aurélien Tomassini
 
+SCRIPT_VERSION="home_assistant_notifier(permanent).sh:v1.3.1"
+
 # Configuration
 HOME_ASSISTANT_DOMAIN="homeassistant.local"
 MQTT_USER="recalbox"
@@ -171,7 +173,7 @@ while true; do
   "imagePath": $IMAGE_PATH,
   "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
   "hardware": $(clean_json_val "$HARDWARE_MODEL"),
-  "scriptVersion": "home_assistant_notifier(permanent).sh:v1.3.1"
+  "scriptVersion": "$SCRIPT_VERSION"
 }
 EOF
 )
