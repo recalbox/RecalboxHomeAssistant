@@ -35,7 +35,7 @@ HA_IP=""
 
 # Ecriture dans les logs
 log() {
-  echo "[ $(date '+%Y-%m-%d %H:%M:%S') ] $1" >&2
+  echo "[ $(date '+%Y-%m-%d %H:%M:%S.%3N') ] $1" >&2
 }
 
 # Fonction pour extraire une valeur par sa clé

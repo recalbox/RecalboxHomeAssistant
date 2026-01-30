@@ -20,6 +20,7 @@
   - `Recalbox/userscripts/home_assistant_notifier(permanent).sh` :
     - New version, that is permanent : the script is launched only once, and loops on events.
     - It should be way more optimized, and waits to be connected to network to send MQTT messages.
+    - Add timestamped logs
 - Added `host` attribute, so the REcalbox card uses the configured host to access webmanager, instead of `ip_adress` that doesn't exist yet
 - Make `ip_adress` attribut as "//TODO", instead of setting as the host
 
