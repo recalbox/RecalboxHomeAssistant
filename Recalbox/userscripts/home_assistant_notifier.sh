@@ -45,18 +45,25 @@ GAME_GENRE_ID=$(get_val "GenreId")
 GAME_NAME="${GAME_NAME/#[0-9][0-9][0-9] /}"
 
 
-# logs : 1 dossier par jour
-LOG_DIR="$LOGS_FOLDER/$(date '+%Y-%m-%d')"
-# On crée le dossier de logs du jour, s'il n'existe pas encore
-mkdir -p "$LOG_DIR"
-# On supprime les dossiers de logs des autres jours, pour pas tout garder pour rien :
-# on cherche les dossiers (-type d) dans le répertoire parent,
-# on exclut le dossier parent lui-même (!) et celui du jour (! -path),
-# puis on supprime.
-find "$LOGS_FOLDER/" -mindepth 1 -maxdepth 1 -type d ! -path "$LOG_DIR" -exec rm -rf {} +
-# Et enfin on crée le fichier le logs de cette instance du script
-LOG_FILE="$LOG_DIR/home_assistant_notifier_$(date '+%Y-%m-%d_%H%M%S')_$ACTION.log"
-exec > "$LOG_FILE" 2>&1 # Redirige les sorties vers le fichier
+prepare_logs_file() {
+  # logs : 1 dossier par jour
+  LOG_DIR="$LOGS_FOLDER/$(date '+%Y-%m-%d')"
+  # On crée le dossier de logs du jour, s'il n'existe pas encore
+  mkdir -p "$LOG_DIR"
+  if [ ! -f "$HOME_ASSISTANT_IP_CACHE_FILE" ]; then
+    # Si on n'a pas encore récupéré l'adresse IP de HomeAssistant <-> dans les premiers lancements,
+    # Alors on va nettoyer les anciens logs.
+
+    # On supprime les dossiers de logs des autres jours, pour pas tout garder pour rien :
+    # on cherche les dossiers (-type d) dans le répertoire parent,
+    # on exclut le dossier parent lui-même (!) et celui du jour (! -path),
+    # puis on supprime.
+    find "$LOGS_FOLDER/" -mindepth 1 -maxdepth 1 -type d ! -path "$LOG_DIR" -exec rm -rf {} +
+  fi
+  # Et enfin on crée le fichier le logs de cette instance du script
+  LOG_FILE="$LOG_DIR/home_assistant_notifier_$(date '+%Y-%m-%d_%H%M%S')_$ACTION.log"
+  exec > "$LOG_FILE" 2>&1 # Redirige les sorties vers le fichier
+}
 
 # Ecriture dans les logs
 log() {
@@ -97,6 +104,7 @@ clear_game() {
 }
 
 STATUS="ON"
+prepare_logs_file
 
 case "$ACTION" in
   start|systembrowsing|endgame)

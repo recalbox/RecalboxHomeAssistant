@@ -15,25 +15,7 @@ TOPIC="recalbox/notifications"
 STATE_FILE="/tmp/es_state.inf"
 LOGS_FOLDER="/recalbox/share/system/logs/home_assistant_integration"
 
-# logs
-LOG_DIR="/recalbox/share/system/logs/home_assistant_integration/$(date '+%Y-%m-%d')"
-mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/home_assistant_notifier_permanent_$(date '+%Y-%m-%d_%H%M%S')_$ACTION.log"
-exec > "$LOG_FILE" 2>&1 # Redirige les sorties vers le fichier
 
-
-# logs : 1 dossier par jour
-LOG_DIR="$LOGS_FOLDER/$(date '+%Y-%m-%d')"
-# On crée le dossier de logs du jour, s'il n'existe pas encore
-mkdir -p "$LOG_DIR"
-# On supprime les dossiers de logs des autres jours, pour pas tout garder pour rien :
-# on cherche les dossiers (-type d) dans le répertoire parent,
-# on exclut le dossier parent lui-même (!) et celui du jour (! -path),
-# puis on supprime.
-find "$LOGS_FOLDER/" -mindepth 1 -maxdepth 1 -type d ! -path "$LOG_DIR" -exec rm -rf {} +
-# Et enfin on crée le fichier le logs de cette instance du script
-LOG_FILE="$LOG_DIR/home_assistant_notifier_permanent_$(date '+%Y-%m-%d_%H%M%S')_$ACTION.log"
-exec > "$LOG_FILE" 2>&1 # Redirige les sorties vers le fichier
 
 # MQTT localpour écouter les événements Recalbox
 MQTT_LOCAL_HOST="127.0.0.1"
@@ -51,6 +33,28 @@ HA_IP=""
 
 
 #------ Outils ------
+
+
+prepare_logs_file() {
+  # logs : 1 dossier par jour
+  LOG_DIR="$LOGS_FOLDER/$(date '+%Y-%m-%d')"
+  # On crée le dossier de logs du jour, s'il n'existe pas encore
+  mkdir -p "$LOG_DIR"
+  if [ ! -f "$HOME_ASSISTANT_IP_CACHE_FILE" ]; then
+    # Si on n'a pas encore récupéré l'adresse IP de HomeAssistant <-> dans les premiers lancements,
+    # Alors on va nettoyer les anciens logs.
+
+    # On supprime les dossiers de logs des autres jours, pour pas tout garder pour rien :
+    # on cherche les dossiers (-type d) dans le répertoire parent,
+    # on exclut le dossier parent lui-même (!) et celui du jour (! -path),
+    # puis on supprime.
+    find "$LOGS_FOLDER/" -mindepth 1 -maxdepth 1 -type d ! -path "$LOG_DIR" -exec rm -rf {} +
+  fi
+  # Et enfin on crée le fichier le logs de cette instance du script
+  LOG_FILE="$LOG_DIR/home_assistant_notifier_$(date '+%Y-%m-%d_%H%M%S')_$ACTION.log"
+  exec > "$LOG_FILE" 2>&1 # Redirige les sorties vers le fichier
+}
+
 
 # Ecriture dans les logs
 log() {
@@ -112,6 +116,8 @@ send_mqtt() {
 # Lancer le script à la main :    bash -x "/recalbox/share/userscripts/home_assistant_notifier(permanent).sh"
 # générer un événement fake:      mosquitto_pub -h 127.0.0.1 -t "/Recalbox/EmulationStation/Event" -m "start"
 # voir les logs de cet outil:     tail -f "/recalbox/share/saves/home_assistant_notifier.log"
+
+prepare_logs_file
 
 log "Démarrage du démon de notification Home Assistant par MQTT..."
 
