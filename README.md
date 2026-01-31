@@ -85,8 +85,10 @@ Home Assistant can then update its "Recalbox" entity with the current game.
 > - `genre`
 > - `genreId`
 > - `imageUrl`
+> - `recalboxIpAddress`
 > - `recalboxVersion` : Version of the Recalbox OS
 > - `hardware` : Device running the Recalbox
+> - `scriptVersion` : Version of the integration script in the Recalbox
 
 ### Home Assistant to Recalbox
 
@@ -105,8 +107,11 @@ It uses the same services just listed.
 
 1. **Recalbox**
    
-   - Copy the file `Recalbox/userscripts/home_assistant_notifier.sh` in the `userscripts` Recalbox folder.
-     This script will react to Recalbox events.
+   - Copy the script in the `userscripts` Recalbox folder. **Only one is required** !
+     - `Recalbox/userscripts/home_assistant_notifier.sh` : script called at every event. Optimized since v1.3.1
+     - **(EXPERIMENTAL)** `Recalbox/userscripts/home_assistant_notifier(permanent).sh` : script called only once, and waiting for events itself
+     Both script will react to Recalbox events.
+     Still experimental in v1.3.1, use at your own risk.
 
 
 2. **Home Assistant**
@@ -138,20 +143,15 @@ It uses the same services just listed.
        You will be asked for Host/IP of your Recalbox (you should let the default "recalbox.local"), and ports can be changed if needed.
        If you can, have your Recalbox ON, and then let the "Test connection" checkbox checked to test host and ports.
        
-       ![](docs/RecalboxSettings.png)
-       
-       > A second reboot could be necessary, depending on what's shown on dashboard custom card,
-       > to apply the newly installed custom_sentences for Assist.
-
       
 
 
 ## Usage 
 
 
-> Most of actions features use UDP commands.  
-> It requires to set `network_cmd_enable = true` in `retroarch.cfg`, as [documented in the Recalbox Wiki / GPIO](https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio).  
-> Please double check the port configured in your device : this versions uses port 55355 for retroarch UDP commands.
+> Most of in-game button/voice actions use UDP commands.  
+> If not working, ensure that your Recalbox has `network_cmd_enable = true` in `retroarch.cfg`, as [documented in the Recalbox Wiki / GPIO](https://wiki.recalbox.com/en/tutorials/network/send-commands-to-emulators-with-gpio).  
+> This versions uses port 55355 for retroarch UDP commands by default.
 
 
 ### Dashboard card

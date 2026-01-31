@@ -52,6 +52,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         self.genre = "-"
         self.genreId = "-"
         self.imageUrl = "-"
+        self.scriptVersion = "-"
 
     #@property
     #def icon(self):
@@ -82,7 +83,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         global_data = self.hass.data.get(DOMAIN, {}).get("global", {})
         return {
             **self._attr_extra_state_attributes, # Les persistants (version, hw)
-            "ip_address": self._api.host,
+            "host": self._api.host,
+            "recalboxIpAddress": self.recalboxIpAddress,
             "game": self.game,
             "console": self.console,
             "genre": self.genre,
@@ -256,6 +258,17 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     #       Ecoute MQTT      #
     ##########################
 
+
+
+    def generateImageUrlFromPath(self, path:str) -> str:
+        if path and path != "-":
+            imageUrl = f"http://{self._api.host}:{self._api.api_port_gamesmanager}/{path}"
+            _LOGGER.debug(f"Generate image URL to {imageUrl}")
+            return imageUrl
+        else:
+            return path
+
+
     # Callback, une fois ajouté à HASS
     # on souscrit aux files MQTT
     # pour mettre à jour la Recalbox selon
@@ -263,6 +276,17 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     async def async_added_to_hass(self):
         """Appelé quand l'entité est ajoutée à HA."""
         await super().async_added_to_hass()
+
+        # Initialisation du 1er status pour savoir si on est ON ou OFF
+        await self.coordinator.async_config_entry_first_refresh()
+        if self.coordinator.data is True:
+            _LOGGER.debug("Premier ping réussi au démarrage : on met la recalbox sur ON")
+            self._attr_is_on = True
+            self.reset_game_attributes()
+            self.async_write_ha_state()
+            _LOGGER.info("Recalbox marquée comme en ligne, sans info de jeux")
+        else:
+            _LOGGER.debug("Premier ping échoué au démarrage : on laisse la recalbox sur OFF")
 
         async def message_received(msg):
             """Logique lors de la réception d'un message MQTT."""
@@ -285,21 +309,26 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                     # 1. Mise à jour des attributs internes
                     v_sw = data.get("recalboxVersion")
                     v_hw = data.get("hardware")
+                    scriptVersion = data.get("scriptVersion")
 
                     self._attr_extra_state_attributes.update({
                         "hardware": v_hw,
-                        "recalboxVersion": v_sw
+                        "recalboxVersion": v_sw,
+                        "scriptVersion": scriptVersion,
                     })
+                    self.recalboxIpAddress = data.get("recalboxIpAddress", "-")
+
+                    _LOGGER.debug('Updating game attributes...')
 
                     self.game = data.get("game", "-")
                     self.console = data.get("console", "-")
                     self.genre = data.get("genre", "-")
                     self.genreId = data.get("genreId", "-")
                     self.rom = data.get("rom", "-")
-                    self.imageUrl = data.get("imageUrl", "-")
+                    self.imageUrl = data.get("imageUrl", self.generateImageUrlFromPath(data.get("imagePath", "-")))
 
 
-                    _LOGGER.debug('Updating device version/hardware')
+                    _LOGGER.debug('Updating device version/hardware...')
                     # On signale à HA que les infos du device ont pu changer
                     device_registry = dr.async_get(self.hass)
                     device = device_registry.async_get_device(
@@ -313,6 +342,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                         )
 
                 except json.JSONDecodeError:
+                    _LOGGER.error('Cannot parse JSON')
                     pass
 
             # Notifier HA du changement

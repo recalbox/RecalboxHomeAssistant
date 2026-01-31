@@ -11,7 +11,7 @@ const TRANSLATIONS = {
       "shutdown": "Éteindre",
       "reboot": "Redémarrer",
       "screenshot": "Capture",
-      "pause": "Pause",
+      "pause": "Pause/Reprendre",
       "save": "Enregistrer",
       "load": "Restaurer",
       "stop": "Quitter le jeu"
@@ -35,7 +35,7 @@ const TRANSLATIONS = {
         "showTurnOffButton": "Éteindre",
         "showRebootButton": "Redémarrer",
         "showScreenshotButton": "Capture",
-        "showPauseGameButton": "Pause",
+        "showPauseGameButton": "Pause/Reprendre",
         "showLoadGameButton": "Restaurer",
         "showSaveGameButton": "Enregistrer",
         "showQuitGameButton": "Quitter le jeu",
@@ -44,7 +44,7 @@ const TRANSLATIONS = {
         "entity": "Doit être une entité créée à partir de l'intégration Recalbox",
         "showGameGenre": "Afficher ou non le genre du jeu (textuellement) dans la section du jeu en cours.",
         "showRomPath": "Afficher ou non le chemin de stockage de la ROM lancée, dans la section du jeu en cours.",
-        "showRestartRequiredSuggestion": "Lorsque l'intégration Recalbox est installée, ou mise à jour, elle installe les fichiers nécessaires à la reconnaissances des phrases Assist. Si ces phrases ont été mises à jour, Home Assistant pourrait nécessiter un redémarrage pour les prendre en compte (chargement au lancement).",
+        "showRestartRequiredSuggestion": "Lorsque l'intégration Recalbox est installée, ou mise à jour, elle installe les fichiers nécessaires à la reconnaissances des phrases Assist. Si ces phrases ont été mises à jour, l'intégration essaye de recharger Assist, mais en cas d'échec, Home Assistant pourrait nécessiter un redémarrage pour les prendre en compte.",
         "showTurnOffButton": "Demande d'extinction par appel à l'API Recalbox",
         "showRebootButton": "Demande de redémarrage par appel à l'API Recalbox",
         "showScreenshotButton": "Demande de screenshot du jeu en cours, par UDP (sinon, par l'API si l'envoi UDP a échoué)",
@@ -66,7 +66,7 @@ const TRANSLATIONS = {
       "reboot": "Reboot",
       "screenshot": "Screenshot",
       "stop": "Quit game",
-      "pause": "Pause",
+      "pause": "Pause/Resume",
       "save": "Save State",
       "load": "Load State",
     },
@@ -89,7 +89,7 @@ const TRANSLATIONS = {
         "showTurnOffButton": "Power off",
         "showRebootButton": "Reboot",
         "showScreenshotButton": "Screenshot",
-        "showPauseGameButton": "Pause",
+        "showPauseGameButton": "Pause/Resume",
         "showLoadGameButton": "Load State",
         "showSaveGameButton": "Save State",
         "showQuitGameButton": "Quit game"
@@ -98,7 +98,7 @@ const TRANSLATIONS = {
         "entity": "Must be an entity created by the Recalbox integration",
         "showGameGenre": "Whether to display the game genre (text) in the current game section.",
         "showRomPath": "Whether to display the storage path of the running ROM in the current game section.",
-        "showRestartRequiredSuggestion": "When the Recalbox integration is installed or updated, it installs the files required for Assist phrase recognition. If these phrases have been updated, Home Assistant may require a restart to load them.",
+        "showRestartRequiredSuggestion": "When the Recalbox integration is installed or updated, it installs the files required for Assist phrase recognition. If these phrases have been updated, and the automatic reload fails, Home Assistant may require a restart to load them.",
         "showTurnOffButton": "Request shutdown via Recalbox API",
         "showRebootButton": "Request reboot via Recalbox API",
         "showScreenshotButton": "Request a screenshot of the current game via UDP (falls back to API if UDP fails)",
@@ -161,6 +161,7 @@ class RecalboxCard extends HTMLElement {
 
             .card-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 12px; border-top: 1px solid var(--divider-color); border-radius: 0 0 12px 12px; }
             .action-button { display: flex; min-height: 26px; flex-direction: row; gap: 6px; border-radius: 20px; padding: 0 12px; align-items: center; cursor: pointer; font-size: 10px; text-transform: uppercase; color: var(--primary-text-color); background-color: var(--chip-background-color); }
+            /* Couleur spécifique pour le Thème Clair (Light) */ @media (prefers-color-scheme: light) { .action-button { background-color: var(--ha-assist-chip-active-container-color); }}
             .action-button ha-icon { color: var(--_leading-icon-color); --mdc-icon-size: 18px; }
             .no-gap { gap: 0; }
             .game-icon-button { padding: 0 4px; min-height: 26px; align-content: center; }
@@ -289,7 +290,7 @@ class RecalboxCard extends HTMLElement {
     const deviceId = state.context && state.context.device_id;
     const recalboxVersion = state.attributes.recalboxVersion || "x.x";
     const hardware = state.attributes.hardware;
-    const host = state.attributes.ip_address;
+    const host = state.attributes.host;
 
     this.footer.innerHTML = `
       <div>
@@ -440,8 +441,8 @@ class RecalboxCardEditor extends HTMLElement {
         schema: [
             { name: "showScreenshotButton", selector: { boolean: {} } },
             { name: "showPauseGameButton", selector: { boolean: {} } },
-            { name: "showLoadGameButton", selector: { boolean: {} } },
             { name: "showSaveGameButton", selector: { boolean: {} } },
+            { name: "showLoadGameButton", selector: { boolean: {} } },
             { name: "showQuitGameButton", selector: { boolean: {} } },
         ]
       }
