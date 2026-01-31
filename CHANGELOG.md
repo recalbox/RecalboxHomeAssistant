@@ -5,7 +5,7 @@
 
 ## v1.3.2 - ...
 
-- ...
+- Clean `recalboxIpAddress` and `scriptVersion` switch attributes
 
 
 ## v1.3.1 - 01/02/2026
