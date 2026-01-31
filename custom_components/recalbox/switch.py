@@ -46,13 +46,13 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         self._attr_is_on = False
         self._attr_extra_state_attributes = {}
         # Attribut volatile (non persisté dans l'objet d'état standard)
+        self.recalboxIpAddress = None
         self.game = "-"
         self.console = "-"
         self.rom = "-"
         self.genre = "-"
         self.genreId = "-"
         self.imageUrl = "-"
-        self.scriptVersion = "-"
 
     #@property
     #def icon(self):
@@ -298,6 +298,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                 _LOGGER.debug(f"MQTT status message received ! Updating recalbox status to : {payload}")
                 self._attr_is_on = (payload == "ON")
                 if not self._attr_is_on:
+                    # si on passe à OFF -> on oublie l'IP, qui risque de changer au prochain start
+                    self.recalboxIpAddress = None
                     self.reset_game_attributes()
 
             # 2. Gestion des infos du Jeu (JSON)
@@ -316,7 +318,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                         "recalboxVersion": v_sw,
                         "scriptVersion": scriptVersion,
                     })
-                    self.recalboxIpAddress = data.get("recalboxIpAddress", "-")
+                    self.recalboxIpAddress = data.get("recalboxIpAddress")
 
                     _LOGGER.debug('Updating game attributes...')
 
