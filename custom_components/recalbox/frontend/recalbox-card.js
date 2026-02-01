@@ -163,9 +163,13 @@ class RecalboxCard extends HTMLElement {
         if (!currentScriptVersion) {
             // we already had a recalbox version but not the script version
             needsRecalboxScriptUpgrade = true;
-        } else if (currentScriptVersion.localeCompare(RECALBOX_SCRIPT_MIN_VERSION, undefined, { numeric: true, sensitivity: 'base' }) < 0) {
-            // the script version is < RECALBOX_SCRIPT_MIN_VERSION
-            needsRecalboxScriptUpgrade = true;
+        } else {
+            const versionParts = currentScriptVersion.split(":");
+            const cleanVersion = versionParts.length > 1 ? versionParts[1].trim() : versionParts[0].trim();
+            if (cleanVersion.localeCompare(RECALBOX_SCRIPT_MIN_VERSION, undefined, { numeric: true, sensitivity: 'base' }) < 0) {
+                // the script version is < RECALBOX_SCRIPT_MIN_VERSION
+                needsRecalboxScriptUpgrade = true;
+            }
         }
     }
 
@@ -273,7 +277,7 @@ class RecalboxCard extends HTMLElement {
           <ha-icon icon="mdi:alert" style="margin-right: 16px;"></ha-icon>
           ${i18n.recalboxScriptUpgradeRequired}
           <br/>Min : ${RECALBOX_SCRIPT_MIN_VERSION}
-          <br/>Script : ${RECALBOX_SCRIPT_MIN_VERSION}
+          <br/>Script : ${currentScriptVersion}
         </div>
       `;
       this.content.innerHTML += alertHtml;
