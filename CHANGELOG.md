@@ -3,6 +3,12 @@
 > By Aurélien Tomassini, 2026.
 
 
+## v1.4.1 - ...
+
+
+- ...
+
+
 ## v1.4.0 - 01/02/2026 - (Breaking changes) Support multiple Recalbox !
 
 > This version is the first version to fully support mutiple instances of Recalboxs in the same local network !  
