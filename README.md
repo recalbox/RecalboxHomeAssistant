@@ -52,6 +52,8 @@ This repository allows you to integrate Recalbox in your Home Assistant :
     + [Load last game state](#load-last-game-state)
     + [Turn OFF recalbox](#turn-off-recalbox)
 - [Releases notes](#releases-notes)
+- [Troubleshot](#troubleshot)
+  * [`CRLF` / `LF` run script issue](#crlf--lf-run-script-issue)
 
 <!-- tocstop -->
 
@@ -291,3 +293,23 @@ Examples :
 ## Releases notes
 
 See [change logs file](CHANGELOG.md)
+
+
+## Troubleshot
+
+### `CRLF` / `LF` run script issue 
+If your Recalbox doesn't seem to reach Home Assistant, while you have your script in `userscripts`,
+please make sure the `.sh` file is using "LF" line separator :
+- You can run via SSH `sh <path-to-the-script>` :  
+  if there are errors saying "\r" is invalid, it means
+  your sh file line separators have been modified, while it must not.
+- Or you can simply open the .sh file in a compatible editor, like your IDE, or Notepad++,
+  and check on the bottom right corner if it is shown `CRLF` (wrong) or `LF` (good).  
+
+If you downloaded the file with git on windows, the line separator could have been automatically 
+changed to CRLF, while Recalbox script only accepts LF.
+In that case, type `git config --global core.autocrlf input` in command line, to make sure that 
+git keeps the "LF" as it was in the file, without changing it.
+
+Also, make sure that you are using the latest script version.
+If your script version is too old, a message will be shown in your Recalbox Card.
