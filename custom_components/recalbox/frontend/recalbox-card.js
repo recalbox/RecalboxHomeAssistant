@@ -1,3 +1,4 @@
+const RECALBOX_SCRIPT_MIN_VERSION = "v1.4.0";
 // Traductions
 const TRANSLATIONS = {
   "fr": {
