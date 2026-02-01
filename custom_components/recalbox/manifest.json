@@ -5,6 +5,6 @@
   "codeowners": ["Aurelien Tomassini", "@ooree23"],
   "dependencies": ["mqtt", "frontend", "http"],
   "iot_class": "local_push",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "documentation": "https://github.com/ooree23/RecalboxHomeAssistant"
 }

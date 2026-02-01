@@ -292,21 +292,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
             topic = msg.topic
             payload = msg.payload
 
-            # 1. Gestion du Status (ON/OFF)
-            if topic == "recalbox/notifications/status":
-                # TODO : Vérifier si le recalboxIpAddress du JSON reçu
-                #        correspond à l'adresse IP de l'instance courante
-                #        -> si le mDNS(host) == recalboxIpAddress.
-                #        => Oui = ce message est pour nous, Non = on ignore de ce message
-                _LOGGER.debug(f"MQTT status message received ! Updating recalbox status to : {payload}")
-                self._attr_is_on = (payload == "ON")
-                if not self._attr_is_on:
-                    # si on passe à OFF -> on oublie l'IP, qui risque de changer au prochain start
-                    self.recalboxIpAddress = None
-                    self.reset_game_attributes()
-
-            # 2. Gestion des infos du Jeu (JSON)
-            elif topic == "recalbox/notifications/game":
+            if topic == "recalbox/notifications/game":
                 _LOGGER.debug(f"MQTT game message received ! Updating data with JSON : {payload}")
                 try:
                     data = json.loads(payload)
@@ -318,6 +304,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                         _LOGGER.debug(f"Ignore : this game message was sent from {data.get("recalboxIpAddress")}, but {self._api.host} has IP {self.coordinator.data.get("mdns_ip_address")} !")
                         return
 
+                    # 0. Mise à jour du status
+                    self._attr_is_on = (data.get("status") == "ON")
 
                     # 1. Mise à jour des attributs internes
                     v_sw = data.get("recalboxVersion")

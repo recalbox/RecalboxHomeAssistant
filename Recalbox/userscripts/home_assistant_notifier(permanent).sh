@@ -204,7 +204,8 @@ while true; do
   "recalboxIpAddress": $(clean_json_val "$IP_LOCALE"),
   "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
   "hardware": $(clean_json_val "$HARDWARE_MODEL"),
-  "scriptVersion": "$SCRIPT_VERSION"
+  "scriptVersion": "$SCRIPT_VERSION",
+  "status": "$STATUS"
 }
 EOF
 )
@@ -221,7 +222,6 @@ EOF
   # Arrivés ici, on a du réseau et on a récupéré l'IP de Home Assistant
 
   # 5. Envoi
-  send_mqtt "status" "$STATUS" "false"
   send_mqtt "game" "$JSON_PAYLOAD" "true"
 
 done

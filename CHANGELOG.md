@@ -3,10 +3,12 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v1.3.2 - ...
+## v1.4.à - ...
 
 - Clean `recalboxIpAddress` and `scriptVersion` switch attributes
 - In the HA model, return to 'None' fields values, instead of "-" that was not consistent
+- Simplify MQTT messages : a single message from Recalbox to Home Assistant contains status  + game attributes, instead of 2 messages before
+- On message received, checks the IP address of each Recalbox host, to check if the message comes from this Recalbox
 
 
 ## v1.3.1 - 01/02/2026
