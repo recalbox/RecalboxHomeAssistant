@@ -34,12 +34,16 @@ async def prepare_ping_coordinator(hass, api:RecalboxAPI) -> DataUpdateCoordinat
             # Resolve IP address from hostname here !
             # SEULEMENT si le ping est OK
             if success:
-                async with async_timeout.timeout(5):
+                try:
+                  async with async_timeout.timeout(5):
                     # On demande l'IP correspondant au nom d'hôte pour la comparaison MQTT
                     resolved_ip = await hass.async_add_executor_job(
                         socket.gethostbyname, api.host
                     )
                     _LOGGER.debug(f"Recalbox {api.host} -> l'adresse IP {resolved_ip}")
+                except Exception as dnsErr:
+                    _LOGGER.debug(f"Failed to get DNS from Recalbox {api.host} : {dnsErr}")
+
         except Exception as err:
             # Si échec de connexion, on considère qu'elle est OFF
             _LOGGER.warning(f"Erreur au ping de la Recalbox {api.host}: {err}")
