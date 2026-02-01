@@ -7,6 +7,7 @@ from .const import DOMAIN
 from .translations_service import RecalboxTranslator
 from .api import RecalboxAPI
 import unicodedata
+import ipaddress
 import re
 import homeassistant.helpers.config_validation as cv
 import json
@@ -83,7 +84,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         return {
             **self._attr_extra_state_attributes, # Les persistants (version, hw)
             "host": self._api.host,
-            "mDNSIpAddress": self.coordinator.data.get("mdns_ip_address") if self.coordinator.data else None,
+            "mdns_ip_address": self.coordinator.data.get("mdns_ip_address") if self.coordinator.data else None,
             "game": self.game,
             "console": self.console,
             "genre": self.genre,
@@ -253,6 +254,25 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         self.imageUrl = None
         _LOGGER.debug("Recalbox game attributes cleaned")
 
+
+
+    #########
+    # UTILS #
+    #########
+
+    async def getRecalboxCurrentIPAddress(self) -> str :
+        # si le host est déjà une adresse IP
+        try:
+            ipaddress.ip_address(self._api.host)
+            return self._api.host # on était déjà sur une adresse IP
+        except Exception as err:
+            # Ce n'est pas une IP (probablement un nom d'hôte)
+            # Si on ne connait pas encore l'IP, on essaye de la récupérer
+            if not self.coordinator.data.get("mdns_ip_address"):
+                await self.coordinator.async_config_entry_first_refresh()
+            # on renvoie l'adresse IP si on la connait
+            return self.coordinator.data.get("mdns_ip_address")
+
     ##########################
     #       Ecoute MQTT      #
     ##########################
@@ -298,7 +318,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                     data = json.loads(payload)
 
                     # Vérification si le message est destiné à cette recalbox ou non
-                    if self.coordinator.data.get("mdns_ip_address") == data.get("recalboxIpAddress") :
+                    if await self.getRecalboxCurrentIPAddress() == data.get("recalboxIpAddress") :
                         _LOGGER.debug(f"This game message was sent from {self._api.host} !")
                     else :
                         _LOGGER.debug(f"Ignore : this game message was sent from {data.get("recalboxIpAddress")}, but {self._api.host} has IP {self.coordinator.data.get("mdns_ip_address")} !")
