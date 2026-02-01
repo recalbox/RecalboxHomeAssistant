@@ -4,7 +4,7 @@
 # A placer dans le dossier userscripts
 # Par Aurélien Tomassini
 
-SCRIPT_VERSION="home_assistant_notifier.sh:v1.3.1"
+SCRIPT_VERSION="home_assistant_notifier.sh:v1.4.0"
 
 # Configuration
 HOME_ASSISTANT_DOMAIN="homeassistant.local"
@@ -182,7 +182,8 @@ gen_game_json() {
   "recalboxIpAddress": $(clean_json_val "$IP_LOCALE"),
   "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
   "hardware": $(clean_json_val "$HARDWARE_MODEL"),
-  "scriptVersion": "$SCRIPT_VERSION"
+  "scriptVersion": "$SCRIPT_VERSION",
+  "status": "$STATUS"
 }
 EOF
 }
@@ -190,7 +191,5 @@ EOF
 
 # Si on doit effacer le retain du status...
 # send_mqtt "status" "" "true"
-# On ne demande pas de retenir l'état sur le long terme
-send_mqtt "status" "$STATUS" "false"
 # Mais on veut persister les attributs, notamment pour retenir la version de recalbox et le hardware
 send_mqtt "game" "$(gen_game_json)" "true"

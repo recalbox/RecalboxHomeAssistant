@@ -1,3 +1,4 @@
+const RECALBOX_SCRIPT_MIN_VERSION = "v1.4.0";
 // Traductions
 const TRANSLATIONS = {
   "fr": {
@@ -7,6 +8,7 @@ const TRANSLATIONS = {
     "genre": "Genre",
     "romPath": "Rom",
     "rebootRequired": "De nouvelles phrases Assist ont été détectées et installées. Redémarrez Home Assistant une nouvelle fois pour les activer et avoir accès aux nouvelles commandes vocales/textuelles.",
+    "recalboxScriptUpgradeRequired": "Vous devez installer la dernière version du script sur votre Recalbox. La version actuellement installée est trop ancienne.",
     "buttons": {
       "shutdown": "Éteindre",
       "reboot": "Redémarrer",
@@ -61,6 +63,7 @@ const TRANSLATIONS = {
     "genre": "Genre",
     "romPath": "Rom",
     "rebootRequired": "New Assist sentences have been installed. You will have to restart Home Assistant again to have access to the new intents on text/voice commands.",
+    "recalboxScriptUpgradeRequired": "Please update the script in your Recalbox. The version installed on your Recalbox is too old.",
     "buttons": {
       "shutdown": "Power off",
       "reboot": "Reboot",
@@ -118,8 +121,27 @@ const TRANSLATIONS = {
 class RecalboxCard extends HTMLElement {
 
   set hass(hass) {
+    if (!hass || !hass.connected) {
+      this.innerHTML = `<ha-card><div style="padding:16px; color:orange;">Home Assistant is not ready...</div></ha-card>`;
+      return;
+    }
+    if (!this.config) {
+      this.innerHTML = `<ha-card><div style="padding:16px; color:orange;">Configuration not ready yet...</div></ha-card>`;
+      return;
+    }
+
     const entityId = this.config.entity;
     const state = hass.states[entityId];
+
+    if (!state) {
+      this.innerHTML = `<ha-card><div style="padding:16px; color:red;">Entité non trouvée : ${entityId}</div></ha-card>`;
+      return;
+    }
+
+    if (!state.attributes) {
+      this.innerHTML = `<ha-card><div style="padding:16px; color:red;">Attributs non accessibles : ${entityId}</div></ha-card>`;
+      return;
+    }
 
     const lang = (this.config.lang || hass.language || 'en').split('-')[0].toLowerCase();
     const i18n = TRANSLATIONS[lang] || TRANSLATIONS['en'];
@@ -135,10 +157,32 @@ class RecalboxCard extends HTMLElement {
     const showSaveGameButton = this.config.showSaveGameButton ?? true;
     const showQuitGameButton = this.config.showQuitGameButton ?? true;
 
-    if (!state) {
-      this.innerHTML = `<ha-card><div style="padding:16px; color:red;">Entité non trouvée : ${entityId}</div></ha-card>`;
-      return;
+    let needsRecalboxScriptUpgrade = false;
+    const currentScriptVersion = state.attributes.scriptVersion;
+    if (state && state.attributes.recalboxVersion) {
+        if (!currentScriptVersion) {
+            // we already had a recalbox version but not the script version
+            console.log("Recalbox Card: Aucun scriptVersion trouvé dans les attributs.");
+            needsRecalboxScriptUpgrade = true;
+        } else {
+            const versionParts = currentScriptVersion.split(":");
+            const cleanVersion = versionParts.length > 1 ? versionParts[1].trim() : versionParts[0].trim();
+
+            const comparison = cleanVersion.localeCompare(RECALBOX_SCRIPT_MIN_VERSION, undefined, { numeric: true, sensitivity: 'base' });
+
+            // logs
+            console.log("--- Recalbox Script Check ---");
+            console.log("Brut provenant de l'entité :", currentScriptVersion);
+            console.log("Version extraite (clean) :", cleanVersion);
+            console.log("Version minimale requise :", RECALBOX_SCRIPT_MIN_VERSION);
+            console.log("Résultat localeCompare :", comparison, "(Si < 0, mise à jour requise)");
+
+            needsRecalboxScriptUpgrade = (comparison < 0);
+        }
+    } else {
+
     }
+
 
     if (!this.content) {
       this.innerHTML = `
@@ -190,10 +234,10 @@ class RecalboxCard extends HTMLElement {
     const isOn = state.state === "on";
     const game = state.attributes.game || "-";
     const consoleName = state.attributes.console || "-";
-    const isAGameRunning = game && game!="-" && game!="None" && consoleName!="Kodi";
     const genre = state.attributes.genre || "-";
     const romPath = state.attributes.rom || "-";
     const imageUrl = state.attributes.imageUrl || "";
+    const isAGameRunning = game && game!="-" && game!="None" && consoleName!="Kodi";
     const needsRestart = state.attributes.needs_restart || false;
 
     // 0. titre
@@ -232,6 +276,18 @@ class RecalboxCard extends HTMLElement {
         <div style="background-color: var(--secondary-background-color); color: white; padding: 12px; border-radius: 6px; border: solid 1px grey; margin: 10px; font-size: 0.8em; display: flex; align-items: center;">
           <ha-icon icon="mdi:alert" style="margin-right: 16px;"></ha-icon>
           ${i18n.rebootRequired}
+        </div>
+      `;
+      this.content.innerHTML += alertHtml;
+    }
+
+    if (needsRecalboxScriptUpgrade) {
+      const alertHtml = `
+        <div style="background-color: var(--secondary-background-color); color: white; padding: 12px; border-radius: 6px; border: solid 1px grey; margin: 10px; font-size: 0.8em; display: flex; align-items: center;">
+          <ha-icon icon="mdi:alert" style="margin-right: 16px;"></ha-icon>
+          ${i18n.recalboxScriptUpgradeRequired}
+          <br/>Min : ${RECALBOX_SCRIPT_MIN_VERSION}
+          <br/>Script : ${currentScriptVersion}
         </div>
       `;
       this.content.innerHTML += alertHtml;
@@ -452,10 +508,8 @@ class RecalboxCardEditor extends HTMLElement {
 }
 
 
-customElements.define("recalbox-card-editor", RecalboxCardEditor);
-customElements.define('recalbox-card', RecalboxCard);
 
-const isFrench = navigator.language.startsWith('fr');
+const isFrench = navigator.language.toLowerCase().startsWith('fr');
 const cardDescription = isFrench
   ? "Carte complète avec gestion des jeux, actions et informations système."
   : "Complete card with game management, actions, and system information.";
@@ -466,3 +520,11 @@ window.customCards.push({
   name: "Recalbox Card",
   description: cardDescription
 });
+
+
+if (!customElements.get("recalbox-card-editor")) {
+  customElements.define("recalbox-card-editor", RecalboxCardEditor);
+}
+if (!customElements.get("recalbox-card")) {
+  customElements.define("recalbox-card", RecalboxCard);
+}

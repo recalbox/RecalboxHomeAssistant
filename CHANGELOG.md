@@ -3,10 +3,28 @@
 > By Aurélien Tomassini, 2026.
 
 
+## v1.4.0 - 01/02/2026 - (Breaking changes) Support multiple Recalbox !
+
+> This version is the first version to fully support mutiple instances of Recalboxs in the same local network !  
+> Thanks to mDNS, in Home Assistant we try to get Recalbox IP. When a MQTT message arrives from Recalbox,
+> it now contains the Recalbox IP address (from itself), we can then check, when receiving it, to which instance
+> it was sent to.
+> 
+> The Recalbox script has changes and needs to be updated.  
+> If the script version in < 1.4.0, please upgrade !
+> (a message will be displayed in the Recalbox card).
+
+- Clean `recalboxIpAddress` and `scriptVersion` switch attributes
+- In the HA model, return to 'None' fields values, instead of "-" that was not consistent
+- [Support multiple Recalbox](https://github.com/ooree23/RecalboxHomeAssistant/issues/1)
+  - Simplify MQTT messages : a single message from Recalbox to Home Assistant contains status + game attributes, instead of 2 messages before
+  - On message received, checks the IP address of each Recalbox host, to check if the message comes from this Recalbox
+- Display a message if the script installed on Recalbox needs to be upgraded
+
+
 ## v1.3.1 - 01/02/2026
 
 > This version adds Assist auto reload on updated Assist sentences.
-> 
 
 - On first install or updates, if custom sentences have been updated,
   tries to reload Home Assistant Assist sentences without asking for a new restart.  

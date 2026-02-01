@@ -7,6 +7,7 @@ from .const import DOMAIN
 from .translations_service import RecalboxTranslator
 from .api import RecalboxAPI
 import unicodedata
+import ipaddress
 import re
 import homeassistant.helpers.config_validation as cv
 import json
@@ -46,13 +47,12 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         self._attr_is_on = False
         self._attr_extra_state_attributes = {}
         # Attribut volatile (non persisté dans l'objet d'état standard)
-        self.game = "-"
-        self.console = "-"
-        self.rom = "-"
-        self.genre = "-"
-        self.genreId = "-"
-        self.imageUrl = "-"
-        self.scriptVersion = "-"
+        self.game = None
+        self.console = None
+        self.rom = None
+        self.genre = None
+        self.genreId = None
+        self.imageUrl = None
 
     #@property
     #def icon(self):
@@ -61,7 +61,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
     @property
     def is_on(self) -> bool:
         """L'entité est ON si MQTT dit ON ET que le dernier ping a réussi."""
-        if not self.coordinator.data:
+        if not self.coordinator.data.get("is_alive_smoothed"):
             return False
         return self._attr_is_on
 
@@ -73,8 +73,8 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
             "manufacturer": "Recalbox",
             "model": f"Recalbox OS, at {self._api.host}",
             "configuration_url": f"http://{self._api.host}",
-            "sw_version": self._attr_extra_state_attributes.get("recalboxVersion", "-"),
-            "hw_version": self._attr_extra_state_attributes.get("hardware", "-")
+            "sw_version": self._attr_extra_state_attributes.get("recalboxVersion"),
+            "hw_version": self._attr_extra_state_attributes.get("hardware")
         }
 
     @property
@@ -84,7 +84,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
         return {
             **self._attr_extra_state_attributes, # Les persistants (version, hw)
             "host": self._api.host,
-            "recalboxIpAddress": self.recalboxIpAddress,
+            "mdns_ip_address": self.coordinator.data.get("mdns_ip_address") if self.coordinator.data else None,
             "game": self.game,
             "console": self.console,
             "genre": self.genre,
@@ -246,13 +246,32 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
 
     def reset_game_attributes(self):
-        self.game = "-"
-        self.console = "-"
-        self.genre = "-"
-        self.genreId = "-"
-        self.rom = "-"
-        self.imageUrl = "-"
+        self.game = None
+        self.console = None
+        self.genre = None
+        self.genreId = None
+        self.rom = None
+        self.imageUrl = None
         _LOGGER.debug("Recalbox game attributes cleaned")
+
+
+
+    #########
+    # UTILS #
+    #########
+
+    async def getRecalboxCurrentIPAddress(self) -> str :
+        # si le host est déjà une adresse IP
+        try:
+            ipaddress.ip_address(self._api.host)
+            return self._api.host # on était déjà sur une adresse IP
+        except ValueError as err:
+            # Ce n'est pas une IP (probablement un nom d'hôte)
+            # Si on ne connait pas encore l'IP, on essaye de la récupérer
+            if not self.coordinator.data.get("mdns_ip_address"):
+                await self.coordinator.async_refresh()
+            # on renvoie l'adresse IP si on la connait
+            return self.coordinator.data.get("mdns_ip_address")
 
     ##########################
     #       Ecoute MQTT      #
@@ -279,7 +298,7 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
 
         # Initialisation du 1er status pour savoir si on est ON ou OFF
         await self.coordinator.async_config_entry_first_refresh()
-        if self.coordinator.data is True:
+        if self.coordinator.data.get("is_ping_success") is True:
             _LOGGER.debug("Premier ping réussi au démarrage : on met la recalbox sur ON")
             self._attr_is_on = True
             self.reset_game_attributes()
@@ -293,18 +312,20 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
             topic = msg.topic
             payload = msg.payload
 
-            # 1. Gestion du Status (ON/OFF)
-            if topic == "recalbox/notifications/status":
-                _LOGGER.debug(f"MQTT status message received ! Updating recalbox status to : {payload}")
-                self._attr_is_on = (payload == "ON")
-                if not self._attr_is_on:
-                    self.reset_game_attributes()
-
-            # 2. Gestion des infos du Jeu (JSON)
-            elif topic == "recalbox/notifications/game":
+            if topic == "recalbox/notifications/game":
                 _LOGGER.debug(f"MQTT game message received ! Updating data with JSON : {payload}")
                 try:
                     data = json.loads(payload)
+
+                    # Vérification si le message est destiné à cette recalbox ou non
+                    if await self.getRecalboxCurrentIPAddress() == data.get("recalboxIpAddress") :
+                        _LOGGER.debug(f"This game message was sent from {self._api.host} !")
+                    else :
+                        _LOGGER.debug(f"Ignore : this game message was sent from {data.get("recalboxIpAddress")}, but {self._api.host} has IP {self.coordinator.data.get("mdns_ip_address")} !")
+                        return
+
+                    # 0. Mise à jour du status
+                    self._attr_is_on = (data.get("status") == "ON")
 
                     # 1. Mise à jour des attributs internes
                     v_sw = data.get("recalboxVersion")
@@ -316,16 +337,15 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                         "recalboxVersion": v_sw,
                         "scriptVersion": scriptVersion,
                     })
-                    self.recalboxIpAddress = data.get("recalboxIpAddress", "-")
 
                     _LOGGER.debug('Updating game attributes...')
 
-                    self.game = data.get("game", "-")
-                    self.console = data.get("console", "-")
-                    self.genre = data.get("genre", "-")
-                    self.genreId = data.get("genreId", "-")
-                    self.rom = data.get("rom", "-")
-                    self.imageUrl = data.get("imageUrl", self.generateImageUrlFromPath(data.get("imagePath", "-")))
+                    self.game = data.get("game")
+                    self.console = data.get("console")
+                    self.genre = data.get("genre")
+                    self.genreId = data.get("genreId")
+                    self.rom = data.get("rom")
+                    self.imageUrl = data.get("imageUrl", self.generateImageUrlFromPath(data.get("imagePath")))
 
 
                     _LOGGER.debug('Updating device version/hardware...')
