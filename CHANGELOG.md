@@ -6,7 +6,8 @@
 ## v1.4.1 - ...
 
 
-- ...
+- Ensure git pulls the sources with `LF` instead of `CRLF` on windows (+ add troubleshot section in readme)
+- Add ℹ️ button in the Recalbox Card, going to the quick intro page https://ooree23.github.io/RecalboxHomeAssistant/
 
 
 ## v1.4.0 - 01/02/2026 - (Breaking changes) Support multiple Recalbox !
