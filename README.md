@@ -59,9 +59,9 @@ This repository allows you to integrate Recalbox in your Home Assistant :
 
 ## Requirements
 
-- You should have a `Recalbox` OS available.  
+- You should have a `Recalbox` available.  
   Tested only with Recalbox <mark>9.2.3</mark>, Raspberry Pi 3 B+.  
-  By default, should be accessible on `recalbox.local`.  
+  Should be accessible by its hostname, like `recalbox.local` for example.  
   > Its API ports (80 and 81) and UDP ports (1337 and 55355) should be accessible in the local network (enabled by default).
 
 
@@ -109,11 +109,14 @@ It uses the same services just listed.
 
 1. **Recalbox**
    
-   - Copy the script in the `userscripts` Recalbox folder. **Only one is required** !
+   - Copy the `sh` script in the `userscripts` Recalbox folder. **Only one is required** !
      - `Recalbox/userscripts/home_assistant_notifier.sh` : script called at every event. Optimized since v1.3.1
      - **(EXPERIMENTAL)** `Recalbox/userscripts/home_assistant_notifier(permanent).sh` : script called only once, and waiting for events itself
      Both script will react to Recalbox events.
      Still experimental in v1.3.1, use at your own risk.
+     
+     > If your Home Assistant is not accessible via `homeassistant.local`,
+     > change the "HOME_ASSISTANT_DOMAIN" variable on top of the script.
 
 
 2. **Home Assistant**
@@ -142,8 +145,12 @@ It uses the same services just listed.
        (new "Recalbox" Integration will be available after restart in the Devices & Service menu).
       
      - Go to Devices & Services menu, "+ add integration", and search for "Recalbox".
-       You will be asked for Host/IP of your Recalbox (you should let the default "recalbox.local"), and ports can be changed if needed.
-       If you can, have your Recalbox ON, and then let the "Test connection" checkbox checked to test host and ports.
+       You will be asked for Host/IP of your Recalbox (the default host is "recalbox.local"), and ports can be changed if needed.
+       If you can, have your Recalbox ON, and then let the "Test connection" checkbox checked to test host and ports.  
+       
+       > You can use as many Recalbox as you want in your Network.  
+       > Depending on the infrastructure, if you have dynamic IP address, please use Hostnames,
+       > not IP address, as it could change later.
        
       
 

@@ -21,7 +21,8 @@ const TRANSLATIONS = {
     "footer": {
         "onHardware": "sur",
         "webManagerLabel": "Web manager Recalbox",
-        "integrationLabel": "GitHub de l'intégration"
+        "integrationLabel": "GitHub de l'intégration",
+        "githubPagesLabel": "GitHub Pages"
     },
     "form_sections": {
         "system_buttons": "Affichage des boutons système",
@@ -76,7 +77,8 @@ const TRANSLATIONS = {
     "footer": {
         "onHardware": "on",
         "webManagerLabel": "Recalbox web manager",
-        "integrationLabel": "GitHub integration"
+        "integrationLabel": "GitHub integration",
+        "githubPagesLabel": "GitHub Pages"
     },
     "form_sections": {
         "system_buttons": "System buttons display",
@@ -354,7 +356,8 @@ class RecalboxCard extends HTMLElement {
         <br>
         <a href="http://${host}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
-        <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a>
+        <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a> &nbsp; | &nbsp;
+        <a href="https://ooree23.github.io/RecalboxHomeAssistant/" target="_blank">🔗 ${i18n.footer.githubPagesLabel}</a>
       </div>
     `;
   }
