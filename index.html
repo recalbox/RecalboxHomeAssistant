@@ -78,42 +78,15 @@
 
     <div class="container">
         <a href="https://github.com/ooree23/RecalboxHomeAssistant">
-            <h1>Recalbox Home Assistant</h1>
-            <p class="small-text">by Aurélien Tomassini, 2026</p>
+            <h1 data-i18n="title">Recalbox Home Assistant</h1>
+            <p class="small-text" data-i18n="author">by Aurélien Tomassini, 2026</p>
             <img class="logo" src="logo.png" height="96px">
         </a>
-        <p class="description">This repository allows you to integrate Recalbox in your Home Assistant :</p>
+        <p class="description" data-i18n="description">This repository allows you to integrate Recalbox in your Home Assistant</p>
         <ul>
-            <li>
-                In your dashboard :
-                Get status,
-                Display current game,
-                Turn off,
-                Reboot,
-                Take screenshots,
-                Stop current game,
-                Save game state,
-                Load last game state,
-                ...
-            </li>
-            <li>
-                Trigger any automation you want.
-                For example :
-                change light color according to the game launched,
-                send notifications,
-                etc.
-            </li>
-            <li>
-                Voice/text commands with assistant :
-                Launch a game by title,
-                Ask what is the current game,
-                Save game state,
-                Load last game state,
-                Stop current game,
-                Take a screenshot,
-                Turn off Recalbox,
-                etc
-            </li>
+            <li data-i18n="feat_dashboard">...</li>
+            <li data-i18n="feat_automation">...</li>
+            <li data-i18n="feat_assist">...</li>
         </ul>
         <a class="preview" href="docs/RecalboxHomeAssistantIntegration.png">
             <img src="docs/RecalboxHomeAssistantIntegration.png" alt="Preview"/>
@@ -121,10 +94,47 @@
         <a class="hacs-button" href="https://my.home-assistant.io/redirect/hacs_repository/?owner=ooree23&amp;repository=RecalboxHomeAssistant&amp;category=integration" rel="nofollow">
             <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store." style="max-width: 100%;">
         </a>
-        <a class="github-button" href="https://github.com/ooree23/RecalboxHomeAssistant">
+        <a class="github-button" href="https://github.com/ooree23/RecalboxHomeAssistant" data-i18n="github_btn">
             View documentation and sources on GitHub
         </a>
     </div>
+
+    <script>
+        const translations = {
+            'fr': {
+                'title': 'Recalbox Home Assistant',
+                'author': 'par Aurélien Tomassini, 2026',
+                'description': 'Ce dépôt vous permet d\'intégrer Recalbox dans votre Home Assistant :',
+                'feat_dashboard': 'Dans votre tableau de bord : Obtenir le statut, afficher le jeu actuel, éteindre, redémarrer, prendre des captures d\'écran, sauvegarder/charger une partie, etc.',
+                'feat_automation': 'Déclencher vos automatisations : Par exemple, changer la couleur des lumières selon le jeu lancé, envoyer des notifications, etc.',
+                'feat_assist': 'Commandes vocales/textuelles : Lancer un jeu par son titre, demander quel est le jeu actuel, éteindre la console, etc.',
+                'github_btn': 'Voir la documentation et les sources sur GitHub'
+            },
+            'en': {
+                'title': 'Recalbox Home Assistant',
+                'author': 'Recalbox Home Assistant',
+                'description': 'This repository allows you to integrate Recalbox in your Home Assistant :',
+                'feat_dashboard': 'In your dashboard : Get status, Display current game, Turn off, Reboot, Take screenshots, Stop current game, Save/Load game state, ...',
+                'feat_automation': 'Trigger any automation you want. For example : change light color according to the game launched, send notifications, etc.',
+                'feat_assist': 'Voice/text commands with assistant : Launch a game by title, Ask what is the current game, Save/Load game state, Turn off Recalbox, etc.',
+                'github_btn': 'View documentation and sources on GitHub'
+            }
+        };
+
+        function applyTranslations() {
+            const userLang = navigator.language.startsWith('fr') ? 'fr' : 'en';
+
+            // Traduire tous les éléments avec l'attribut data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[userLang][key]) {
+                    el.innerText = translations[userLang][key];
+                }
+            });
+        }
+
+        window.onload = applyTranslations;
+    </script>
 
 </body>
 </html>
