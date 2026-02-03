@@ -12,9 +12,6 @@ HOME_ASSISTANT_IP_CACHE_FILE="/tmp/ha_ip_address.txt"
 LOGS_FOLDER="/recalbox/share/system/logs/home_assistant_integration"
 #Adresse IP de Recalbox. Sera récupérée plus bas pour optimiser
 HA_IP=""
-MQTT_USER="recalbox"
-MQTT_PASS="recalpass"
-TOPIC="recalbox/notifications"
 # Chemin du fichier d'état Recalbox
 STATE_FILE="/tmp/es_state.inf"
 
@@ -84,20 +81,6 @@ clean_json_val() {
 }
 
 
-# Fonction pour envoyer les messages MQTT
-# Usage: send_mqtt "sous_topic" "message" retain
-send_mqtt() {
-  local sub_topic="$1"
-  local message="$2"
-  
-  if [ "$3" == "true" ]; then
-    mosquitto_pub -h "$HA_IP" -u "$MQTT_USER" -P "$MQTT_PASS" -t "$TOPIC/$sub_topic" -m "$message" -r
-    log "Message MQTT (retain) envoyé à $HA_IP, sur $TOPIC/$sub_topic : $message"
-  else
-    mosquitto_pub -h "$HA_IP" -u "$MQTT_USER" -P "$MQTT_PASS" -t "$TOPIC/$sub_topic" -m "$message"
-    log "Message MQTT envoyé à $HA_IP, sur $TOPIC/$sub_topic : $message"
-  fi
-}
 
 clear_game() {
   GAME_NAME="null"
@@ -188,8 +171,34 @@ gen_game_json() {
 EOF
 }
 
+# Fonction pour envoyer le JSON par API à Home Assistant
+send_api_notification() {
+  local json_payload="$1"
+  local hostname=$(hostname) # Récupère le nom de la Recalbox
 
-# Si on doit effacer le retain du status...
-# send_mqtt "status" "" "true"
-# Mais on veut persister les attributs, notamment pour retenir la version de recalbox et le hardware
-send_mqtt "game" "$(gen_game_json)" "true"
+  # Construction de l'URL vers ton nouveau RestController
+  local url="http://${HA_IP}:8123/api/recalbox/notification/${hostname}"
+
+  log "Envoi de la notification API à $url"
+
+  # Envoi via CURL
+  # -X POST : Méthode POST
+  # -H : En-tête pour dire qu'on envoie du JSON
+  # -d : Le contenu (payload)
+  # -s : Mode silencieux
+  # --max-time : Timeout de 5 secondes pour ne pas bloquer ES
+  response=$(curl -X POST -H "Content-Type: application/json" \
+    -d "$json_payload" \
+    -s -w "%{http_code}" \
+    --max-time 5 \
+    "$url")
+
+  if [ "$response" == "200" ]; then
+    log "Notification API envoyée avec succès (Code 200)"
+  else
+    log "Erreur lors de l'envoi API. Code retour : $response"
+  fi
+}
+
+# Génération et envoi des données
+send_api_notification "$(gen_game_json)"
