@@ -71,6 +71,7 @@ async def prepare_ping_coordinator(hass, api:RecalboxAPI) -> DataUpdateCoordinat
         }
 
 
+
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,

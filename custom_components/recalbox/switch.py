@@ -273,6 +273,14 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
             # on renvoie l'adresse IP si on la connait
             return self.coordinator.data.get("mdns_ip_address")
 
+
+    def isTheOnlyRecalboxExisting(self) -> bool:
+        """Vérifie si cette instance est la seule configurée dans HA."""
+        instances = self.hass.data.get(DOMAIN, {}).get("instances", {})
+        # On vérifie s'il y a exactement 1 seule instance enregistrée
+        return len(instances) <= 1
+
+
     ##########################
     #       Ecoute MQTT      #
     ##########################
@@ -318,7 +326,9 @@ class RecalboxEntityMQTT(CoordinatorEntity, SwitchEntity):
                     data = json.loads(payload)
 
                     # Vérification si le message est destiné à cette recalbox ou non
-                    if await self.getRecalboxCurrentIPAddress() == data.get("recalboxIpAddress") :
+                    if self.isTheOnlyRecalboxExisting() :
+                        _LOGGER.debug(f"This is the only Recalbox : reads all incoming messages !")
+                    elif (await self.getRecalboxCurrentIPAddress()) == data.get("recalboxIpAddress") :
                         _LOGGER.debug(f"This game message was sent from {self._api.host} !")
                     else :
                         _LOGGER.debug(f"Ignore : this game message was sent from {data.get("recalboxIpAddress")}, but {self._api.host} has IP {self.coordinator.data.get("mdns_ip_address")} !")
