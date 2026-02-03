@@ -356,8 +356,8 @@ class RecalboxCard extends HTMLElement {
         <br>
         <a href="http://${host}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
-        <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a> &nbsp; | &nbsp;
-        <a href="https://ooree23.github.io/RecalboxHomeAssistant/" target="_blank">🔗 ${i18n.footer.githubPagesLabel}</a>
+        <!-- <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a> &nbsp; | &nbsp; -->
+        <a href="https://ooree23.github.io/RecalboxHomeAssistant/" target="_blank">${i18n.footer.integrationLabel}</a>
       </div>
     `;
   }
