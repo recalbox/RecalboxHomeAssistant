@@ -3,6 +3,12 @@
 > By Aurélien Tomassini, 2026.
 
 
+## v1.5.2 - ...
+
+
+- ...
+
+
 ## v1.5.1 - 04/02/2026 - Can now quit Kodi from HA
 
 
