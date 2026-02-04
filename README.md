@@ -129,14 +129,16 @@ It uses the same services just listed.
    
    - Install this repository via this button :  
      [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ooree23&repository=RecalboxHomeAssistant&category=integration)  
-     Or manually, add `https://github.com/ooree23/RecalboxHomeAssistant` as repository, as Integration.
-     Press download, and then accept to restart.
+     > Or manually, add `https://github.com/ooree23/RecalboxHomeAssistant` as repository, as Integration.
+       Press download, and then accept to restart.
+     
      It will automatically add Recalbox integration to your Home Assistant
      (new "Recalbox" Integration will be available after restart in the Devices & Service menu).
     
    - Add your new Recalbox with this button  
      [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=recalbox)  
-     Or, manually, go to Devices & Services menu, "+ add integration", and search for "Recalbox".  
+     > Or, manually, go to Devices & Services menu, "+ add integration", and search for "Recalbox".  
+     
      You will be asked for Host/IP of your Recalbox (the default host is "recalbox.local"), and ports can be changed if needed.
      If you can, have your Recalbox ON, and then let the "Test connection" checkbox checked to test host and ports.  
      
