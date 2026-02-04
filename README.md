@@ -120,12 +120,12 @@ It uses the same services just listed.
      Still experimental in v1.3.1, use at your own risk.
      
      > If your Home Assistant is not accessible via `homeassistant.local`,
-     > change the "HOME_ASSISTANT_DOMAIN" variable on top of the script.
+       change the "HOME_ASSISTANT_DOMAIN" variable on top of the script.
 
 
 2. **Home Assistant**
    
-   - If not installed yet, install HACS
+   - If not installed yet, [install HACS](https://www.hacs.xyz/docs/use/download/download/)
    
    - Install this repository via this button :  
      [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ooree23&repository=RecalboxHomeAssistant&category=integration)  
@@ -141,8 +141,8 @@ It uses the same services just listed.
      If you can, have your Recalbox ON, and then let the "Test connection" checkbox checked to test host and ports.  
      
      > You can use as many Recalbox as you want in your Network.  
-     > Depending on the infrastructure, if you have dynamic IP address, please use Hostnames,
-     > not IP address, as it could change later.
+       Depending on the infrastructure, if you have dynamic IP address, please use Hostnames,
+       not IP address, as it could change later.
        
       
 

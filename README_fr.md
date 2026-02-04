@@ -125,24 +125,26 @@ lancées par Assist utilisent les mêmes commandes que listées ci-dessus.
 
 2. **Home Assistant**
    
-   - Si vous ne l'avez pas encore, installez HACS
+   - Si vous ne l'avez pas encore, [installez HACS](https://www.hacs.xyz/docs/use/download/download/)
    
-   - Installez cette intégration Recalbox via ce bouton :  
+   - Installez cette **intégration Recalbox** via ce bouton :  
      [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ooree23&repository=RecalboxHomeAssistant&category=integration)  
-     Ou manuellement, ajoutez `https://github.com/ooree23/RecalboxHomeAssistant` comme dépôt, de type Integration.
-     Cliquez sur télécharger, et acceptez de redémarrer.
+     > Ou manuellement, ajoutez `https://github.com/ooree23/RecalboxHomeAssistant` comme dépôt, de type Integration.
+       Cliquez sur télécharger, et acceptez de redémarrer.
+     
      Cela ajoutera l'intégration Recalbox dans votre Home Assistant
      (la nouvelle intégration "Recalbox" sera visible seulement après le redémarrage, dans le menu Appareils & Service).
     
-   - Ajouter une nouvelle Recalbox avec ce simple bouton :  
+   - Ajouter une **nouvelle Recalbox** avec ce simple bouton :  
      [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=recalbox)  
-     Ou, manuellement, allez dans le menu Appareils & Services, "+ add integration", et recherchez "Recalbox".
+     > Ou, manuellement, allez dans le menu Appareils & Services, "+ add integration", et recherchez "Recalbox".
+     
      Un formulaire vous demandera l'Hôst/IP de votre Recalbox (par défaut "recalbox.local"), et les ports par défaut peuvent être changés si besoin.
      Si votre Recalbox est allumée, activez "Test connection" pour valider vos paramètres.  
      
      > Vous pouvez avoir plusieurs Recalbox sur votre réseau, et dans cette intégration Home Assistant.  
-     > Selon votre infrastructure, vous aurez probablement des adresses IP dynamiques : veuillez donc utiliser les noms d'hôtes,
-     > différents, au lieu des adresses IP, puisque celles-ci peuvent changer dans le temps.
+       Selon votre infrastructure, vous aurez probablement des adresses IP dynamiques : veuillez donc utiliser les noms d'hôtes,
+       différents, au lieu des adresses IP, puisque celles-ci peuvent changer dans le temps.
 
 
 

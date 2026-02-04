@@ -40,7 +40,7 @@ class RecalboxRestController(HomeAssistantView):
                 return web.Response(status=200, text="OK")
 
             _LOGGER.warning(f"Aucune instance Recalbox trouvée pour le host : {hostname}")
-            return web.Response(status=404, text="Host not found")
+            return web.Response(status=404, text="Host not found in Recalbox entities")
 
         except Exception as e:
             _LOGGER.error(f"Erreur lors de la réception notification Recalbox: {e}")
