@@ -186,11 +186,10 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
     async def search_and_launch_game_by_name(self, console, game_query, lang=None) -> str :
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
         translator:RecalboxTranslator = self.hass.data[DOMAIN]["translator"]
-        port_api = self._api.api_port_gamesmanager
         port_udp = self._api.udp_recalbox
         # Récupérer la liste des roms via l'API (HTTP GET)
         try:
-            roms = await self._api.get_roms(console, port_api)
+            roms = await self._api.get_roms(console)
             if not roms:
                 return translator.translate(
                     "intent_response.no_game_on_system",
@@ -264,16 +263,17 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self._attr_is_on = (data.get("status") == "ON")
 
         # 1. Mise à jour des attributs internes
-        v_sw = data.get("recalboxVersion")
-        v_hw = data.get("hardware")
-        scriptVersion = data.get("scriptVersion")
+        v_sw = data.get("recalboxVersion", self._attr_extra_state_attributes.get("recalboxVersion"))
+        v_hw = data.get("hardware", self._attr_extra_state_attributes.get("hardware"))
+        scriptVersion = data.get("scriptVersion", self._attr_extra_state_attributes.get("scriptVersion"))
 
         self._attr_extra_state_attributes.update({
             "hardware": v_hw,
             "recalboxVersion": v_sw,
             "scriptVersion": scriptVersion,
         })
-        self.recalboxIpAddress = data.get("recalboxIpAddress")
+
+        self.recalboxIpAddress = data.get("recalboxIpAddress", self.recalboxIpAddress)
 
         _LOGGER.debug('Updating game attributes...')
 
@@ -357,9 +357,16 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
             _LOGGER.debug("Premier ping réussi au démarrage : on met la recalbox sur ON")
             self._attr_is_on = True
             self.reset_game_attributes()
-            self.async_write_ha_state()
-            # TODO : demander par API les infos actuelles
-            _LOGGER.info("Recalbox marquée comme en ligne, sans info de jeux")
+            try :
+                # vu qu'on est à ON, la Recalbox a peut être déjà des infos à nous donner?
+                # demander par API les infos actuelles : http://{host}:{api_port_gamesmanager}/api/status
+                currentRecalboxStatus = await self._api.get_current_status()
+                await self.update_from_recalbox_json_message(currentRecalboxStatus)
+                _LOGGER.info("Recalbox marquée comme en ligne, les infos de jeu en cours ont été récupérées par API")
+            except Exception as err :
+                _LOGGER.info(f"Recalbox marquée comme en ligne, sans info de jeux : {err}")
+            finally:
+                self.async_write_ha_state()
         else:
             _LOGGER.debug("Premier ping échoué au démarrage : on laisse la recalbox sur OFF")
 

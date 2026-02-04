@@ -48,8 +48,8 @@ class RecalboxAPI:
                 raise
 
 
-    async def get_roms(self, console, port=81):
-        url = f"http://{self.host}:{port}/api/systems/{console}/roms"
+    async def get_roms(self, console):
+        url = f"http://{self.host}:{self.api_port_gamesmanager}/api/systems/{console}/roms"
         _LOGGER.debug(f"API GET roms from {url}")
         async with aiohttp.ClientSession() as session:
             try:
@@ -61,6 +61,65 @@ class RecalboxAPI:
                 _LOGGER.error(f"Failed to get roms list on {url}")
                 raise
 
+
+    async def get_current_status(self):
+        url = f"http://{self.host}:{self.api_port_gamesmanager}/api/status"
+        _LOGGER.debug(f"API GET current Recalbox status {url}")
+        # {
+        #   "Action": "rungame",
+        #   "Parameter": "/recalbox/share/roms/megadrive/001 Sonic 1.bin",
+        #   "Version": "2.0",
+        #   "System": {
+        #     "System": "Sega Megadrive",
+        #     "SystemId": "megadrive",
+        #     "DefaultEmulator": {
+        #       "Emulator": "libretro",
+        #       "Core": "picodrive"
+        #     }
+        #   },
+        #   "Game": {
+        #     "Game": "001 Sonic 1",
+        #     "GamePath": "/recalbox/share/roms/megadrive/001 Sonic 1.bin",
+        #     "IsFolder": false,
+        #     "ImagePath": "/recalbox/share/roms/megadrive/media/images/Sonic The Hedgehog c28514e75f5cdcce646d3f568f089ce0.png",
+        #     "ThumbnailPath": "",
+        #     "VideoPath": "",
+        #     "Developer": "SEGA",
+        #     "Publisher": "SEGA",
+        #     "Players": "1",
+        #     "Region": "us,jp,eu",
+        #     "Genre": "Plateforme",
+        #     "GenreId": "257",
+        #     "Favorite": true,
+        #     "Hidden": false,
+        #     "Adult": false,
+        #     "SelectedEmulator": {
+        #       "Emulator": "libretro",
+        #       "Core": "picodrive"
+        #     }
+        #   }
+        # }
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(url, timeout=10) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return {
+                            "game": data.get("Game", {}).get("Game"),
+                            "console": data.get("System", {}).get("System"),
+                            "rom": data.get("Game", {}).get("GamePath"),
+                            "genre": data.get("Game", {}).get("Genre"),
+                            "genreId": data.get("Game", {}).get("GenreId"),
+                            "imagePath": None,
+                            "recalboxIpAddress": None,
+                            "recalboxVersion": None,
+                            "hardware": None,
+                            "scriptVersion": None,
+                            "status": "ON"
+                        }
+            except:
+                _LOGGER.error(f"Failed to get recalbox status on {url}")
+                raise
 
     async def ping(self) -> bool:
         """Exécute un ping système vers l'hôte."""
