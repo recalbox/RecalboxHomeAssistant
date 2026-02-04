@@ -347,6 +347,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
                 "recalboxVersion": old_state.attributes.get("recalboxVersion"),
                 "scriptVersion": old_state.attributes.get("scriptVersion"),
             })
+            _LOGGER.debug("Last main information from Recalbox has been restored")
 
 
 
