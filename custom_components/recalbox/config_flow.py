@@ -12,7 +12,7 @@ DATA_SCHEMA_CREATION = vol.Schema({
     vol.Required("api_port_gamesmanager", default=81): int,
     vol.Required("udp_recalbox", default=1337): int,
     vol.Required("udp_retroarch", default=55355): int,
-    vol.Required("udp_retroarch", default=55355): int,
+    vol.Required("api_port_kodi", default=8081): int,
     vol.Required("test_connection", default=True): bool,
 })
 
@@ -28,10 +28,11 @@ class RecalboxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # tester un ping sur cette IP/host??
                 api_temp = RecalboxAPI(
                     host=user_input["host"],
-                    api_port_os=user_input["api_port_os"],
-                    api_port_gamesmanager=user_input["api_port_gamesmanager"],
-                    udp_recalbox=user_input["udp_recalbox"],
-                    udp_retroarch=user_input["udp_retroarch"]
+                    api_port_os=user_input["api_port_os"] or 80,
+                    api_port_gamesmanager=user_input["api_port_gamesmanager"] or 81,
+                    udp_recalbox=user_input["udp_recalbox"] or 1337,
+                    udp_retroarch=user_input["udp_retroarch"] or 55355,
+                    api_port_kodi=user_input["api_port_kodi"] or 8081,
                 )
                 is_valid = await api_temp.ping() and await api_temp.testPorts()
             else:
@@ -77,5 +78,6 @@ class RecalboxOptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Required("api_port_gamesmanager", default=current_config.get("api_port_gamesmanager", 81)): int,
                 vol.Required("udp_recalbox", default=current_config.get("udp_recalbox", 1337)): int,
                 vol.Required("udp_retroarch", default=current_config.get("udp_retroarch", 55355)): int,
+                vol.Required("api_port_kodi", default=current_config.get("api_port_kodi", 8081)): int,
             }),
         )

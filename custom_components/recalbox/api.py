@@ -169,7 +169,7 @@ class RecalboxAPI:
     async def testPorts(self) -> bool:
         try:
             _LOGGER.info(f"Testing TCP+UDP ports on {self.host}...")
-            TCP_PORTS = [self.api_port_os, self.api_port_gamesmanager]
+            TCP_PORTS = [self.api_port_os, self.api_port_gamesmanager] # On teste pas Kodi car le port est ouvert que s'il est lancé
             UDP_PORTS = [self.udp_recalbox, self.udp_retroarch]
             for port in TCP_PORTS:
                 try:
