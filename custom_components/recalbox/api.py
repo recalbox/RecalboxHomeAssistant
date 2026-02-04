@@ -12,13 +12,16 @@ class RecalboxAPI:
                  api_port_os: int = 80,
                  api_port_gamesmanager: int = 81,
                  udp_recalbox: int = 1337,
-                 udp_retroarch: int = 55355
+                 udp_retroarch: int = 55355,
+                 api_port_kodi: int = 8081,
                  ):
         self.host = host
         self.api_port_os = api_port_os # Arrêter, Reboot de Recalbox...
         self.api_port_gamesmanager = api_port_gamesmanager # Lister les roms, demander un screenshot...
         self.udp_recalbox = udp_recalbox # Lancer une ROM
         self.udp_retroarch = udp_retroarch
+        self.api_port_kodi = api_port_kodi # Pour quitter Kodi
+
 
     async def send_udp_command(self, port, message):
         _LOGGER.debug(f"Envoi UDP {port}: \"{message}\"")
@@ -64,6 +67,26 @@ class RecalboxAPI:
             except:
                 _LOGGER.error(f"Failed to get roms list on {url}")
                 raise
+
+
+    async def quit_kodi(self, console) -> bool:
+        kodi_url = f"http://{self.host}:{self.api_port_kodi}/jsonrpc"
+        payload = {
+            "jsonrpc": "2.0",
+            "method": "Application.Quit",
+            "id": 1
+        }
+        _LOGGER.debug(f"API to quit Kodi : {kodi_url}")
+        connector = aiohttp.TCPConnector(family=socket.AF_INET) # Force la résolution en IPv4
+        async with aiohttp.ClientSession(connector=connector) as session:
+            try:
+                async with session.post(kodi_url, json=payload, timeout=5) as response:
+                    if response.status == 200:
+                        await asyncio.sleep(5)
+                        return True
+            except:
+                _LOGGER.error(f"Failed to quit Kodi via JSON RPC on {kodi_url}")
+                return False
 
 
     async def get_current_status(self):
