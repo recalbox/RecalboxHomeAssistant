@@ -114,11 +114,7 @@ It uses the same services just listed.
 
 1. **Recalbox**
    
-   - Copy the `sh` script in the `userscripts` Recalbox folder. **Only one is required** !
-     - `Recalbox/userscripts/home_assistant_notifier.sh` : script called at every event. Optimized since v1.3.1
-     - **(EXPERIMENTAL)** `Recalbox/userscripts/home_assistant_notifier(permanent).sh` : script called only once, and waiting for events itself
-     Both script will react to Recalbox events.
-     Still experimental in v1.3.1, use at your own risk.
+   - Copy the script `Recalbox/userscripts/home_assistant_notifier.sh` in the `userscripts` Recalbox folder. Optimized since v1.3.1.
      
      > If your Home Assistant is not accessible via `homeassistant.local`,
        change the "HOME_ASSISTANT_DOMAIN" variable on top of the script.
@@ -328,4 +324,4 @@ If it occures too often, go to your integration settings, and change your hostna
 It will fix this issue, but if your router changes your IP address, you will have to change it again.
 
 > Version v1.5.0 forces now to use IPv4.  
-> This issue should not happen again.
+> This issue should not happen again. If it does again, disable IPV6 in Home Assistant (Settings, Network, IPv6, disable)

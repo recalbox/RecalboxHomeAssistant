@@ -114,11 +114,7 @@ lancées par Assist utilisent les mêmes commandes que listées ci-dessus.
 
 1. **Recalbox**
    
-   - Copiez le script `sh` dans le dossier `userscripts` de la Recalbox. **Uniquement l'un des deux, pas les deux!**
-     - `Recalbox/userscripts/home_assistant_notifier.sh` : script appelé pour chaque événement. Optimisé depuis la version v1.3.1
-     - **(EXPERIMENTAL)** `Recalbox/userscripts/home_assistant_notifier(permanent).sh` : script permanent, lancé en background, qui boucles sur les événements reçus. Expérimental, pas encore au point !  
-     
-     Les deux scripts réagissent aux mêmes événements.
+   - Copiez le script `Recalbox/userscripts/home_assistant_notifier.sh` dans le dossier `userscripts` de la Recalbox. Optimisé depuis la version v1.3.1.
      
      > Si votre Home Assistant est accessible par un autre hôte que `homeassistant.local`,
      > changez la variable "HOME_ASSISTANT_DOMAIN" en haut du script.
@@ -333,4 +329,4 @@ Si cela se produit et vous bloque, allez dans les paramètres de l'intégration,
 Ca va corriger le problème, maissi votre routeur attribue une nouvelle IP à votre Recalbox, il faudra retourner changer l'IP dans Home Assistant...
 
 > La version v1.5.0 force dorénavant l'utilisation des IPv4.  
-> Le problème ne devrait plus se produire.
+> Le problème ne devrait plus se produire. Si cela se produit encore, désactivez l'IPV6 dans Home Assistant (Paramètres, Réseau, IPv6, désactiver)
