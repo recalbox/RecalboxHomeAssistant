@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.7">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.3">
   <diagram name="Page-1" id="k_nSxGcE_CIYXGTXqeBE">
-    <mxGraphModel dx="1042" dy="562" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="583" math="0" shadow="0">
+    <mxGraphModel dx="2066" dy="777" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="583" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -18,9 +18,9 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="ec2RJxvYGELbJNF-a-S--29" connectable="0" parent="ec2RJxvYGELbJNF-a-S--27" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];spacingTop=0;spacingLeft=0;spacingBottom=0;spacingRight=0;textShadow=0;labelBorderColor=none;spacing=0;labelBackgroundColor=none;" value="API calls :&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Turn OFF Recalbox&lt;/div&gt;&lt;div&gt;- Reboot Recalbox&lt;/div&gt;&lt;div&gt;- List roms of a system&lt;/div&gt;&lt;div&gt;- Take a screenshot&lt;/div&gt;&lt;/div&gt;" vertex="1">
+        <mxCell id="ec2RJxvYGELbJNF-a-S--29" connectable="0" parent="ec2RJxvYGELbJNF-a-S--27" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];spacingTop=0;spacingLeft=0;spacingBottom=0;spacingRight=0;textShadow=0;labelBorderColor=none;spacing=0;labelBackgroundColor=none;" value="API calls :&lt;div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Get status&lt;/div&gt;&lt;div&gt;Turn OFF Recalbox&lt;/div&gt;&lt;div&gt;- Reboot Recalbox&lt;/div&gt;&lt;div&gt;- List roms of a system&lt;/div&gt;&lt;div&gt;- Take a screenshot&lt;/div&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.0501" y="-4" as="geometry">
-            <mxPoint x="-50" y="16" as="offset" />
+            <mxPoint x="-50" y="24" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="ec2RJxvYGELbJNF-a-S--28" edge="1" parent="1" source="ec2RJxvYGELbJNF-a-S--3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" target="ec2RJxvYGELbJNF-a-S--4">
@@ -51,16 +51,16 @@
           <mxGeometry height="80" width="220" x="73" y="162" as="geometry" />
         </mxCell>
         <mxCell id="ec2RJxvYGELbJNF-a-S--8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="30" width="176" x="100" y="112" as="geometry" />
+          <mxGeometry height="30" width="196" x="80" y="112" as="geometry" />
         </mxCell>
-        <mxCell id="ec2RJxvYGELbJNF-a-S--7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="API Recalbox Integration" vertex="1">
-          <mxGeometry height="30" width="152" x="108" y="113" as="geometry" />
+        <mxCell id="ec2RJxvYGELbJNF-a-S--7" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="API 8123 : Recalbox Integration" vertex="1">
+          <mxGeometry height="30" width="190" x="80" y="112" as="geometry" />
         </mxCell>
         <mxCell id="cxFimN4w7W0WBXtZPJgl-1" edge="1" parent="1" source="ec2RJxvYGELbJNF-a-S--10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="ec2RJxvYGELbJNF-a-S--8">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="591" y="40" />
-              <mxPoint x="232" y="40" />
+              <mxPoint x="227" y="40" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -76,7 +76,7 @@
         <mxCell id="ec2RJxvYGELbJNF-a-S--25" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=6.418604651162838;" value="" vertex="1">
           <mxGeometry height="30" width="20" x="264" y="122" as="geometry" />
         </mxCell>
-        <mxCell id="ec2RJxvYGELbJNF-a-S--31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="API" vertex="1">
+        <mxCell id="ec2RJxvYGELbJNF-a-S--31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="API 80, 81" vertex="1">
           <mxGeometry height="30" width="60" x="549" y="238" as="geometry" />
         </mxCell>
         <mxCell id="ec2RJxvYGELbJNF-a-S--32" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="UDP 55355" vertex="1">

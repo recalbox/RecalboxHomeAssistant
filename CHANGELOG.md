@@ -3,6 +3,12 @@
 > By Aurélien Tomassini, 2026.
 
 
+## v1.5.1 - 
+
+
+- ...
+
+
 ## v1.5.0 - 04/02/2026 - (Breaking changes) Remove MQTT usage
 
 > Major changes : to make installation way more easy, I left MQTT broker dependency !  
