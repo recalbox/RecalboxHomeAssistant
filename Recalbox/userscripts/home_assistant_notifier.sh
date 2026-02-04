@@ -174,7 +174,7 @@ EOF
 # Fonction pour envoyer le JSON par API à Home Assistant
 send_api_notification() {
   local json_payload="$1"
-  local hostname_local=$(hostname).local
+  local hostname_local=$(hostname)
 
   # Construction de l'URL vers ton nouveau RestController
   local url="http://${HA_IP}:8123/api/recalbox/notification/${hostname_local}"

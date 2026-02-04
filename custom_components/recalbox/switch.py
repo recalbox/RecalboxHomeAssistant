@@ -52,6 +52,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity):
         self.genre = None
         self.genreId = None
         self.imageUrl = None
+        self.recalboxIpAddress = None
 
     #@property
     #def icon(self):
@@ -83,7 +84,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity):
         return {
             **self._attr_extra_state_attributes, # Les persistants (version, hw)
             "host": self._api.host,
-            "mdns_ip_address": self.coordinator.data.get("mdns_ip_address") if self.coordinator.data else None,
+            "recalboxIpAddress": self.recalboxIpAddress,
             "game": self.game,
             "console": self.console,
             "genre": self.genre,
@@ -271,6 +272,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity):
             "recalboxVersion": v_sw,
             "scriptVersion": scriptVersion,
         })
+        self.recalboxIpAddress = data.get("recalboxIpAddress")
 
         _LOGGER.debug('Updating game attributes...')
 
@@ -295,26 +297,21 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity):
                 hw_version=v_hw
             )
 
+        # On force un ping instantané s'il faut pour raffraichir l'état connecté
+        if self._attr_is_on and not self.coordinator.data.get("is_alive_smoothed") :
+            _LOGGER.debug(f"Forces instant ping on {self._api.host} to update its status to ON...")
+            await self.coordinator.async_refresh()
+            _LOGGER.debug(f"Coordinator of {self._api.host} is now {self.coordinator.data.get("is_alive_smoothed")}")
+
         # Notifier HA du changement
         self.async_write_ha_state()
+
+
 
 
     #########
     # UTILS #
     #########
-
-    async def getRecalboxCurrentIPAddress(self) -> str :
-        # si le host est déjà une adresse IP
-        try:
-            ipaddress.ip_address(self._api.host)
-            return self._api.host # on était déjà sur une adresse IP
-        except ValueError as err:
-            # Ce n'est pas une IP (probablement un nom d'hôte)
-            # Si on ne connait pas encore l'IP, on essaye de la récupérer
-            if not self.coordinator.data.get("mdns_ip_address"):
-                await self.coordinator.async_refresh()
-            # on renvoie l'adresse IP si on la connait
-            return self.coordinator.data.get("mdns_ip_address")
 
 
     def isTheOnlyRecalboxExisting(self) -> bool:
