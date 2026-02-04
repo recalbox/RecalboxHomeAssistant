@@ -3,7 +3,7 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v1.5.0 - 
+## v1.5.0 - 04/02/2026 - Remove MQTT !
 
 > Major changes, please upload the new Recalbox script to Recalbox `userscripts` folder.
 

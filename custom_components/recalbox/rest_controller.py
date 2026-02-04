@@ -30,7 +30,7 @@ class RecalboxRestController(HomeAssistantView):
             for entry_id, instance in instances.items():
                 api = instance.get("api")
                 # On compare le hostname de l'URL avec celui configuré dans l'API
-                if api and api.host == hostname:
+                if api and api.host.lower() == hostname.lower():
                     target_entity = instance.get("sensor_entity")
                     break
 
