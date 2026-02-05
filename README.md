@@ -140,6 +140,8 @@ It uses the same services just listed.
      You will be asked for Host/IP of your Recalbox (the default host is "recalbox.local"), and ports can be changed if needed.
      If you can, have your Recalbox ON, and then let the "Test connection" checkbox checked to test host and ports.  
      
+     ![](docs/DeviceIntegrationSelectAndConfig.png)
+
      > You can use as many Recalbox as you want in your Network.  
        Depending on the infrastructure, if you have dynamic IP address, please use Hostnames,
        not IP address, as it could change later.
