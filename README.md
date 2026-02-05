@@ -71,7 +71,7 @@ This repository allows you to integrate Recalbox in your Home Assistant :
 
 
 - You should have a `Home Assistant`.  
-  Tested on Home Assistant <mark>2026.1</mark>, Raspberry Pi 3 B+.  
+  Tested on Home Assistant <mark>2026.1</mark>, <mark>2026.2</mark>, on Raspberry Pi 3 B+.  
   By default, It should be accessible in the same network, at `homeassistant.local`
 
 
