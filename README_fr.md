@@ -139,7 +139,9 @@ lancées par Assist utilisent les mêmes commandes que listées ci-dessus.
      
      Un formulaire vous demandera l'Hôst/IP de votre Recalbox (par défaut "recalbox.local"), et les ports par défaut peuvent être changés si besoin.
      Si votre Recalbox est allumée, activez "Test connection" pour valider vos paramètres.  
-     
+
+     ![](docs/DeviceIntegrationSelectAndConfig.png)
+
      > Vous pouvez avoir plusieurs Recalbox sur votre réseau, et dans cette intégration Home Assistant.  
        Selon votre infrastructure, vous aurez probablement des adresses IP dynamiques : veuillez donc utiliser les noms d'hôtes,
        différents, au lieu des adresses IP, puisque celles-ci peuvent changer dans le temps.
