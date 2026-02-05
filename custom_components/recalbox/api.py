@@ -11,9 +11,9 @@ class RecalboxAPI:
                  host: str = "recalbox.local",
                  api_port_os: int = 80,
                  api_port_gamesmanager: int = 81,
-                 udp_recalbox: int = 1337,
-                 udp_retroarch: int = 55355,
-                 api_port_kodi: int = 8081,
+                 udp_recalbox: int = 1337, # https://github.com/recalbox/recalbox-api
+                 udp_retroarch: int = 55355, # https://docs.libretro.com/development/retroarch/network-control-interface/
+                 api_port_kodi: int = 8081, # https://kodi.wiki/view/JSON-RPC_API
                  ):
         self.host = host
         self.api_port_os = api_port_os # Arrêter, Reboot de Recalbox...
@@ -169,7 +169,7 @@ class RecalboxAPI:
     async def testPorts(self) -> bool:
         try:
             _LOGGER.info(f"Testing TCP+UDP ports on {self.host}...")
-            TCP_PORTS = [self.api_port_os, self.api_port_gamesmanager]
+            TCP_PORTS = [self.api_port_os, self.api_port_gamesmanager] # On teste pas Kodi car le port est ouvert que s'il est lancé
             UDP_PORTS = [self.udp_recalbox, self.udp_retroarch]
             for port in TCP_PORTS:
                 try:

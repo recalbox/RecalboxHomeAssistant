@@ -6,7 +6,7 @@
 ## v1.5.2 - ...
 
 
-- ...
+- Enable (re)configuration of the Kodi port
 
 
 ## v1.5.1 - 04/02/2026 - Can now quit Kodi from HA
