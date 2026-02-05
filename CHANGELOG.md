@@ -6,7 +6,7 @@
 ## v1.5.2 - ...
 
 
-- Enable (re)configuration of the Kodi port
+- Enable (re)configuration of the Kodi port (8081 by default)
 - [#9](https://github.com/ooree23/RecalboxHomeAssistant/issues/9) If Recalbox didn't send any message, but suddenly responds to Ping : ask for current status to update the recalbox card
 - [#10](https://github.com/ooree23/RecalboxHomeAssistant/issues/10) If, when we try to pull status from Recalbox, the API call is KO, we try to Ping Kodi, to check if Recalbox started with Kodi and is running
 

@@ -64,12 +64,18 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         """L'entité est ON si le JSON dit ON ET que le dernier ping a réussi."""
         if not self.coordinator.data.get("is_alive_smoothed"): # le coordionateur n'arrive pas à ping
             return False
-        elif not self._attr_is_on: # la recalbox est marquée OFF mais elle répond au ping -> on essaye de faire un pull de ses infos par l'API
-            _LOGGER.debug("La recalbox répond aux ping, mais était OFF. Essaye de requêter ses infos...")
-            self.hass.async_create_task(self.pull_game_infos_from_recalbox_api())
-            return False
         else :
             return self._attr_is_on
+
+
+    def _handle_coordinator_update(self) -> None:
+        """Géré à chaque rafraîchissement du coordinateur (ping)."""
+        _LOGGER.debug("_handle_coordinator_update")
+        is_alive = self.coordinator.data.get("is_alive_smoothed")
+        if is_alive and not self._attr_is_on:
+            _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF. Lancement du Pull API.")
+            self.hass.async_create_task(self.pull_game_infos_from_recalbox_api())
+        super()._handle_coordinator_update()
 
 
     @property
@@ -380,7 +386,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         if self.coordinator.data.get("is_ping_success") is True:
             _LOGGER.debug("Premier ping réussi au démarrage : on met la recalbox sur ON")
             self._attr_is_on = True
-            await self.pull_game_infos_from_recalbox_api()
+            self.async_write_ha_state()
         else:
             _LOGGER.debug("Premier ping échoué au démarrage : on laisse la recalbox sur OFF")
 
