@@ -6,7 +6,7 @@
 ## v1.5.3 - ...
 
 
-- ...
+- In the Recalbox card, hide "Web manager" link if Recalbox is off, or if Kodi is running (because API maybe not running yet)
 
 
 ## v1.5.2 - 05/02/2026

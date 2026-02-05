@@ -246,7 +246,8 @@ class RecalboxCard extends HTMLElement {
     const genre = state.attributes.genre || "-";
     const romPath = state.attributes.rom || "-";
     const imageUrl = state.attributes.imageUrl || "";
-    const isAGameRunning = game && game!="-" && game!="None" && consoleName!="Kodi";
+    const isKodiRunning = consoleName=="Kodi";
+    const isAGameRunning = game && game!="-" && game!="None" && !isKodiRunning;
     const needsRestart = state.attributes.needs_restart || false;
 
     // 0. titre
@@ -329,7 +330,7 @@ class RecalboxCard extends HTMLElement {
       this.actions.innerHTML = `
         <div class="action-button" id="btn-power-off" ` + ((showTurnOffButton) ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:power"></ha-icon>${i18n.buttons.shutdown}</div>
         <div class="action-button" id="btn-reboot" ` + ((showRebootButton) ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:restart"></ha-icon>${i18n.buttons.reboot}</div>
-        <div class="action-button" id="btn-quit-kodi" ` + ((showQuitKodiButton && consoleName=='Kodi') ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:kodi"></ha-icon>${i18n.buttons.quit_kodi}</div>
+        <div class="action-button" id="btn-quit-kodi" ` + ((showQuitKodiButton && isKodiRunning) ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:kodi"></ha-icon>${i18n.buttons.quit_kodi}</div>
 
         <div class="action-button no-gap" ` + (isAGameRunning ? '' : 'style="display:none"')+ `>
             ${i18n.game} &nbsp;
@@ -363,7 +364,7 @@ class RecalboxCard extends HTMLElement {
       <div>
         Recalbox (${host}) version ${recalboxVersion}${ (hardware) ? `, ${i18n.footer.onHardware} ${hardware}` : ''}
         <br>
-        <a href="http://${host}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;
+        <span ${!isOn || isKodiRunning ? 'style="display:none;"' : ''}><a href="http://${host}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;</span>
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
         <!-- <a href="https://github.com/ooree23/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a> &nbsp; | &nbsp; -->
         <a href="https://ooree23.github.io/RecalboxHomeAssistant/" target="_blank">${i18n.footer.integrationLabel}</a>
