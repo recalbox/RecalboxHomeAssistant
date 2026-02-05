@@ -62,9 +62,15 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
     @property
     def is_on(self) -> bool:
         """L'entité est ON si le JSON dit ON ET que le dernier ping a réussi."""
-        if not self.coordinator.data.get("is_alive_smoothed"):
+        if not self.coordinator.data.get("is_alive_smoothed"): # le coordionateur n'arrive pas à ping
             return False
-        return self._attr_is_on
+        elif not self._attr_is_on: # la recalbox est marquée OFF mais elle répond au ping -> on essaye de faire un pull de ses infos par l'API
+            _LOGGER.debug("La recalbox répond aux ping, mais était OFF. Essaye de requêter ses infos...")
+            self.pull_game_infos_from_recalbox_api()
+            return False
+        else :
+            return self._attr_is_on
+
 
     @property
     def device_info(self):
@@ -337,6 +343,19 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
             return path
 
 
+
+    async def pull_game_infos_from_recalbox_api(self):
+        try :
+            self.reset_game_attributes()
+            currentRecalboxStatus = await self._api.get_current_status()
+            await self.update_from_recalbox_json_message(currentRecalboxStatus)
+            _LOGGER.info("Recalbox marquée comme en ligne, les infos de jeu en cours ont été récupérées par API")
+        except Exception as err :
+            _LOGGER.info(f"Recalbox marquée comme en ligne, sans info de jeux : {err}")
+        finally:
+            self.async_write_ha_state()
+
+
     # Callback, une fois ajouté à HASS
     # pour voir si la Recalbox est accessible ou non
     async def async_added_to_hass(self):
@@ -361,17 +380,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         if self.coordinator.data.get("is_ping_success") is True:
             _LOGGER.debug("Premier ping réussi au démarrage : on met la recalbox sur ON")
             self._attr_is_on = True
-            self.reset_game_attributes()
-            try :
-                # vu qu'on est à ON, la Recalbox a peut être déjà des infos à nous donner?
-                # demander par API les infos actuelles : http://{host}:{api_port_gamesmanager}/api/status
-                currentRecalboxStatus = await self._api.get_current_status()
-                await self.update_from_recalbox_json_message(currentRecalboxStatus)
-                _LOGGER.info("Recalbox marquée comme en ligne, les infos de jeu en cours ont été récupérées par API")
-            except Exception as err :
-                _LOGGER.info(f"Recalbox marquée comme en ligne, sans info de jeux : {err}")
-            finally:
-                self.async_write_ha_state()
+            await self.pull_game_infos_from_recalbox_api()
         else:
             _LOGGER.debug("Premier ping échoué au démarrage : on laisse la recalbox sur OFF")
 

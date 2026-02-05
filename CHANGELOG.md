@@ -7,6 +7,7 @@
 
 
 - Enable (re)configuration of the Kodi port
+- [#9](https://github.com/ooree23/RecalboxHomeAssistant/issues/9) If Recalbox didn't send any message, but suddenly responds to Ping : ask for current status to update the recalbox card
 
 
 ## v1.5.1 - 04/02/2026 - Can now quit Kodi from HA
