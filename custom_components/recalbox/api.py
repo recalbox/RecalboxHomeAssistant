@@ -11,9 +11,9 @@ class RecalboxAPI:
                  host: str = "recalbox.local",
                  api_port_os: int = 80,
                  api_port_gamesmanager: int = 81,
-                 udp_recalbox: int = 1337,
-                 udp_retroarch: int = 55355,
-                 api_port_kodi: int = 8081,
+                 udp_recalbox: int = 1337, # https://github.com/recalbox/recalbox-api
+                 udp_retroarch: int = 55355, # https://docs.libretro.com/development/retroarch/network-control-interface/
+                 api_port_kodi: int = 8081, # https://kodi.wiki/view/JSON-RPC_API
                  ):
         self.host = host
         self.api_port_os = api_port_os # Arrêter, Reboot de Recalbox...
@@ -89,6 +89,27 @@ class RecalboxAPI:
                 return False
 
 
+    async def is_kodi_running(self) -> bool:
+        kodi_url = f"http://{self.host}:{self.api_port_kodi}/jsonrpc"
+        payload = {
+            "jsonrpc": "2.0",
+            "method": "JSONRPC.Ping",
+            "id": 1
+        }
+        _LOGGER.debug(f"Ping Kodi : {kodi_url}")
+        connector = aiohttp.TCPConnector(family=socket.AF_INET) # Force la résolution en IPv4
+        async with aiohttp.ClientSession(connector=connector) as session:
+            try:
+                async with session.post(kodi_url, json=payload, timeout=5) as response:
+                    if response.status == 200:
+                        return True
+            except:
+                _LOGGER.info(f"Failed to ping Kodi via JSON RPC on {kodi_url}")
+                return False
+
+
+    # On va interroger Recalbox pour connaitre le status.
+    # S'il répond pas, on va quand même regarder si Kodi est lancé au démarrage
     async def get_current_status(self):
         url = f"http://{self.host}:{self.api_port_gamesmanager}/api/status"
         _LOGGER.debug(f"API GET current Recalbox status {url}")
@@ -146,8 +167,25 @@ class RecalboxAPI:
                             "status": "ON"
                         }
             except:
-                _LOGGER.error(f"Failed to get recalbox status on {url}")
-                raise
+                _LOGGER.error(f"Failed to get recalbox status on API {url}")
+                if (await self.is_kodi_running()) :
+                    _LOGGER.debug(f"Kodi seems to be running ! Simulating JSON data for Recalbox HA status")
+                    return {
+                        "game": None,
+                        "console": "Kodi",
+                        "rom": None,
+                        "genre": None,
+                        "genreId": None,
+                        "imagePath": None,
+                        "recalboxIpAddress": None,
+                        "recalboxVersion": None,
+                        "hardware": None,
+                        "scriptVersion": None,
+                        "status": "ON"
+                    }
+                else:
+                    _LOGGER.error(f"Kodi is not reachable neither")
+                    raise
 
     async def ping(self) -> bool:
         """Exécute un ping système vers l'hôte."""
@@ -169,7 +207,7 @@ class RecalboxAPI:
     async def testPorts(self) -> bool:
         try:
             _LOGGER.info(f"Testing TCP+UDP ports on {self.host}...")
-            TCP_PORTS = [self.api_port_os, self.api_port_gamesmanager]
+            TCP_PORTS = [self.api_port_os, self.api_port_gamesmanager] # On teste pas Kodi car le port est ouvert que s'il est lancé
             UDP_PORTS = [self.udp_recalbox, self.udp_retroarch]
             for port in TCP_PORTS:
                 try:

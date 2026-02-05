@@ -9,7 +9,8 @@
           "api_port_gamesmanager": "Port API Jeux (liste de roms, captures)",
           "udp_recalbox": "Port UDP Recalbox",
           "udp_retroarch": "Port UDP RetroArch",
-          "test_connection": "Tester la connexion"
+          "api_port_kodi": "Port API Kodi",
+          "test_connection": "Tester la connexion (Recalbox allumée, sur le menu)"
         }
       }
     },
@@ -26,7 +27,8 @@
           "api_port_os": "Port API Système (arrêt, redémarrage)",
           "api_port_gamesmanager": "Port API Jeux (liste de roms, captures)",
           "udp_recalbox": "Port UDP Recalbox",
-          "udp_retroarch": "Port UDP RetroArch"
+          "udp_retroarch": "Port UDP RetroArch",
+          "api_port_kodi": "Port API Kodi"
         }
       }
     }
