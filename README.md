@@ -175,6 +175,8 @@ Example : all buttons shown, update alert shown, genre shown, but Rom path hidde
 
 ### Automations
 
+> Demonstration (fr) : https://youtu.be/H2Tp9kacX0E?si=-ZFEbC_dkr6CJ-ky
+
 You can also create automations, triggered when a game is launched for example.  
 If interested in this example, copy [recalbox_automations.yaml](Home%20Assistant/automations/recalbox_automations.yaml) into `/config/automations/recalbox_automations.yaml`
 and then add
@@ -187,9 +189,10 @@ in `configuration.yaml`, to allow Home Assistant to read yaml files in `automati
 
 ### Assist (text/voice)
 
+> Demonstration (fr) : https://youtube.com/shorts/TIOIKZNCbBE?si=my2BR19OPJmfDUWc
+
 > Since v0.2.0, a script auto installs the sentences and sentences updates.
 > Check the dashboard custom card to see if the HA needs a restarts to update the sentences.
-
 
 #### Get current game
 

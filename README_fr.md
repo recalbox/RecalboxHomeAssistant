@@ -175,6 +175,8 @@ Exemple : tous les boutons visibles, alerte de mises à jour activées, afficher
 
 ### Automatisations
 
+> Démonstration : https://youtu.be/H2Tp9kacX0E?si=-ZFEbC_dkr6CJ-ky
+
 Vous pouvez créer des automatisations, déclenchées par exemple lorsqu'un jeu est lancé.  
 Si cet exemple vous intéresse, copiez [recalbox_automations.yaml](Home%20Assistant/automations/recalbox_automations.yaml) dans `/config/automations/recalbox_automations.yaml`
 puis ajoutez
@@ -186,6 +188,8 @@ dans `configuration.yaml`, pour permettre à Home Assistant de lire les fichiers
 
 
 ### Assist (texte/voix)
+
+> Démonstration : https://youtube.com/shorts/TIOIKZNCbBE?si=my2BR19OPJmfDUWc
 
 > Depuis la version v0.2.0, un script va automatiquement installer les phrases Assist au bon endroit, et ses mises à jour.
 > Vérifiez la carte du tableau de bord si un redémarrage manuel est nécessaire.
