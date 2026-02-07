@@ -6,7 +6,7 @@
 ## v1.5.4 - 
 
 
-- ...
+- Add option to force IP v4 on mDNS or not
 
 
 ## v1.5.3 - 05/02/2026

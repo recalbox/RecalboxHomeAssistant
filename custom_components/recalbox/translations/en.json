@@ -10,6 +10,7 @@
           "udp_recalbox": "UDP Port for Recalbox",
           "udp_retroarch": "UDP Port for RetroArch",
           "api_port_kodi": "Kodi API Port",
+          "only_ip_v4": "Force IP v4 on mDNS",
           "test_connection": "Test connection (Recalbox ON, on the menu)"
         }
       }
@@ -28,7 +29,8 @@
           "api_port_gamesmanager": "Web API Port for games (list roms, screenshot)",
           "udp_recalbox": "UDP Port for Recalbox",
           "udp_retroarch": "UDP Port for RetroArch",
-          "api_port_kodi": "Kodi API Port"
+          "api_port_kodi": "Kodi API Port",
+          "only_ip_v4": "Force IP v4 on mDNS"
         }
       }
     }
