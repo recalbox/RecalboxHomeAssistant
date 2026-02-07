@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.8">
   <diagram name="Page-1" id="b3Vfai5NgRxYjSCUl25N">
-    <mxGraphModel dx="1737" dy="937" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="3473" dy="1873" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -41,7 +41,7 @@
           <mxGeometry height="60" width="10" x="45" y="210" as="geometry" />
         </mxCell>
         <mxCell id="xuUsNKQw6926h0aMBOMb-6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Home Assistant" vertex="1">
-          <mxGeometry height="330" width="100" x="1830" y="280" as="geometry" />
+          <mxGeometry height="390" width="100" x="1825" y="240" as="geometry" />
         </mxCell>
         <mxCell id="xuUsNKQw6926h0aMBOMb-8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=5;" value="get status via API">
           <mxGeometry relative="1" as="geometry">
@@ -357,8 +357,8 @@
         <mxCell id="qsk5WlGwlOyVUWhQ8Vzm-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;autosize=1;resizable=0;" value="Evénement" vertex="1">
           <mxGeometry height="30" width="80" x="1060" y="424" as="geometry" />
         </mxCell>
-        <mxCell id="qsk5WlGwlOyVUWhQ8Vzm-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;autosize=1;resizable=0;" value="Evénement" vertex="1">
-          <mxGeometry height="30" width="80" x="1620" y="424" as="geometry" />
+        <mxCell id="qsk5WlGwlOyVUWhQ8Vzm-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;autosize=1;resizable=0;" value="Kodi" vertex="1">
+          <mxGeometry height="30" width="50" x="1620" y="424" as="geometry" />
         </mxCell>
         <mxCell id="qsk5WlGwlOyVUWhQ8Vzm-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;autosize=1;resizable=0;" value="Evénement" vertex="1">
           <mxGeometry height="30" width="80" x="2220" y="544" as="geometry" />
@@ -377,6 +377,9 @@
         </mxCell>
         <mxCell id="qsk5WlGwlOyVUWhQ8Vzm-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;autosize=1;resizable=0;" value="Evénement" vertex="1">
           <mxGeometry height="30" width="80" x="1060" y="694" as="geometry" />
+        </mxCell>
+        <mxCell id="0Acvpm1zrFt8vK76c7wQ-1" parent="1" style="html=1;whiteSpace=wrap;" value="Recalbox Intég reeady" vertex="1">
+          <mxGeometry height="26" width="130" x="1760" y="305" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
