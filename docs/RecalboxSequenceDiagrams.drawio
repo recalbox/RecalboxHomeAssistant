@@ -1,0 +1,205 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36" version="29.3.7">
+  <diagram name="Page-1" id="b3Vfai5NgRxYjSCUl25N">
+    <mxGraphModel dx="1489" dy="803" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="xuUsNKQw6926h0aMBOMb-1" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Démarrage de Recalbox après HA (A)&lt;/h1&gt;&lt;p&gt;Home Assistant est censé tourner en continu, alors que Recalbox est allumée normalement de façon beaucoup plus occasionnelle. C&#39;est donc le cas nominal qui va être décrit dans les sous-cas ci-dessous :&lt;br&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="450" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-2" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Recalbox" vertex="1">
+          <mxGeometry height="280" width="100" x="390" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Home Assistant" vertex="1">
+          <mxGeometry height="400" width="100" x="70" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-4" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Démarrage de HA après Recalbox&lt;/h1&gt;&lt;p&gt;Dans un cas plus rare, par exemple où la Recalbox est déjà lancée, mais que Home Assistant subit un redémarrage, on se retrouve dans les cas ci-dessous :&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="410" x="1200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Recalbox" vertex="1">
+          <mxGeometry height="410" width="100" x="1550" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-7" parent="xuUsNKQw6926h0aMBOMb-5" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="60" width="10" x="45" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Home Assistant" vertex="1">
+          <mxGeometry height="330" width="100" x="1230" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=5;" value="get status via API">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1280" y="379" as="sourcePoint" />
+            <mxPoint x="1595" y="379" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-9" edge="1" parent="1" source="xuUsNKQw6926h0aMBOMb-7" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=-5;" value="status (game, system, ...)">
+          <mxGeometry relative="1" x="-0.0007" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1280" y="425" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-13" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="439.5" y="360" as="sourcePoint" />
+            <mxPoint x="119.63043478260875" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-14" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="439.87" y="400" as="sourcePoint" />
+            <mxPoint x="120.00043478260875" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-15" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="439.87" y="480" as="sourcePoint" />
+            <mxPoint x="120.00043478260875" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-16" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="439.87" y="510" as="sourcePoint" />
+            <mxPoint x="120.00043478260875" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-17" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="1599.8695652173913" y="520" as="sourcePoint" />
+            <mxPoint x="1280" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-18" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="1599.8695652173913" y="550" as="sourcePoint" />
+            <mxPoint x="1280" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-19" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="xuUsNKQw6926h0aMBOMb-20" value="on event : JSON ...">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="1599.8695652173913" y="240" as="sourcePoint" />
+            <mxPoint x="1480" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="x" vertex="1">
+          <mxGeometry height="30" width="30" x="1450" y="224" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Cas A :&lt;br&gt;La Recalbox a du réseau dès la poussée des premiers événements" vertex="1">
+          <mxGeometry height="30" width="190" x="345" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-22" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;" value="Failed = off">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="120" y="280" as="sourcePoint" />
+            <mxPoint x="220" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-23" connectable="0" parent="xuUsNKQw6926h0aMBOMb-22" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="Ping" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="x" vertex="1">
+          <mxGeometry height="30" width="30" x="220" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-25" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;" value="Success = ON, go to ask on API for status !">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="1280" y="320" as="sourcePoint" />
+            <mxPoint x="1599" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-26" connectable="0" parent="xuUsNKQw6926h0aMBOMb-25" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="Ping" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-27" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Démarrage de Recalbox après HA (B)&lt;/h1&gt;&lt;p&gt;Home Assistant est censé tourner en continu, alors que Recalbox est allumée normalement de façon beaucoup plus occasionnelle. Cette fois-ci, la Recalbox n&#39;a pas un accès immédiat au réseau, les premiers événements ne sont pas poussés à Home Assistant :&lt;br&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="450" x="640" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-28" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Recalbox" vertex="1">
+          <mxGeometry height="420" width="100" x="990" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-29" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Home Assistant" vertex="1">
+          <mxGeometry height="540" width="100" x="670" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-30" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON lost">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="1039.5" y="360" as="sourcePoint" />
+            <mxPoint x="900" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-34" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="Cas B :&lt;br&gt;La Recalbox a démarré sans avoir encore eu accès au réseau : les premiers événements ont été perdus" vertex="1">
+          <mxGeometry height="30" width="190" x="945" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-35" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;" value="Failed = off">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="720" y="280" as="sourcePoint" />
+            <mxPoint x="820" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-36" connectable="0" parent="xuUsNKQw6926h0aMBOMb-35" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="Ping" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="x" vertex="1">
+          <mxGeometry height="30" width="30" x="820" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-38" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON lost">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="1039.5" y="400" as="sourcePoint" />
+            <mxPoint x="900" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-39" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;" value="Failed = off">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="720" y="370" as="sourcePoint" />
+            <mxPoint x="820" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-40" connectable="0" parent="xuUsNKQw6926h0aMBOMb-39" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="Ping" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-41" parent="1" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="" vertex="1">
+          <mxGeometry height="60" width="10" x="1035" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-42" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=5;" value="get status via API">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="720" y="519" as="sourcePoint" />
+            <mxPoint x="1035" y="519" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-43" edge="1" parent="1" source="xuUsNKQw6926h0aMBOMb-41" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=-5;" value="status (game, system, ...)">
+          <mxGeometry relative="1" x="-0.0007" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="720" y="565" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-44" edge="1" parent="1" style="endArrow=block;endFill=1;html=1;edgeStyle=orthogonalEdgeStyle;align=left;verticalAlign=top;rounded=0;" value="Success = ON, go to ask on API for status !">
+          <mxGeometry relative="1" x="-1" as="geometry">
+            <mxPoint x="720" y="460" as="sourcePoint" />
+            <mxPoint x="1039" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-45" connectable="0" parent="xuUsNKQw6926h0aMBOMb-44" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=bottom;" value="Ping" vertex="1">
+          <mxGeometry relative="1" x="-1" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-46" parent="1" style="html=1;whiteSpace=wrap;" value="Accès au réseau OK" vertex="1">
+          <mxGeometry height="26" width="120" x="1030" y="414" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-47" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="1039.9995652173911" y="640" as="sourcePoint" />
+            <mxPoint x="720.13" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-48" edge="1" parent="1" style="html=1;verticalAlign=bottom;startArrow=oval;startFill=1;endArrow=block;startSize=8;curved=0;rounded=0;" value="on event : JSON with status, game, system,&amp;nbsp; etc">
+          <mxGeometry relative="1" width="60" as="geometry">
+            <mxPoint x="1039.9995652173911" y="670" as="sourcePoint" />
+            <mxPoint x="720.13" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-49" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="x" vertex="1">
+          <mxGeometry height="30" width="30" x="820" y="354" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-50" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="x" vertex="1">
+          <mxGeometry height="30" width="30" x="870" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="xuUsNKQw6926h0aMBOMb-51" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="x" vertex="1">
+          <mxGeometry height="30" width="30" x="870" y="384" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
