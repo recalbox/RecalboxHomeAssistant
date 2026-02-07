@@ -42,7 +42,7 @@ intents:
   RecalboxQuitKodi:
     data:
       - sentences:
-          - "(quit | exit | kill) Kodi [on [the] recalbox]"
+          - "(quit | exit | kill) (kodi | codi) [on [the] recalbox]"
 
 lists:
   game:

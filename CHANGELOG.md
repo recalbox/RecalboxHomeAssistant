@@ -3,10 +3,11 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v1.5.4 - 
+## v1.5.4 - 07/02/2025
 
 
-- ...
+- Add option to force IP v4 on mDNS or not
+- Add other variants on Quit Kodi sentences for Assist voice
 
 
 ## v1.5.3 - 05/02/2026

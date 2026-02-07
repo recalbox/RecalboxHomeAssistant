@@ -332,14 +332,15 @@ If your script version is too old, a message will be shown in your Recalbox Card
 ### IP v6
 
 When your Home Assistants resolves the hostname of your Recalbox, it can use IPv6.
-It seems to have some troubles (at least on RPi3), so Recalbox doesn't receive the requests from Home Assistant.
+It seems to have some troubles with IP v6 (at least on RPi3), so Recalbox doesn't receive the requests from Home Assistant.
 A toast is shown in Home Assistant showing an IPv6 address.
 
-> Version v1.5.0 forces now to use IPv4.  
-> This issue should not happen again. If it does again, disable IPV6 in Home Assistant (Settings, Network, IPv6, disable)
+If it happens to you :
+- since v1.5.4, a new option allows you to try to force mDNS resolution to IP v4
+  ![](docs/force_ipv4_resolution.png)
+- if it's not enough, try to disable IP v6 on Home Assistant (Settings, Network, IPv6, disactivate)
+- if it's not enough, write the IP address of your Recalbox in the host address of the custom integration
 
-If it occurres too often, go to your integration settings, and change your hostname to the IP address v4.
-It will fix this issue, but if your router changes your IP address, you will have to change it again.
-
+Related HA issues :
 - https://github.com/home-assistant/core/issues/161174
 - https://github.com/home-assistant/core/issues/161877
