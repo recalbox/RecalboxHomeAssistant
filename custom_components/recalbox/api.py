@@ -27,9 +27,15 @@ class RecalboxAPI:
 
     def _getSocketType(self):
         if self.only_ip_v4:
-            return socket.AF_INET
+            return socket.AF_INET  # Force la résolution en IPv4
         else :
-            return socket.AF_UNSPEC
+            return socket.AF_UNSPEC  # Peut avoir du IPv6 ou IPv4
+
+    def _createTCPConnector(self) -> aiohttp.TCPConnector:
+        return aiohttp.TCPConnector(
+            family=self._getSocketType(),
+            use_dns_cache=False # aide aiohttp qui a du mal avec le .local
+        )
 
 
     async def send_udp_command(self, port, message):
@@ -53,7 +59,7 @@ class RecalboxAPI:
     async def post_api(self, path, port=80):
         url = f"http://{self.host}:{port}{path}"
         _LOGGER.debug(f"API POST {url}")
-        connector = aiohttp.TCPConnector(family=self._getSocketType()) # Force la résolution en IPv4
+        connector = self._createTCPConnector()
         async with aiohttp.ClientSession(connector=connector) as session:
             try:
                 async with session.post(url) as response:
@@ -66,7 +72,7 @@ class RecalboxAPI:
     async def get_roms(self, console):
         url = f"http://{self.host}:{self.api_port_gamesmanager}/api/systems/{console}/roms"
         _LOGGER.debug(f"API GET roms from {url}")
-        connector = aiohttp.TCPConnector(family=self._getSocketType()) # Force la résolution en IPv4
+        connector = self._createTCPConnector()
         async with aiohttp.ClientSession(connector=connector) as session:
             try:
                 async with session.get(url, timeout=10) as response:
@@ -86,7 +92,7 @@ class RecalboxAPI:
             "id": 1
         }
         _LOGGER.debug(f"API to quit Kodi : {kodi_url}")
-        connector = aiohttp.TCPConnector(family=self._getSocketType()) # Force la résolution en IPv4
+        connector = self._createTCPConnector()
         async with aiohttp.ClientSession(connector=connector) as session:
             try:
                 async with session.post(kodi_url, json=payload, timeout=5) as response:
@@ -106,7 +112,7 @@ class RecalboxAPI:
             "id": 1
         }
         _LOGGER.debug(f"Ping Kodi : {kodi_url}")
-        connector = aiohttp.TCPConnector(family=self._getSocketType()) # Force la résolution en IPv4
+        connector = self._createTCPConnector()
         async with aiohttp.ClientSession(connector=connector) as session:
             try:
                 async with session.post(kodi_url, json=payload, timeout=5) as response:
@@ -122,7 +128,7 @@ class RecalboxAPI:
     async def get_current_status(self):
         url = f"http://{self.host}:{self.api_port_gamesmanager}/api/status"
         _LOGGER.debug(f"API GET current Recalbox status {url}")
-        connector = aiohttp.TCPConnector(family=self._getSocketType()) # Force la résolution en IPv4
+        connector = self._createTCPConnector()
         # {
         #   "Action": "rungame",
         #   "Parameter": "/recalbox/share/roms/megadrive/001 Sonic 1.bin",

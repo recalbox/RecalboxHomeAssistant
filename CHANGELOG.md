@@ -5,7 +5,8 @@
 
 ## v1.5.5 - ...
 
-- ...
+- Force not using DNS cache on aiohttp, because the mDNS resolution is not stable with
+  `.local` hosts...
 
 
 ## v1.5.4 - 07/02/2025
