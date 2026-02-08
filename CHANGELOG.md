@@ -3,6 +3,13 @@
 > By Aurélien Tomassini, 2026.
 
 
+## v1.5.6 - ...
+
+
+- ...
+
+
+
 ## v1.5.5 - 08/02/2025
 
 - Force not using DNS cache on `aiohttp`, because its mDNS resolution is not stable with
