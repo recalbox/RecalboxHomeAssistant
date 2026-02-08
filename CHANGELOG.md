@@ -9,6 +9,7 @@
 - When pulling hame info from API, set current game only if "Action"=="rungame"
 - Remove custom `aiohttp` sessions, now uses the `async_get_clientsession`
   from Home Assistant
+- On Recalbox card, align the game title, and other information to the right side
 
 
 

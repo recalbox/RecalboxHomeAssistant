@@ -203,6 +203,7 @@ class RecalboxCard extends HTMLElement {
             .recalbox-card-content { padding: var(--ha-space-4); }
             .recalbox-card-content hr { margin: 12px 0; border: 0; border-top: 1px solid var(--divider-color); margin: 8px 0; }
             .info-row { display: flex; align-items: center; padding: 4px 0; min-height: 40px; }
+            .info-row div:last-child { text-align: right; }
             .info-row ha-icon { color: var(--state-icon-color); margin-right: 24px; margin-left: 4px; }
             .info-text { flex-grow: 1; }
             .info-value { color: var(--secondary-text-color); font-size: 0.9em; }
