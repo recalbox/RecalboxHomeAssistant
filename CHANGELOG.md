@@ -1,12 +1,13 @@
 # Recalbox Home Assistant integration - Changelog
 
-> By Aurélien Tomassini, 2026.
+> By Recalbox, 2026.
 
 
-## v1.5.7 - 
+## v1.6.0 - 09/02/2026 - Configurable entities and Migrate to Recalbox
 
 
-- Move Recalbox parameter entities to `Configuration` instead of `Diagnostic` section
+- Move Recalbox parameter entities to editable `Configuration` instead of `Diagnostic` section
+- Update docs to new Recalbox repository !
 
 
 ## v1.5.6 - 09/02/2026 - Network stability + UX improvement + Support HA 2026.2

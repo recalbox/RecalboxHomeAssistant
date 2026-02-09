@@ -1,6 +1,6 @@
 # Intégration Recalbox Home Assistant
 
-<small>Par Aurélien Tomassini, 2026</small>
+<small>Par Recalbox, 2026</small>
 
 🇫🇷 Version Française  
 [🇺🇸 Go to English version](README.md)
@@ -126,8 +126,8 @@ lancées par Assist utilisent les mêmes commandes que listées ci-dessus.
    - Si vous ne l'avez pas encore, [installez HACS](https://www.hacs.xyz/docs/use/download/download/)
    
    - Installez cette **intégration Recalbox** via ce bouton :  
-     [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ooree23&repository=RecalboxHomeAssistant&category=integration)  
-     > Ou manuellement, ajoutez `https://github.com/ooree23/RecalboxHomeAssistant` comme dépôt, de type Integration.
+     [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=recalbox&repository=RecalboxHomeAssistant&category=integration)  
+     > Ou manuellement, ajoutez `https://github.com/recalbox/RecalboxHomeAssistant` comme dépôt, de type Integration.
        Cliquez sur télécharger, et acceptez de redémarrer.
      
      Cela ajoutera l'intégration Recalbox dans votre Home Assistant
