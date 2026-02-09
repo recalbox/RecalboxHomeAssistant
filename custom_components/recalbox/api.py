@@ -28,6 +28,8 @@ class RecalboxAPI:
         self.api_port_kodi = api_port_kodi # Pour quitter Kodi
         self.only_ip_v4 = only_ip_v4
         # On récupère la session globale de HA
+        # https://developers.home-assistant.io/docs/asyncio_blocking_operations/#load_verify_locations :
+        # httpx: homeassistant.helpers.httpx_client.get_async_client to create the httpx.AsyncClient
         self._http_client = httpx.AsyncClient(
             limits=httpx.Limits(
                 max_keepalive_connections=5,
@@ -35,8 +37,10 @@ class RecalboxAPI:
             ),
             transport=httpx.AsyncHTTPTransport(
                 local_address="0.0.0.0" if only_ip_v4 else None,
-                retries=3 # fait des retry en cas d'échec DNS
-            )
+                retries=3, # fait des retry en cas d'échec DNS
+                verify=False # pas de vérification SSL : pas de certificat en .local
+            ),
+            verify=False # pas de vérification SSL : pas de certificat en .local
         )
         _LOGGER.debug(f"Create API with {"IPv4 only" if self.only_ip_v4 else "IPv4 and IPv6"} supported")
 
