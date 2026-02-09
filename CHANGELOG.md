@@ -3,10 +3,10 @@
 > By Recalbox, 2026.
 
 
-## v1.6.2 - ...
+## v1.6.2 - 09/02/2026
 
 
-- ...
+- [#1](https://github.com/recalbox/RecalboxHomeAssistant/issues/1) Implements and fixes HACS and hessfest validations on github
 
 
 
