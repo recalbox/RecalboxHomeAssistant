@@ -14,7 +14,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         RecalboxDiagnosticSensor(config_entry, "udp_recalbox", "Port UDP Recalbox", "mdi:remote", 1337),
         RecalboxDiagnosticSensor(config_entry, "udp_retroarch", "Port UDP RetroArch", "mdi:remote", 55355),
         RecalboxDiagnosticSensor(config_entry, "api_port_kodi", "Port API Kodi", "mdi:kodi", 8081),
-        RecalboxDiagnosticSensor(config_entry, "only_ip_v4", "Force mDNS IP v4 only", "mdi:dns", False),
+        RecalboxDiagnosticSensor(config_entry, "only_ip_v4", "Force mDNS IP v4 only", "mdi:dns", True),
     ]
     async_add_entities(entities)
 

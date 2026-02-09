@@ -113,7 +113,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Suppression de l'intégration."""
 
     # Fermer les connexions avant de décharger tout :
-    api = hass.data[DOMAIN][entry.entry_id]["api"]
+    api = hass.data[DOMAIN]["instances"][entry.entry_id]["api"]
     await api.close()
 
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
