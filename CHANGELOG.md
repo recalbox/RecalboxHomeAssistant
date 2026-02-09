@@ -7,6 +7,7 @@
 
 
 - Move "only_ip_v4" back to diagnistics, because when is config as a switch, we can select it in the Recalbox Card... Not convenient
+- [#1](https://github.com/recalbox/RecalboxHomeAssistant/issues/1) Creates the github workflows for validation for HACS
 
 
 
