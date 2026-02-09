@@ -1,12 +1,12 @@
 {
   "domain": "recalbox",
   "name": "Recalbox",
-  "config_flow": true,
-  "integration_type": "hub",
-  "dependencies": ["frontend", "http", "api", "lovelace"],
-  "iot_class": "local_push",
-  "version": "1.6.2",
   "codeowners": ["@ooree23", "@recalbox"],
+  "config_flow": true,
+  "dependencies": ["frontend", "http", "api", "lovelace"],
   "documentation": "https://github.com/recalbox/RecalboxHomeAssistant",
-  "issue_tracker": "https://github.com/recalbox/RecalboxHomeAssistant/issues"
+  "integration_type": "hub",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/recalbox/RecalboxHomeAssistant/issues",
+  "version": "1.6.2"
 }
