@@ -3,7 +3,7 @@
 > By Recalbox, 2026.
 
 
-## v1.6.1 - ...
+## v1.6.1 - 09/02/2026
 
 
 - Move "only_ip_v4" back to diagnistics, because when is config as a switch, we can select it in the Recalbox Card... Not convenient
