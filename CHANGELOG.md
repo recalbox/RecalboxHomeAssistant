@@ -3,7 +3,7 @@
 > By Aurélien Tomassini, 2026.
 
 
-## v1.5.6 - ...
+## v1.5.6 - 09/02/2025 - Network stability + UX improvement + Support HA 2026.2
 
 
 - When pulling game info from API, set game attributes only if "Action"=="rungame", else, we only use the system data (no game running).
