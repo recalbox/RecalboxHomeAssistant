@@ -38,6 +38,7 @@ class RecalboxAPI:
                 retries=3 # fait des retry en cas d'échec DNS
             )
         )
+        _LOGGER.debug(f"Create API with {"IPv4 only" if self.only_ip_v4 else "IPv4 and IPv6"} supported")
 
 
     # --------- Network tools -----------
