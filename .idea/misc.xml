@@ -3,6 +3,9 @@
   <component name="AhkProjectSettings">
     <option name="defaultAhkSdk" value="AutoHotkey v2.0.19" />
   </component>
+  <component name="Black">
+    <option name="sdkName" value="Python 3.14 (RecalboxHomeAssistant)" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="25" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
