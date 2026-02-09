@@ -9,12 +9,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     # On crée une liste d'entités à ajouter
     entities = [
         RecalboxDiagnosticSensor(config_entry, "host", "Host", "mdi:ip-network"),
-        RecalboxDiagnosticSensor(config_entry, "api_port_os", "Port API OS", "mdi:api", 80),
-        RecalboxDiagnosticSensor(config_entry, "api_port_gamesmanager", "Port API Games", "mdi:api", 81),
-        RecalboxDiagnosticSensor(config_entry, "udp_recalbox", "Port UDP Recalbox", "mdi:remote", 1337),
-        RecalboxDiagnosticSensor(config_entry, "udp_retroarch", "Port UDP RetroArch", "mdi:remote", 55355),
-        RecalboxDiagnosticSensor(config_entry, "api_port_kodi", "Port API Kodi", "mdi:kodi", 8081),
-        RecalboxDiagnosticSensor(config_entry, "only_ip_v4", "Force mDNS IP v4 only", "mdi:dns", True),
     ]
     async_add_entities(entities)
 
@@ -31,7 +25,7 @@ class RecalboxDiagnosticSensor(SensorEntity):
         self._attr_icon = icon
         self._default = default
         # L'ID unique doit être différent pour chaque port
-        self._attr_unique_id = f"{config_entry.entry_id}_{key}"
+        self._attr_unique_id = f"{config_entry.entry_id}_config_{key}"
 
     @property
     def native_value(self):

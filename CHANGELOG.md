@@ -1,9 +1,16 @@
 # Recalbox Home Assistant integration - Changelog
 
-> By Aurélien Tomassini, 2026.
+> By Recalbox, 2026.
 
 
-## v1.5.6 - 09/02/2025 - Network stability + UX improvement + Support HA 2026.2
+## v1.6.0 - 09/02/2026 - Configurable entities and Migrate to Recalbox
+
+
+- Move Recalbox parameter entities to editable `Configuration` instead of `Diagnostic` section
+- Update docs to new Recalbox repository !
+
+
+## v1.5.6 - 09/02/2026 - Network stability + UX improvement + Support HA 2026.2
 
 
 - When pulling game info from API, set game attributes only if "Action"=="rungame", else, we only use the system data (no game running).
@@ -16,13 +23,13 @@
 - Re-enable option to force or not IPv4
 
 
-## v1.5.5 - 08/02/2025
+## v1.5.5 - 08/02/2026
 
 - Force not using DNS cache on `aiohttp`, because its mDNS resolution is not stable with
   `.local`-suffixed host.
 
 
-## v1.5.4 - 07/02/2025
+## v1.5.4 - 07/02/2026
 
 
 - Add option to force IP v4 on mDNS or not
