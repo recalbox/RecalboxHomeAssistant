@@ -6,14 +6,13 @@
 ## v1.5.6 - ...
 
 
-- When pulling hame info from API, set current game only if "Action"=="rungame"
-- Remove custom `aiohttp` sessions, now uses the `async_get_clientsession`
-  from Home Assistant
+- When pulling game info from API, set game attributes only if "Action"=="rungame", else, we only use the system data (no game running).
 - On Recalbox card, align the game title, and other information to the right side
-- When launching a game by its name, if it starts with 3 digits and a space, then
-  say only the text after this prefix.
-- Switch from `aiohttp` to `httpx` with auto retry and backoff when DNS fails
-- Migrate front_end to be fully compatible with Home Assistant 2026.2
+- When launching a game by its name, if it starts with 3 digits and a space, then we remove it in order to
+  say only the useful text after this prefix.
+- Remove custom `aiohttp` sessions from API
+- Switch from `aiohttp` to `httpx` implementation, with auto retry and backoff when DNS fails
+- Migrate front_end to be fully compatible with Home Assistant 2026.2 (fixing error `AttributeError: 'LovelaceData' object has no attribute 'mode'` in HA 2026.2)
 
 
 ## v1.5.5 - 08/02/2025
