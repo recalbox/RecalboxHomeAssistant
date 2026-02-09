@@ -9,6 +9,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     # On crée une liste d'entités à ajouter
     entities = [
         RecalboxDiagnosticSensor(config_entry, "host", "Host", "mdi:ip-network"),
+        RecalboxDiagnosticSensor(config_entry, "only_ip_v4", "Force mDNS IP v4 only", "mdi:dns", True),
     ]
     async_add_entities(entities)
 

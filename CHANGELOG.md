@@ -3,6 +3,14 @@
 > By Recalbox, 2026.
 
 
+## v1.6.1 - 09/02/2026
+
+
+- Move "only_ip_v4" back to diagnistics, because when is config as a switch, we can select it in the Recalbox Card... Not convenient
+- [#1](https://github.com/recalbox/RecalboxHomeAssistant/issues/1) Creates the github workflows for validation for HACS
+
+
+
 ## v1.6.0 - 09/02/2026 - Configurable entities and Migrate to Recalbox
 
 

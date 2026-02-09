@@ -31,7 +31,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     # On crée l'entité en lui passant l'objet config_entry (qui contient l'IP)
     new_recalbox_entity = RecalboxEntity(hass, config_entry, api, coordinator)
     hass.data[DOMAIN]["instances"][config_entry.entry_id]["sensor_entity"] = new_recalbox_entity # pour la retrouver ailleurs plus facilement
-    async_add_entities([new_recalbox_entity, RecalboxForceV4Switch(hass, config_entry)])
+    async_add_entities([new_recalbox_entity])
 
 
 
@@ -398,36 +398,3 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
             _LOGGER.debug("Premier ping échoué au démarrage : on laisse la recalbox sur OFF")
 
 
-
-
-# --------- SWITCH ON CONFIG -----------
-
-class RecalboxForceV4Switch(SwitchEntity):
-    _attr_entity_category = EntityCategory.CONFIG
-    _attr_has_entity_name = True
-    _attr_name = "Force mDNS IP v4 only"
-    _attr_icon = "mdi:dns"
-
-    def __init__(self, hass, config_entry):
-        self.hass = hass
-        self._config_entry = config_entry
-        self._attr_unique_id = f"{config_entry.entry_id}_only_ip_v4"
-
-    @property
-    def is_on(self):
-        return self._config_entry.options.get("only_ip_v4", True)
-
-    async def async_turn_on(self, **kwargs):
-        await self._update_config(True)
-
-    async def async_turn_off(self, **kwargs):
-        await self._update_config(False)
-
-    async def _update_config(self, value):
-        new_options = dict(self._config_entry.options)
-        new_options["only_ip_v4"] = value
-        self.hass.config_entries.async_update_entry(self._config_entry, options=new_options)
-
-    @property
-    def device_info(self):
-        return {"identifiers": {(DOMAIN, self._config_entry.entry_id)}}
