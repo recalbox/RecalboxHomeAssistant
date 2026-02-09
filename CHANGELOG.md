@@ -3,6 +3,13 @@
 > By Recalbox, 2026.
 
 
+## v1.6.1 - ...
+
+
+- ...
+
+
+
 ## v1.6.0 - 09/02/2026 - Configurable entities and Migrate to Recalbox
 
 
