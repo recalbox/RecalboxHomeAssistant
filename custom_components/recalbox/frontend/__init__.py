@@ -27,7 +27,9 @@ class JSModuleRegistration:
     async def async_register(self):
         """Register view_assist path."""
         await self._async_register_path()
-        if self.lovelace.mode == "storage":
+
+        mode = getattr(self.lovelace, "resource_mode", getattr(self.lovelace, "mode", None))
+        if mode == "storage":
             await self._async_wait_for_lovelace_resources()
 
     # install card resources
