@@ -1,6 +1,5 @@
 {
   "name": "Recalbox",
   "render_readme": true,
-  "homeassistant": "2026.1.0",
-  "extra_folders": ["custom_sentences"]
+  "homeassistant": "2026.1.0"
 }
