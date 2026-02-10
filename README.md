@@ -42,12 +42,12 @@ This repository allows you to integrate Recalbox in your Home Assistant :
 ![](docs/RecalboxHomeAssistantIntegration.png)
 
 - [Requirements](https://github.com/recalbox/RecalboxHomeAssistant/wiki#requirements)
-- [Installation](https://github.com/recalbox/RecalboxHomeAssistant/wiki/Installation-(EN))
+- [Installation](https://github.com/recalbox/RecalboxHomeAssistant/wiki/EN_Installation)
 - Usage :
-  * [Dashboard card](https://github.com/recalbox/RecalboxHomeAssistant/wiki/Usage-on-Lovelace-Dashboard-(EN))
-  * [Automations](https://github.com/recalbox/RecalboxHomeAssistant/wiki/Usage-with-automations-(EN))
-  * [Assist (text/voice)](https://github.com/recalbox/RecalboxHomeAssistant/wiki/Usage-with-Assist-(EN))
+  * [Dashboard card](https://github.com/recalbox/RecalboxHomeAssistant/wiki/EN_Usage-on-Lovelace-Dashboard)
+  * [Automations](https://github.com/recalbox/RecalboxHomeAssistant/wiki/EN_Usage-with-automations)
+  * [Assist (text/voice)](https://github.com/recalbox/RecalboxHomeAssistant/wiki/EN_Usage-with-Assist)
 - [Releases notes](CHANGELOG.md)
-- [Troubleshot](https://github.com/recalbox/RecalboxHomeAssistant/wiki/Troubleshot-(EN))
+- [Troubleshot](https://github.com/recalbox/RecalboxHomeAssistant/wiki/EN_Troubleshot)
 
 
