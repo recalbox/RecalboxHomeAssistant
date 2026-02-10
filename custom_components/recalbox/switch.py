@@ -332,7 +332,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self.async_write_ha_state()
 
         # Notifier l'entité image de se rafraichir, et l'entité de game name
-        self.refresh_children(["image_entity", "game_name_entity"])
+        self.refresh_children(["image_entity", "game_name_entity", "system_name_entity"])
 
 
     def refresh_children(self, children):
