@@ -1,11 +1,20 @@
 from homeassistant.components.image import ImageEntity
 from .const import DOMAIN
+import logging
+
+
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Configuration de l'entité Image."""
     api = hass.data[DOMAIN]["instances"][config_entry.entry_id]["api"]
     # On récupère l'entité switch déjà créée pour accéder à ses attributs
-    switch_entity = hass.data[DOMAIN]["instances"][config_entry.entry_id]["sensor_entity"]
+    instance_data = hass.data[DOMAIN]["instances"].get(config_entry.entry_id)
+    switch_entity = instance_data.get("sensor_entity") if instance_data else None
+    if not switch_entity:
+        _LOGGER.error("Le switch Recalbox n'est pas prêt. Impossible de charger l'image.")
+        return False
+
     image_entity = RecalboxCurrentGameImage(hass, switch_entity, config_entry, api)
     hass.data[DOMAIN]["instances"][config_entry.entry_id]["image_entity"] = image_entity
     async_add_entities([image_entity])
