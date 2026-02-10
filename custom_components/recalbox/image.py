@@ -1,4 +1,5 @@
 from homeassistant.components.image import ImageEntity
+from homeassistant.util import dt as dt_util
 from .const import DOMAIN
 import logging
 
@@ -29,16 +30,26 @@ class RecalboxCurrentGameImage(ImageEntity):
         self._attr_unique_id = f"{config_entry.entry_id}_game_image"
         self._attr_name = f"Gamepic"
         self._attr_device_info = switch_entity.device_info
+        self._last_image_url = None
 
     @property
     def image_url(self) -> str | None:
         """Retourne l'URL de l'image stockée dans le switch."""
-        # On vérifie si le switch est ON et si une URL est disponible
-        if self._switch.is_on and self._switch.imageUrl:
-            return self._switch.imageUrl
-        return None
+        url = self._switch.imageUrl if (self._switch.is_on and self._switch.imageUrl) else None
+        # Si l'URL a changé, on met à jour le timestamp pour casser le cache
+        if url != self._last_image_url:
+            self._last_image_url = url
+            self._attr_image_last_updated = dt_util.utcnow()
+        return url
 
     @property
     def available(self) -> bool:
         """L'entité image est disponible si le switch est ON."""
         return self._switch.available and self._switch.is_on
+
+    @property
+    def state(self):
+        """Affiche le nom du jeu comme état de l'entité au lieu de la date."""
+        if self._switch.is_on and self._switch.game:
+            return self._switch.game
+        return None
