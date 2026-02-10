@@ -3,6 +3,8 @@ from homeassistant.util import dt as dt_util
 from .const import DOMAIN
 import logging
 
+# https://www.home-assistant.io/integrations/image
+# https://developers.home-assistant.io/docs/core/entity/image/
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -17,7 +19,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         return False
 
     image_entity = RecalboxCurrentGameImage(hass, switch_entity, config_entry, api)
-    hass.data[DOMAIN]["instances"][config_entry.entry_id]["image_entity"] = image_entity
+    instance_data["image_entity"] = image_entity
     async_add_entities([image_entity])
 
 class RecalboxCurrentGameImage(ImageEntity):
@@ -27,20 +29,26 @@ class RecalboxCurrentGameImage(ImageEntity):
         super().__init__(hass)
         self._switch = switch_entity
         self._api = api
-        self._attr_unique_id = f"{config_entry.entry_id}_game_image"
-        self._attr_name = f"Gamepic"
+        self._attr_unique_id = f"{config_entry.entry_id}_current_game"
+        self._attr_name = f"Game"
         self._attr_device_info = switch_entity.device_info
-        self._last_image_url = None
+        self._attr_image_last_updated = dt_util.utcnow()
+        self._last_url = None
+
+    async def async_update(self) -> None:
+        """Récupère les dernières données du switch et vérifie les changements."""
+        _LOGGER.debug("Checking for image update via async_update...")
+        url = self._switch.imageUrl if (self._switch.is_on and self._switch.imageUrl) else None
+
+        if url != self._last_url:
+            self._last_url = url
+            self._attr_image_last_updated = dt_util.utcnow()
+            _LOGGER.debug(f"Image changed to {url}, timestamp updated")
 
     @property
     def image_url(self) -> str | None:
-        """Retourne l'URL de l'image stockée dans le switch."""
-        url = self._switch.imageUrl if (self._switch.is_on and self._switch.imageUrl) else None
-        # Si l'URL a changé, on met à jour le timestamp pour casser le cache
-        if url != self._last_image_url:
-            self._last_image_url = url
-            self._attr_image_last_updated = dt_util.utcnow()
-        return url
+        """Retourne simplement l'URL stockée."""
+        return self._last_url
 
     @property
     def available(self) -> bool:

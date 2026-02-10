@@ -334,7 +334,10 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         # Notifier l'entité image de se raffraichir
         image_entity = self.hass.data[DOMAIN]["instances"][self._config_entry.entry_id].get("image_entity")
         if image_entity:
-            image_entity.async_write_ha_state()
+            image_entity.async_schedule_update_ha_state(True)
+            _LOGGER.debug("Updated image_entity")
+        else:
+            _LOGGER.debug("No image_entity found to update")
 
 
 
