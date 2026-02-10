@@ -359,11 +359,11 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
 
     async def pull_game_infos_from_recalbox_api(self):
         try :
-            self.reset_game_attributes()
             currentRecalboxStatus = await self._api.get_current_status()
             await self.update_from_recalbox_json_message(currentRecalboxStatus)
             _LOGGER.info("Recalbox marquée comme en ligne, les infos de jeu en cours ont été récupérées par API")
         except Exception as err :
+            self.reset_game_attributes()
             _LOGGER.info(f"Recalbox marquée comme en ligne, sans info de jeux : {err}")
         finally:
             self.async_write_ha_state()
