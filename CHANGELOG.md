@@ -5,6 +5,9 @@
 
 ## v1.6.3 - ...
 
+> Added pulling mode, that doesnt require Recalbox script installation anymore.  
+> - Updating data/Ui cant take up to 30 seconds
+> - Turning OFF Recalbox can take up to 2 minutes
 
 - Add a polling mode : if the user didn't install the script in Recalbox, he will not receive events in real time,
   but the ping each 30 sec will pull the Rcablbox status and current game/system.
