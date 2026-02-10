@@ -11,9 +11,9 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     if not switch_entity:
         return False
 
-    game_name_entity = RecalboxSwitchAttribute(switch_entity, config_entry, "game")
+    game_name_entity = RecalboxSwitchAttribute(switch_entity, config_entry, "game", "Game",  "mdi:gamepad-variant-outline")
     instance_data["game_name_entity"] = game_name_entity
-    system_name_entity = RecalboxSwitchAttribute(switch_entity, config_entry, "console")
+    system_name_entity = RecalboxSwitchAttribute(switch_entity, config_entry, "console", "System", "mdi:sony-playstation")
     instance_data["system_name_entity"] = system_name_entity
 
     # On crée une liste d'entités à ajouter
@@ -57,11 +57,11 @@ class RecalboxDiagnosticSensor(SensorEntity):
 class RecalboxSwitchAttribute(SensorEntity):
     """Nom du jeu."""
 
-    def __init__(self, switch_entity, config_entry, attributeName:str):
+    def __init__(self, switch_entity, config_entry, attributeName:str, title:str, icon:str):
         self._switch = switch_entity
         self._attr_unique_id = f"{config_entry.entry_id}_current_{attributeName}"
-        self._attr_name = attributeName
-        self._attr_icon = "mdi:controller-classic"
+        self._attr_name = title
+        self._attr_icon = icon
         self._attr_device_info = switch_entity.device_info
         self.attributeName = attributeName
 
