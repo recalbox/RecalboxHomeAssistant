@@ -3,6 +3,12 @@
 > By Recalbox, 2026.
 
 
+## v1.6.4 - ...
+
+
+- ...
+
+
 ## v1.6.3 - 10/02/2026
 
 > Added pulling mode, that doesnt require Recalbox script installation anymore.  
