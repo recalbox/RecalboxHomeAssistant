@@ -19,7 +19,8 @@ import logging
 import hashlib
 
 _LOGGER = logging.getLogger(__name__)
-PLATFORMS = ["switch", "sensor", "number"]
+PLATFORMS = ["switch"]
+OTHER_PLATFORMS = ["sensor", "number", "image"]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -50,6 +51,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # On ajoute le switch à la liste des plateformes
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    # Puis les autres
+    await hass.config_entries.async_forward_entry_setups(entry, OTHER_PLATFORMS)
 
     # engistrement des services Recalbox, utilisés par la partie JS notamment
     # mais dispo aussi dans HA au global

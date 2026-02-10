@@ -71,8 +71,8 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
     def _handle_coordinator_update(self) -> None:
         """Géré à chaque rafraîchissement du coordinateur (ping)."""
         is_alive = self.coordinator.data.get("is_alive_smoothed")
-        if is_alive and not self._attr_is_on:
-            _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF. Lancement du Pull API.")
+        if is_alive and (not self._attr_is_on or self.recalboxIpAddress is None):
+            _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF, ou que l'on ne reçoit pas de message push par la Recalbox. Lancement du Pull API.")
             self.hass.async_create_task(self.pull_game_infos_from_recalbox_api())
         super()._handle_coordinator_update()
 
@@ -331,6 +331,14 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         # Notifier HA du changement
         self.async_write_ha_state()
 
+        # Notifier l'entité image de se raffraichir
+        image_entity = self.hass.data[DOMAIN]["instances"][self._config_entry.entry_id].get("image_entity")
+        if image_entity:
+            image_entity.async_schedule_update_ha_state(True)
+            _LOGGER.debug("Updated image_entity")
+        else:
+            _LOGGER.debug("No image_entity found to update")
+
 
 
 
@@ -359,11 +367,11 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
 
     async def pull_game_infos_from_recalbox_api(self):
         try :
-            self.reset_game_attributes()
             currentRecalboxStatus = await self._api.get_current_status()
             await self.update_from_recalbox_json_message(currentRecalboxStatus)
             _LOGGER.info("Recalbox marquée comme en ligne, les infos de jeu en cours ont été récupérées par API")
         except Exception as err :
+            self.reset_game_attributes()
             _LOGGER.info(f"Recalbox marquée comme en ligne, sans info de jeux : {err}")
         finally:
             self.async_write_ha_state()

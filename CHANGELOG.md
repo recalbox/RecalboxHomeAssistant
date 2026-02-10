@@ -3,10 +3,17 @@
 > By Recalbox, 2026.
 
 
-## v1.6.3 - ...
+## v1.6.3 - 10/02/2026
 
+> Added pulling mode, that doesnt require Recalbox script installation anymore.  
+> - Updating data/Ui cant take up to 30 seconds
+> - Turning OFF Recalbox can take up to 2 minutes
 
-- ...
+- Add a polling mode : if the user didn't install the script in Recalbox, he will not receive events in real time,
+  but the ping each 30 sec will pull the Rcablbox status and current game/system.
+- Add image path generation HomeAssistant-side when in polling mode
+- Add an image entity, showing current game picture and title.
+  It can be displayed in a dashboard, and its state, containing the current game title, is saved in history.
 
 
 ## v1.6.2 - 09/02/2026

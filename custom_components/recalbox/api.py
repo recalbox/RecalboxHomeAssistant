@@ -3,6 +3,7 @@ import httpx
 import asyncio
 import logging
 import socket
+import urllib.parse
 from homeassistant.core import (
     HomeAssistant
 )
@@ -194,14 +195,23 @@ class RecalboxAPI:
             response = await self._http_client.get(url, timeout=10)
             response.raise_for_status()
             data = response.json()
-            is_game_running = (data.get("Action")=="rungame");
+            is_game_running = (data.get("Action")=="rungame")
+            imagePath = None
+            # Generate image path
+            if (is_game_running
+                    and data.get("Game", {}).get("GamePath") is not None
+                    and data.get("System", {}).get("SystemId") is not None
+                    and data.get("Game", {}).get("ImagePath") is not None) :
+                romPathUrlEncoded = urllib.parse.quote(data.get("Game", {}).get("GamePath"), safe='')
+                imagePath = f"api/systems/{data.get("System", {}).get("SystemId")}/roms/metadata/image/{romPathUrlEncoded}"
+                _LOGGER.debug(f"Auto created image path : {imagePath}")
             return {
                 "game": data.get("Game", {}).get("Game") if is_game_running else None,
                 "console": data.get("System", {}).get("System"),
                 "rom": data.get("Game", {}).get("GamePath") if is_game_running else None,
                 "genre": data.get("Game", {}).get("Genre") if is_game_running else None,
                 "genreId": data.get("Game", {}).get("GenreId") if is_game_running else None,
-                "imagePath": None,
+                "imagePath": imagePath,
                 "recalboxIpAddress": None,
                 "recalboxVersion": None,
                 "hardware": None,
