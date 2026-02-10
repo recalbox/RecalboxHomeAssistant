@@ -71,8 +71,8 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
     def _handle_coordinator_update(self) -> None:
         """Géré à chaque rafraîchissement du coordinateur (ping)."""
         is_alive = self.coordinator.data.get("is_alive_smoothed")
-        if is_alive and not self._attr_is_on:
-            _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF. Lancement du Pull API.")
+        if is_alive and (not self._attr_is_on or self.recalboxIpAddress is None):
+            _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF, ou que l'on ne reçoit pas de message push par la Recalbox. Lancement du Pull API.")
             self.hass.async_create_task(self.pull_game_infos_from_recalbox_api())
         super()._handle_coordinator_update()
 

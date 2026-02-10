@@ -6,7 +6,8 @@
 ## v1.6.3 - ...
 
 
-- ...
+- Add a polling mode : if the user didn't install the script in Recalbox, he will not receive events in real time,
+  but the ping each 30 sec will pull the Rcablbox status and current game/system.
 
 
 ## v1.6.2 - 09/02/2026
