@@ -44,6 +44,7 @@ class RecalboxCurrentGameImage(ImageEntity):
             self._last_url = url
             self._attr_image_last_updated = dt_util.utcnow()
             _LOGGER.debug(f"Image changed to {url}, timestamp updated")
+            self._cached_image = None
             self.async_write_ha_state()
 
     @property
