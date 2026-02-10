@@ -1,3 +1,10 @@
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+![Downloads](https://img.shields.io/github/downloads/recalbox/RecalboxHomeAssistant/total)  
+[![Release](https://img.shields.io/github/v/release/recalbox/RecalboxHomeAssistant)](https://github.com/recalbox/RecalboxHomeAssistant/releases)
+![Latest Downloads](https://img.shields.io/github/downloads/recalbox/RecalboxHomeAssistant/latest/total)  
+![GitHub issue custom search](https://img.shields.io/github/issues-search?query=is%3Aopen%20repo%3Arecalbox%2FRecalboxHomeAssistant&label=Open%20issues)
+
+
 # Recalbox Home Assistant integration
 
 <small>By Recalbox, 2026</small>
