@@ -34,6 +34,7 @@ class RecalboxCurrentGameImage(ImageEntity):
         self._attr_device_info = switch_entity.device_info
         self._attr_image_last_updated = dt_util.utcnow()
         self._last_url = None
+        self._cached_image = None
 
     async def async_update(self) -> None:
         """Récupère les dernières données du switch et vérifie les changements."""
