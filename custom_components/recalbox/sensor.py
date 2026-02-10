@@ -68,8 +68,9 @@ class RecalboxSwitchAttribute(SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Retourne le nom du jeu stocké dans l'attribut du switch."""
-        if self._switch.is_on and self._switch.get(self.attributeName):
-            return self._switch.get(self.attributeName)
+        value = getattr(self._switch, self.attributeName, None)
+        if self._switch.is_on and value:
+            return value
         return None
 
     @property
