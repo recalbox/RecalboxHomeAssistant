@@ -331,16 +331,18 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         # Notifier HA du changement
         self.async_write_ha_state()
 
-        # Notifier l'entité image de se raffraichir
-        image_entity = self.hass.data[DOMAIN]["instances"][self._config_entry.entry_id].get("image_entity")
-        if image_entity:
-            image_entity.async_schedule_update_ha_state(True)
-            _LOGGER.debug("Updated image_entity")
-        else:
-            _LOGGER.debug("No image_entity found to update")
+        # Notifier l'entité image de se rafraichir, et l'entité de game name
+        self.refresh_children(["image_entity", "game_name_entity"])
 
 
-
+    def refresh_children(self, children):
+        for child in children:
+            entity = self.hass.data[DOMAIN]["instances"][self._config_entry.entry_id].get(child)
+            if entity:
+                entity.async_schedule_update_ha_state(True)
+                _LOGGER.debug(f"Updated {child}")
+            else:
+                _LOGGER.debug(f"No {child} found to update")
 
     #########
     # UTILS #

@@ -11,10 +11,14 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     if not switch_entity:
         return False
 
+    game_name_entity = RecalboxCurrentGameName(switch_entity, config_entry)
+    instance_data["game_name_entity"] = game_name_entity
+
     # On crée une liste d'entités à ajouter
     entities = [
         RecalboxDiagnosticSensor(switch_entity, config_entry, "host", "Host", "mdi:ip-network"),
         RecalboxDiagnosticSensor(switch_entity, config_entry, "only_ip_v4", "Force mDNS IP v4 only", "mdi:dns", True),
+        game_name_entity,
     ]
     async_add_entities(entities)
 
@@ -45,3 +49,25 @@ class RecalboxDiagnosticSensor(SensorEntity):
 
 
 
+# Infos du jeu
+
+class RecalboxCurrentGameName(SensorEntity):
+    """Nom du jeu."""
+
+    def __init__(self, switch_entity, config_entry):
+        self._switch = switch_entity
+        self._attr_unique_id = f"{config_entry.entry_id}_current_game_name"
+        self._attr_name = f"Game"
+        self._attr_icon = "mdi:controller-classic"
+        self._attr_device_info = switch_entity.device_info
+
+    @property
+    def native_value(self) -> str | None:
+        """Retourne le nom du jeu stocké dans l'attribut du switch."""
+        if self._switch.is_on and self._switch.game:
+            return self._switch.game
+        return None
+
+    @property
+    def available(self) -> bool:
+        return self._switch.available and self._switch.is_on

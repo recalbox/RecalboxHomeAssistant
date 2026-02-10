@@ -30,7 +30,8 @@ class RecalboxCurrentGameImage(ImageEntity):
         self._switch = switch_entity
         self._api = api
         self._attr_unique_id = f"{config_entry.entry_id}_current_game"
-        self._attr_name = f"Game"
+        self._attr_name = f"Gamepic"
+        self._attr_icon = "mdi:image-outline"
         self._attr_device_info = switch_entity.device_info
         self._attr_image_last_updated = dt_util.utcnow()
         self._last_url = None
@@ -40,13 +41,11 @@ class RecalboxCurrentGameImage(ImageEntity):
         """Récupère les dernières données du switch et vérifie les changements."""
         _LOGGER.debug("Checking for image update via async_update...")
         url = self._switch.imageUrl if (self._switch.is_on and self._switch.imageUrl) else None
-
         if url != self._last_url:
             self._last_url = url
             self._attr_image_last_updated = dt_util.utcnow()
-            _LOGGER.debug(f"Image changed to {url}, timestamp updated")
             self._cached_image = None
-            self.async_write_ha_state()
+            _LOGGER.debug(f"Image changed to {url}, timestamp updated, and cache cleaned")
 
     @property
     def image_url(self) -> str | None:
@@ -57,10 +56,3 @@ class RecalboxCurrentGameImage(ImageEntity):
     def available(self) -> bool:
         """L'entité image est disponible si le switch est ON."""
         return self._switch.available and self._switch.is_on
-
-    @property
-    def state(self):
-        """Affiche le nom du jeu comme état de l'entité au lieu de la date."""
-        if self._switch.is_on and self._switch.game:
-            return self._switch.game
-        return None

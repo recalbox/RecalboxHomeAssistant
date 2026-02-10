@@ -6,7 +6,9 @@
 ## v1.6.4 - ...
 
 
-- ...
+- Re-add a specific game name entity, because when using the name as the picture title,
+  it fails if the game ends with a number (Home Assistant tries to use it as a date).  
+  So now there are two sensors per Recalbox : picture, and game name
 
 
 ## v1.6.3 - 10/02/2026
