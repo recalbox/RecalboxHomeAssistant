@@ -19,7 +19,7 @@ import logging
 import hashlib
 
 _LOGGER = logging.getLogger(__name__)
-PLATFORMS = ["switch", "sensor", "number"]
+PLATFORMS = ["switch", "sensor", "number", "image"]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
