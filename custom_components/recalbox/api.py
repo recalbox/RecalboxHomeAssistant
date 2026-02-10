@@ -202,8 +202,8 @@ class RecalboxAPI:
                     and data.get("Game", {}).get("GamePath") is not None
                     and data.get("System", {}).get("SystemId") is not None
                     and data.get("Game", {}).get("ImagePath") is not None) :
-                romPathUrlEncoded = urllib.parse.quote_plus(data.get("Game", {}).get("GamePath"))
-                imagePath = f"/api/systems/{data.get("System", {}).get("SystemId")}/roms/metadata/image/{romPathUrlEncoded}"
+                romPathUrlEncoded = urllib.parse.quote(data.get("Game", {}).get("GamePath"))
+                imagePath = f"api/systems/{data.get("System", {}).get("SystemId")}/roms/metadata/image/{romPathUrlEncoded}"
                 _LOGGER.debug(f"Auto created image path : {imagePath}")
             return {
                 "game": data.get("Game", {}).get("Game") if is_game_running else None,
