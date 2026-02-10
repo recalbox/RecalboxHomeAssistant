@@ -27,7 +27,7 @@ class RecalboxCurrentGameImage(ImageEntity):
         self._switch = switch_entity
         self._api = api
         self._attr_unique_id = f"{config_entry.entry_id}_game_image"
-        self._attr_name = f"Recalbox Game {api.host}"
+        self._attr_name = f"Gamepic"
         self._attr_device_info = switch_entity.device_info
 
     @property
