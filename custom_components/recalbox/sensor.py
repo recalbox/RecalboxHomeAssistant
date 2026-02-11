@@ -3,6 +3,8 @@ from homeassistant.helpers.entity import EntityCategory
 from .const import DOMAIN
 
 # Pour afficher l'IP dans les diagnostics de la recalbox
+# Affiche aussi le jeu, et la console, dans le status (avec historique)
+# Et utilise cet historique pour mesurer le temps d'allumage quotidien
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Configuration des capteurs de diagnostic."""
