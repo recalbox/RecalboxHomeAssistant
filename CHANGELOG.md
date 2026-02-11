@@ -9,7 +9,7 @@
 - Re-add a specific game name entity, because when using the name as the picture title,
   it fails if the game ends with a number (Home Assistant tries to use it as a date).  
   So now there are two sensors per Recalbox : picture, and game name
-- Add current console entity
+- Add current console entity (can be useful for [statistics](https://www.home-assistant.io/integrations/history_stats/))
 
 
 ## v1.6.3 - 10/02/2026
