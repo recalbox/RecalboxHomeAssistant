@@ -3,7 +3,7 @@
 > By Recalbox, 2026.
 
 
-## v1.6.4 - ...
+## v1.6.4 - 12/02/2026
 
 
 - Re-add a specific game name entity, because when using the name as the picture title,
