@@ -367,8 +367,7 @@ class RecalboxCard extends HTMLElement {
         <br>
         <span ${!isOn || isKodiRunning ? 'style="display:none;"' : ''}><a href="http://${host}" target="_blank">${i18n.footer.webManagerLabel}</a> &nbsp; | &nbsp;</span>
         <a href="https://www.recalbox.com" target="_blank">Recalbox.com</a> &nbsp; | &nbsp;
-        <!-- <a href="https://github.com/recalbox/RecalboxHomeAssistant" target="_blank">${i18n.footer.integrationLabel}</a> &nbsp; | &nbsp; -->
-        <a href="https://recalbox.github.io/RecalboxHomeAssistant/" target="_blank">${i18n.footer.integrationLabel}</a>
+        <a href="https://github.com/recalbox/RecalboxHomeAssistant/wiki" target="_blank">${i18n.footer.integrationLabel}</a>
       </div>
     `;
   }

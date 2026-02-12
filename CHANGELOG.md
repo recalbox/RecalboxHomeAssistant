@@ -3,6 +3,23 @@
 > By Recalbox, 2026.
 
 
+## v1.6.4 - 12/02/2026
+
+
+- Re-add a specific game name entity, because when using the name as the picture title,
+  it fails if the game ends with a number (Home Assistant tries to use it as a date).  
+  So now there are two sensors per Recalbox : picture, and game name
+- Add current console entity (can be useful for [statistics](https://www.home-assistant.io/integrations/history_stats/))
+- In the Recalbox card, update the github link to go straight [to the repo wiki](https://github.com/recalbox/RecalboxHomeAssistant/wiki), not the [intro webpage](https://recalbox.github.io/RecalboxHomeAssistant)
+- Add advanced documentation on how to display statistics charts :
+  - https://github.com/recalbox/RecalboxHomeAssistant/wiki/EN_Usage-on-Lovelace-Dashboard-Advanced
+  - https://github.com/recalbox/RecalboxHomeAssistant/wiki/FR_Usage-on-Lovelace-Dashboard-Advanced
+  > <img src="docs/StatisticsTimeline.png"/>
+  > <img src="docs/StatisticsDurations.png"/>
+  > <img src="docs/StatisticsDurationsStack.png" width="45%"/>
+  > <img src="docs/StatisticsDurationsPie.png" width="45%"/>
+
+
 ## v1.6.3 - 10/02/2026
 
 > Added pulling mode, that doesnt require Recalbox script installation anymore.  
@@ -10,7 +27,7 @@
 > - Turning OFF Recalbox can take up to 2 minutes
 
 - Add a polling mode : if the user didn't install the script in Recalbox, he will not receive events in real time,
-  but the ping each 30 sec will pull the Rcablbox status and current game/system.
+  but the ping each 30 sec will pull the Recalbox status and current game/system.
 - Add image path generation HomeAssistant-side when in polling mode
 - Add an image entity, showing current game picture and title.
   It can be displayed in a dashboard, and its state, containing the current game title, is saved in history.
