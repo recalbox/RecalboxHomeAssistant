@@ -10,7 +10,7 @@
   it fails if the game ends with a number (Home Assistant tries to use it as a date).  
   So now there are two sensors per Recalbox : picture, and game name
 - Add current console entity (can be useful for [statistics](https://www.home-assistant.io/integrations/history_stats/))
-- In the Recalbox card, update the github link to go straight to the repo, not the intro webpage
+- In the Recalbox card, update the github link to go straight [to the repo wiki](https://github.com/recalbox/RecalboxHomeAssistant/wiki), not the [intro webpage](https://recalbox.github.io/RecalboxHomeAssistant)
 - Add advanced documentation on how to display statistics charts :
   - https://github.com/recalbox/RecalboxHomeAssistant/wiki/EN_Usage-on-Lovelace-Dashboard-Advanced
   - https://github.com/recalbox/RecalboxHomeAssistant/wiki/FR_Usage-on-Lovelace-Dashboard-Advanced
