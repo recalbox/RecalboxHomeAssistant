@@ -61,3 +61,4 @@ layout:
     visible: false
 config:
   scrollZoom: false
+  displayModeBar: false

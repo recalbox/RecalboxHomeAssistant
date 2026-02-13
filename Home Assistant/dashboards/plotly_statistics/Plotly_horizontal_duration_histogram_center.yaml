@@ -63,3 +63,4 @@ layout:
     side: right
 config:
   scrollZoom: false
+  displayModeBar: false
