@@ -15,6 +15,7 @@
 - When pulling data from Recalbox, if getting game info fails, do not clean current games infos
 - As soon as 4 pings fail, clean current game/system attributes
 - Clean game name in pulling mode : remove the "NNN " prefix number
+- Fix integration services declaration (missed `save_state`, `load_state`, `pause_resume_game` declarations for dev tools)
 
 
 ## v1.6.4 - 12/02/2026

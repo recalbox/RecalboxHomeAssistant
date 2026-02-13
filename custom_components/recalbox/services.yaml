@@ -43,9 +43,31 @@ quit_game:
       selector:
         text:
 
-quit_kodi:
-  name: "Quitter Kodi"
-  description: "Ferme Kodi, pour arriver à l'interface EmulationStation."
+pause_resume_game:
+  name: "Pause/Reprendre le jeu"
+  description: "Met en pause ou reprend l'émulateur."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
+      required: true
+      selector:
+        text:
+
+save_state:
+  name: "Sauvegarder la partie"
+  description: "Créer une savestate du jeu en cours."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
+      required: true
+      selector:
+        text:
+
+load_state:
+  name: "Recharger la dernière sauvegarde"
+  description: "Charger la dernière savestate."
   fields:
     entity_id:
       name: "ID de l'entité"
@@ -76,5 +98,16 @@ launch_game:
       description: "Le nom du système (ex: snes, megadrive, psx)."
       required: true
       example: "snes"
+      selector:
+        text:
+
+quit_kodi:
+  name: "Quitter Kodi"
+  description: "Ferme Kodi, pour arriver à l'interface EmulationStation."
+  fields:
+    entity_id:
+      name: "ID de l'entité"
+      description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
+      required: true
       selector:
         text:
