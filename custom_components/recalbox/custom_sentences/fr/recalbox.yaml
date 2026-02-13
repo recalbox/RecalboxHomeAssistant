@@ -23,7 +23,7 @@ intents:
   RecalboxStopGame:
     data:
       - sentences:
-          - "(arrête | stop | stoppe | quitte) le jeu (actuel | en cours) [sur [la] recalbox]"
+          - "(arrête | stop | stoppe | quitte | ferme) le jeu (actuel | en cours) [sur [la] recalbox]"
           - "(retourne | retour | va) (au | sur le) menu [sur [la] recalbox]"
   RecalboxPauseGame:
     data:

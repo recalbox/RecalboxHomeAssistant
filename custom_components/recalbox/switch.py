@@ -3,19 +3,15 @@ from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed, CoordinatorEntity
 from homeassistant.helpers import device_registry as dr
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.entity import EntityCategory
 from .const import DOMAIN
-from .translations_service import RecalboxTranslator
+from .services.translations_service import RecalboxTranslator
 from .api import RecalboxAPI
 import unicodedata
-import ipaddress
 import re
-import homeassistant.helpers.config_validation as cv
-import json
 import asyncio
 import logging
-from collections import deque
-from .recalbox_offline_watcher import prepare_ping_coordinator
+from . import utils
+from .services.recalbox_offline_watcher import prepare_ping_coordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -55,6 +51,12 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self.imageUrl = None
         self.recalboxIpAddress = None
 
+    def is_raspberry_pi3(self) -> bool:
+        hardware = self._attr_extra_state_attributes.get("hardware")
+        if isinstance(hardware, str):
+            return "pi 3" in hardware.lower()
+        return False
+
     #@property
     #def icon(self):
     #    return "mdi:controller" if self.is_on else "mdi:controller-off"
@@ -74,6 +76,11 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         if is_alive and (not self._attr_is_on or self.recalboxIpAddress is None):
             _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF, ou que l'on ne reçoit pas de message push par la Recalbox. Lancement du Pull API.")
             self.hass.async_create_task(self.pull_game_infos_from_recalbox_api())
+        elif (not is_alive) and (self.console is not None):
+            # la Recalbox ne répond plus, mais on avait encore des infos jeux en attributs : on nettoie.
+            self.reset_game_attributes()
+            self.async_write_ha_state()
+
         super()._handle_coordinator_update()
 
 
@@ -156,17 +163,35 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
 
     async def request_screenshot(self) -> bool :
         _LOGGER.debug("Screenshot UDP, puis API si échec")
-        port_api = self._api.api_port_gamesmanager
         port_udp = self._api.udp_retroarch
-        # 1. Test UDP
-        success = await self._api.send_udp_command(port_udp, "SCREENSHOT")
-        # 2. Fallback API
-        if not success:
-            _LOGGER.warning(f"Screenshot UDP command not sent on port {port_udp}. Please check your Recalbox is has this port running. Will now try a screenshot via API...")
-            return await self._api.post_api("/api/media/takescreenshot", port=port_api)
-        else:
-            _LOGGER.debug("Screenshot UDP command sent successfully to Recalbox")
-            return True
+        port_api = self._api.api_port_gamesmanager
+        screenshot_api_path = "/api/media/takescreenshot"
+        screenshot_udp_command = "SCREENSHOT"
+        if self.is_raspberry_pi3() :
+            _LOGGER.debug(f"Screenshot requested on a raspberry pi 3 : will try with UDP on priority...")
+            # Sur Raspberry Pi 3, on fait d'abord un screenshot UDP, parce que l'API rend un truc bizarre...
+            # 1. Test UDP
+            success = await self._api.send_udp_command(port_udp, screenshot_udp_command)
+            # 2. Fallback API
+            if not success:
+                _LOGGER.warning(f"Screenshot UDP command not sent on port {port_udp}. Please check your Recalbox is has this port running. Will now try a screenshot via API...")
+                return await self._api.post_api(screenshot_api_path, port=port_api)
+            else:
+                _LOGGER.debug("Screenshot UDP command sent successfully to Recalbox")
+                return True
+
+        else :
+            # Sur le reste, on fait d'abord un screenshot API
+            # 1. Test API
+            success = await self._api.post_api(screenshot_api_path, port=port_api)
+            # 2. Fallback UDP
+            if not success:
+                _LOGGER.warning(f"Screenshot API command failed. Will now try with UDP...")
+                return await self._api.send_udp_command(port_udp, screenshot_udp_command)
+            else:
+                _LOGGER.debug("Screenshot API command sent successfully to Recalbox")
+                return True
+
 
 
     async def request_quit_current_game(self) -> bool :
@@ -198,12 +223,6 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         return await self._api.quit_kodi()
 
 
-
-    def _clean_game_name(self, raw_game_name):
-        if len(raw_game_name) > 4 and raw_game_name[:3].isdigit() and raw_game_name[3] == " ":
-            return raw_game_name[4:]
-        else:
-            return raw_game_name
 
     # Renvoie le texte pour Assist
     async def search_and_launch_game_by_name(self, console, game_query, lang=None) -> str :
@@ -243,7 +262,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
                 break
 
         if target:
-            game_cleaned_name = self._clean_game_name(target['name'])
+            game_cleaned_name = utils.clean_game_name(target['name'])
             _LOGGER.debug(f"Game found, with name {target['name']}, on system {console}. Try to launch via UDP command...")
             try:
                 await self._api.send_udp_command(port_udp, f"START|{console}|{target['path']}")
@@ -277,6 +296,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self.rom = None
         self.imageUrl = None
         _LOGGER.debug("Recalbox game attributes cleaned")
+        self.refresh_dependencies()
 
 
 
@@ -332,8 +352,10 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self.async_write_ha_state()
 
         # Notifier l'entité image de se rafraichir, et l'entité de game name
-        self.refresh_children(["image_entity", "game_name_entity", "system_name_entity"])
+        self.refresh_dependencies()
 
+    def refresh_dependencies(self):
+        self.refresh_children(["image_entity", "game_name_entity", "system_name_entity"])
 
     def refresh_children(self, children):
         for child in children:
@@ -373,7 +395,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
             await self.update_from_recalbox_json_message(currentRecalboxStatus)
             _LOGGER.info("Recalbox marquée comme en ligne, les infos de jeu en cours ont été récupérées par API")
         except Exception as err :
-            self.reset_game_attributes()
+            # self.reset_game_attributes()
             _LOGGER.info(f"Recalbox marquée comme en ligne, sans info de jeux : {err}")
         finally:
             self.async_write_ha_state()

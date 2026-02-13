@@ -1,6 +1,6 @@
 import logging
 from homeassistant.core import HomeAssistant
-from .const import DOMAIN
+from ..const import DOMAIN
 
 # by Aurélien Tomassini - ooree23
 # Tools : installer les services
@@ -9,7 +9,7 @@ from .const import DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 
-def findRecalboxEntity(hass: HomeAssistant, entity_id: str):
+def _find_recalbox_entity(hass: HomeAssistant, entity_id: str):
     for instance in hass.data[DOMAIN]["instances"].values():
         entity = instance.get("sensor_entity")
         if entity and entity.entity_id == entity_id:
@@ -21,34 +21,34 @@ def install_services(hass: HomeAssistant):
 
     # handlers
     async def handle_shutdown(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.request_shutdown()
     async def handle_reboot(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.request_reboot()
     async def handle_screenshot(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.request_screenshot()
     async def handle_quit_game(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.request_quit_current_game()
     async def handle_pause_resume_game(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.request_pause_game()
     async def handle_save_state(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.request_save_state()
     async def handle_load_state(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.request_load_state()
     async def handle_launch_game(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         game = call.data.get("game")
         console = call.data.get("console")
         if recalbox_entity:
             await recalbox_entity.search_and_launch_game_by_name(console, game)
     async def handle_quit_kodi(call):
-        recalbox_entity = findRecalboxEntity(hass, call.data.get("entity_id"))
+        recalbox_entity = _find_recalbox_entity(hass, call.data.get("entity_id"))
         if recalbox_entity: await recalbox_entity.quit_kodi()
 
     # Mapping des noms de services vers leurs fonctions de rappel

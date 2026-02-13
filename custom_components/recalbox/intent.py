@@ -2,8 +2,11 @@ from homeassistant.helpers import intent
 from homeassistant.core import HomeAssistant, State
 import unicodedata
 import re
+
+from homeassistant.util import slugify
+
 from .const import DOMAIN
-from .translations_service import RecalboxTranslator
+from .services.translations_service import RecalboxTranslator
 from .switch import RecalboxEntity
 import logging
 
@@ -43,7 +46,7 @@ async def async_setup_intents(hass):
 # - soit l'instance est spécifiée dans l'intent
 # - soit non, et on prend la première qu'on trouve allumée
 # - soit on prend la première qu'on trouve si toutes sont éteintes
-def find_recalbox_entity(hass: HomeAssistant, intent_obj:intent.Intent) -> RecalboxEntity:
+def _find_recalbox_entity(hass: HomeAssistant, intent_obj:intent.Intent) -> RecalboxEntity:
     instances = hass.data[DOMAIN].get("instances", {})
     if not instances:
         return None
@@ -82,7 +85,7 @@ def find_recalbox_entity(hass: HomeAssistant, intent_obj:intent.Intent) -> Recal
     return all_entities[0]
 
 def find_recalbox_states(hass: HomeAssistant, intent_obj:intent.Intent) -> State:
-    recalboxEntity:RecalboxEntity = find_recalbox_entity(hass, intent_obj)
+    recalboxEntity:RecalboxEntity = _find_recalbox_entity(hass, intent_obj)
     return hass.states.get(recalboxEntity.entity_id)
 
 def get_translator(hass: HomeAssistant) -> RecalboxTranslator:
@@ -121,7 +124,7 @@ class RecalboxScreenshotHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        recalbox:RecalboxEntity = find_recalbox_entity(hass, intent_obj)
+        recalbox:RecalboxEntity = _find_recalbox_entity(hass, intent_obj)
         translator:RecalboxTranslator = get_translator(hass)
 
         if await recalbox.request_screenshot():
@@ -140,7 +143,7 @@ class RecalboxQuitGameHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        recalbox:RecalboxEntity = find_recalbox_entity(hass, intent_obj)
+        recalbox:RecalboxEntity = _find_recalbox_entity(hass, intent_obj)
         translator:RecalboxTranslator = get_translator(hass)
 
         if await recalbox.request_quit_current_game():
@@ -159,7 +162,7 @@ class RecalboxQuitKodiHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        recalbox:RecalboxEntity = find_recalbox_entity(hass, intent_obj)
+        recalbox:RecalboxEntity = _find_recalbox_entity(hass, intent_obj)
         translator:RecalboxTranslator = get_translator(hass)
 
         if await recalbox.quit_kodi():
@@ -178,7 +181,7 @@ class RecalboxPauseGameHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        recalbox:RecalboxEntity = find_recalbox_entity(hass, intent_obj)
+        recalbox:RecalboxEntity = _find_recalbox_entity(hass, intent_obj)
         translator:RecalboxTranslator = get_translator(hass)
 
         if await recalbox.request_pause_game():
@@ -196,7 +199,7 @@ class RecalboxSaveStateHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        recalbox:RecalboxEntity = find_recalbox_entity(hass, intent_obj)
+        recalbox:RecalboxEntity = _find_recalbox_entity(hass, intent_obj)
         translator:RecalboxTranslator = get_translator(hass)
 
         if await recalbox.request_save_state():
@@ -214,7 +217,7 @@ class RecalboxLoadStateHandler(intent.IntentHandler):
 
     async def async_handle(self, intent_obj):
         hass = intent_obj.hass
-        recalbox:RecalboxEntity = find_recalbox_entity(hass, intent_obj)
+        recalbox:RecalboxEntity = _find_recalbox_entity(hass, intent_obj)
         translator:RecalboxTranslator = get_translator(hass)
 
         if await recalbox.request_load_state():
@@ -241,7 +244,7 @@ class RecalboxLaunchHandler(intent.IntentHandler):
         console = slots.get("console", {}).get("value")
         # recalboxEntityId = slots.get("recalboxEntityId", {}).get("value")
 
-        recalbox = find_recalbox_entity(hass, intent_obj)
+        recalbox = _find_recalbox_entity(hass, intent_obj)
 
         # Appeler la fonction de recherche
         result_text = await recalbox.search_and_launch_game_by_name(console, game, lang=intent_obj.language)

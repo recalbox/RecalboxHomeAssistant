@@ -3,6 +3,29 @@
 > By Recalbox, 2026.
 
 
+## v1.6.5 - 13/02/2026
+
+**Polling mode workflow**
+- When pulling data from Recalbox via API (`get_current_status`), try to get the Recalbox version
+  with its API (new function `get_recalbox_version`, using "api/versions")
+- When pulling data from Recalbox, if getting game info fails, do not clean current games infos
+- Clean game name in pulling mode : remove the "NNN " prefix number
+
+**Cleaning data**
+- As soon as 4 pings fail, clean current game/system attributes
+
+**Raspberry Pi 3 exceptions**
+- Split screenshot feature in two cases :
+  - if the hardware contains "pi 3" (ignoring case), we consider it is a Raspberry Pi 3, failing API screenshot,
+    so we use UDP first, and then API
+  - if any other device, we first try API, and if it fails, we use UDP command.
+
+**Dev tools**
+- Fix integration services declaration (missed `save_state`, `load_state`, `pause_resume_game` declarations for dev tools)
+- Remove hardcoded version from `const.py`, now uses the one parsed from `manifest.json`
+- Update frontend `__init__.py` from [KipK documentation](https://gist.github.com/KipK/3cf706ac89573432803aaa2f5ca40492)
+
+
 ## v1.6.4 - 12/02/2026
 
 

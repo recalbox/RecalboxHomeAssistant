@@ -9,14 +9,11 @@ from .const import DOMAIN
 from .api import RecalboxAPI
 from .intent import async_setup_intents
 from .frontend import JSModuleRegistration
-from .translations_service import RecalboxTranslator
-from .custom_sentences_installer import install_sentences
-from .services_installer import install_services
-from.rest_controller import RecalboxRestController
-import os
-import shutil
+from .services.translations_service import RecalboxTranslator
+from .services.custom_sentences_installer import install_sentences
+from .services.services_installer import install_services
+from .rest_controllers.rest_controller import RecalboxRestController
 import logging
-import hashlib
 
 _LOGGER = logging.getLogger(__name__)
 PLATFORMS = ["switch"]
