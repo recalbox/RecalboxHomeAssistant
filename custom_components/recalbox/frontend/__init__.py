@@ -3,156 +3,119 @@
 # Source : https://gist.github.com/KipK/3cf706ac89573432803aaa2f5ca40492
 
 import logging
-import os
 from pathlib import Path
+from typing import Any
 
 from homeassistant.components.http import StaticPathConfig
-from homeassistant.components.lovelace import LovelaceData
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.event import async_call_later
 
-from ..const import JSMODULES, URL_BASE  # noqa: TID252
+from ..const import JSMODULES, URL_BASE, INTEGRATION_VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class JSModuleRegistration:
-    """Register Javascript modules."""
+    """Registers JavaScript modules in Home Assistant."""
 
     def __init__(self, hass: HomeAssistant) -> None:
-        """Initialise."""
+        """Initialize the registrar."""
         self.hass = hass
-        self.lovelace: LovelaceData = self.hass.data.get("lovelace")
+        self.lovelace = self.hass.data.get("lovelace")
 
-    async def async_register(self):
-        """Register view_assist path."""
+    async def async_register(self) -> None:
+        """Register frontend resources."""
         await self._async_register_path()
+        # Only register modules if Lovelace is in storage mode
+        if getattr(self.lovelace, "mode", getattr(self.lovelace, "resource_mode", "yaml")) == "storage":
 
-        mode = getattr(self.lovelace, "resource_mode", getattr(self.lovelace, "mode", None))
-        if mode == "storage":
             await self._async_wait_for_lovelace_resources()
 
-    # install card resources
-    async def _async_register_path(self):
-        """Register resource path if not already registered."""
+    async def _async_register_path(self) -> None:
+        """Register the static HTTP path."""
         try:
             await self.hass.http.async_register_static_paths(
                 [StaticPathConfig(URL_BASE, Path(__file__).parent, False)]
             )
-            _LOGGER.debug("Registered resource path from %s", Path(__file__).parent)
+            _LOGGER.debug("Path registered: %s -> %s", URL_BASE, Path(__file__).parent)
         except RuntimeError:
-            # Runtime error is likley this is already registered.
-            _LOGGER.debug("Resource path already registered")
+            _LOGGER.debug("Path already registered: %s", URL_BASE)
 
     async def _async_wait_for_lovelace_resources(self) -> None:
-        """Wait for lovelace resources to have loaded."""
+        """Wait for Lovelace resources to load."""
 
-        async def _check_lovelace_resources_loaded(now):
+        async def _check_loaded(_now: Any) -> None:
             if self.lovelace.resources.loaded:
                 await self._async_register_modules()
             else:
-                _LOGGER.debug(
-                    "Unable to install resources because Lovelace resources have not yet loaded.  Trying again in 5 seconds"
-                )
-                async_call_later(self.hass, 5, _check_lovelace_resources_loaded)
+                _LOGGER.debug("Lovelace resources not loaded, retrying in 5s")
+                async_call_later(self.hass, 5, _check_loaded)
 
-        await _check_lovelace_resources_loaded(0)
+        await _check_loaded(0)
 
-    async def _async_register_modules(self):
-        """Register modules if not already registered."""
-        _LOGGER.debug("Installing javascript modules")
+    async def _async_register_modules(self) -> None:
+        """Register or update JavaScript modules."""
+        _LOGGER.debug("Installing JavaScript modules")
 
-        # Get resources already registered
-        resources = [
-            resource
-            for resource in self.lovelace.resources.async_items()
-            if resource["url"].startswith(URL_BASE)
+        # Get existing resources from this integration
+        existing_resources = [
+            r for r in self.lovelace.resources.async_items()
+            if r["url"].startswith(URL_BASE)
         ]
 
         for module in JSMODULES:
-            url = f"{URL_BASE}/{module.get('filename')}"
+            url = f"{URL_BASE}/{module['filename']}"
+            registered = False
 
-            card_registered = False
-
-            for resource in resources:
-                if self._get_resource_path(resource["url"]) == url:
-                    card_registered = True
-                    # check version
-                    if self._get_resource_version(resource["url"]) != module.get(
-                        "version"
-                    ):
-                        # Update card version
-                        _LOGGER.debug(
+            for resource in existing_resources:
+                if self._get_path(resource["url"]) == url:
+                    registered = True
+                    # Check if update needed
+                    if self._get_version(resource["url"]) != module["version"]:
+                        _LOGGER.info(
                             "Updating %s to version %s",
-                            module.get("name"),
-                            module.get("version"),
+                            module["name"], module["version"]
                         )
                         await self.lovelace.resources.async_update_item(
-                            resource.get("id"),
+                            resource["id"],
                             {
                                 "res_type": "module",
-                                "url": url + "?v=" + module.get("version"),
+                                "url": f"{url}?v={module['version']}",
                             },
                         )
-                        # Remove old gzipped files
-                        await self.async_remove_gzip_files()
-                    else:
-                        _LOGGER.debug(
-                            "%s already registered as version %s",
-                            module.get("name"),
-                            module.get("version"),
-                        )
+                    break
 
-            if not card_registered:
-                _LOGGER.debug(
-                    "Registering %s as version %s",
-                    module.get("name"),
-                    module.get("version"),
+            if not registered:
+                _LOGGER.info(
+                    "Registering %s version %s",
+                    module["name"], module["version"]
                 )
                 await self.lovelace.resources.async_create_item(
-                    {"res_type": "module", "url": url + "?v=" + module.get("version")}
+                    {
+                        "res_type": "module",
+                        "url": f"{url}?v={module['version']}",
+                    }
                 )
 
-    def _get_resource_path(self, url: str):
+    def _get_path(self, url: str) -> str:
+        """Extract path without parameters."""
         return url.split("?")[0]
 
-    def _get_resource_version(self, url: str):
-        if version := url.split("?")[1].replace("v=", ""):
-            return version
-        return 0
+    def _get_version(self, url: str) -> str:
+        """Extract version from URL."""
+        parts = url.split("?")
+        if len(parts) > 1 and parts[1].startswith("v="):
+            return parts[1].replace("v=", "")
+        return "0"
 
-    async def async_unregister(self):
-        """Unload lovelace module resource."""
+    async def async_unregister(self) -> None:
+        """Remove Lovelace resources from this integration."""
         if self.lovelace.mode == "storage":
             for module in JSMODULES:
-                url = f"{URL_BASE}/{module.get('filename')}"
-                wiser_resources = [
-                    resource
-                    for resource in self.lovelace.resources.async_items()
-                    if str(resource["url"]).startswith(url)
+                url = f"{URL_BASE}/{module['filename']}"
+                resources = [
+                    r for r in self.lovelace.resources.async_items()
+                    if r["url"].startswith(url)
                 ]
-                for resource in wiser_resources:
-                    await self.lovelace.resources.async_delete_item(resource.get("id"))
-
-    async def async_remove_gzip_files(self):
-        """Remove cached gzip files."""
-        await self.hass.async_add_executor_job(self.remove_gzip_files)
-
-    def remove_gzip_files(self):
-        """Remove cached gzip files."""
-        path = self.hass.config.path("custom_components/wiser/frontend")
-
-        gzip_files = [
-            filename for filename in os.listdir(path) if filename.endswith(".gz")
-        ]
-
-        for file in gzip_files:
-            try:
-                if (
-                    Path.stat(f"{path}/{file}").st_mtime
-                    < Path.stat(f"{path}/{file.replace('.gz', '')}").st_mtime
-                ):
-                    _LOGGER.debug("Removing older gzip file - %s", file)
-                    Path.unlink(f"{path}/{file}")
-            except OSError:
-                pass
+                for resource in resources:
+                    await self.lovelace.resources.async_delete_item(resource["id"])

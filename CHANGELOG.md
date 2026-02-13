@@ -22,6 +22,8 @@
 
 **Dev tools**
 - Fix integration services declaration (missed `save_state`, `load_state`, `pause_resume_game` declarations for dev tools)
+- Remove hardcoded version from `const.py`, now uses the one parsed from `manifest.json`
+- Update frontend `__init__.py` from [KipK documentation](https://gist.github.com/KipK/3cf706ac89573432803aaa2f5ca40492)
 
 
 ## v1.6.4 - 12/02/2026
