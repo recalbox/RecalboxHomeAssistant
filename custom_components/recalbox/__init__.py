@@ -9,7 +9,7 @@ from .const import DOMAIN
 from .api import RecalboxAPI
 from .intent import async_setup_intents
 from .frontend import JSModuleRegistration
-from .translations_service import RecalboxTranslator
+from .services.translations_service import RecalboxTranslator
 from .services.custom_sentences_installer import install_sentences
 from .services.services_installer import install_services
 from .rest_controllers.rest_controller import RecalboxRestController

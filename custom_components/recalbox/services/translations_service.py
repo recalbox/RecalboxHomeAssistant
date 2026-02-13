@@ -1,4 +1,3 @@
-# translations.py
 import json
 import os
 import random
@@ -6,12 +5,15 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
+# Service de traduction différent de celui par défaut dans home assistant
+# Il permet d'avoir la main sur tout, et surtout d'avoir des variantes sur les réponses
+# aux intents, pour que ce soit moins monotone
 class RecalboxTranslator:
     def __init__(self, hass, domain):
         self.hass = hass
         self._domain = domain
         self._cache = {}
-        self._base_path = hass.config.path("custom_components", domain, "custom_translations")
+        self._base_path = hass.config.path("custom_components", domain, "translations_randomized")
 
     def _load_language(self, lang):
         _LOGGER.info(f"Loading translations from lang : {lang}")
