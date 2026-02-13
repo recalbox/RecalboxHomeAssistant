@@ -1,0 +1,63 @@
+type: custom:plotly-graph
+hours_to_show: 1d
+title: Games playing duration (last 24h)
+entities:
+  - entity: sensor.game_2
+    type: bar
+    computeDurationsData: |
+      $ex {
+        // https://github.com/dbuezas/lovelace-plotly-graph-card?tab=readme-ov-file#sharing-data-across-functions
+        let durations = {};
+        for (let i = 0; i < ys.length - 1; i++) {
+          let currentValue = ys[i];
+          if (!currentValue || ['unavailable', 'unknown', 'idle'].includes(currentValue.toLowerCase())) continue;
+          let duration = (xs[i+1] - xs[i]) / (1000);
+          // On cumule ici : si le jeu existe déjà, on ajoute la durée
+          durations[currentValue] = (durations[currentValue] || 0) + duration;
+        }
+        vars.durationsData = durations;
+
+        vars.durationToText = totalSec => {
+          let h = Math.floor(totalSec / 3600);
+          let m = Math.floor((totalSec % 3600) / 60);
+          let s = Math.floor(totalSec % 60);
+
+          let res = [];
+          if (h > 0) res.push(h + "h");
+          if (m > 0) res.push(m + "m");
+          if (s > 0 || res.length === 0) res.push(s + "s");
+          return res.join(" ");
+        }
+      }
+    x: $ex Object.keys(vars.durationsData)
+    "y": $ex Object.values(vars.durationsData)
+    text: $ex Object.values(vars.durationsData).map(vars.durationToText)
+    textposition: inside
+    hovertemplate: <b>%{x}</b><br>%{text}<extra></extra>
+layout:
+  height: 450
+  staticPlot: true
+  dragmode: false
+  barmode: stack
+  transition:
+    duration: 1000
+    easing: cubic-in-out
+  margin:
+    b: 200
+    l: 30
+  xaxis:
+    type: category
+    autorange: true
+    categoryorder: total descending
+    showgrid: false
+    autotickangles:
+      - 0
+      - 90
+  yaxis:
+    title: Durée (minutes)
+    rangemode: tozero
+    fixedrange: true
+    showgrid: false
+    visible: false
+config:
+  scrollZoom: false

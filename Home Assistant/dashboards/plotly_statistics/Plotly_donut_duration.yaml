@@ -1,0 +1,98 @@
+type: custom:plotly-graph
+hours_to_show: 1d
+title: Games playing duration (last 24h)
+entities:
+  - entity: sensor.game_2
+    type: pie
+    hole: 0.4
+    computeDurationsData: |
+      $ex {
+        const storageKey = 'plotly_pie_pull_' + getFromConfig("entities.0.entity");
+
+        // https://github.com/dbuezas/lovelace-plotly-graph-card?tab=readme-ov-file#sharing-data-across-functions
+        let durations = {};
+        for (let i = 0; i < ys.length - 1; i++) {
+          let currentValue = ys[i];
+          if (!currentValue || ['unavailable', 'unknown', 'idle'].includes(currentValue.toLowerCase())) continue;
+          let duration = (xs[i+1] - xs[i]) / (1000);
+          // On cumule ici : si le jeu existe déjà, on ajoute la durée
+          durations[currentValue] = (durations[currentValue] || 0) + duration;
+        }
+        vars.durationsData = durations;// Initialiser le tableau pull si ce n'est pas déjà fait
+        if (!vars.pullArray) {
+           vars.pullArray = window[storageKey] || Object.keys(durations).map(() => 0);
+           console.log('Init pull array');
+        }
+        vars.durationToText = totalSec => {
+          let h = Math.floor(totalSec / 3600);
+          let m = Math.floor((totalSec % 3600) / 60);
+          let s = Math.floor(totalSec % 60);
+
+          let res = [];
+          if (h > 0) res.push(h + "h");
+          if (m > 0) res.push(m + "m");
+          if (s > 0 || res.length === 0) res.push(s + "s");
+          return res.join(" ");
+        }
+        vars.totalDurationText = vars.durationToText(Object.values(durations).reduce((acc, val) => acc + val, 0));
+        vars.hoverEvent = (event) => {
+          console.log("event:", event);
+          const index = event.points[0].i;
+          vars.pullArray = vars.pullArray.map((v, i) => (i === index && v==0.0) ? 0.1 : 0.0);
+          // persistance
+          window[storageKey] = vars.pullArray;
+          console.log("vars.pullArray is now:", vars.pullArray);
+          // "plotly_restyle"
+          let gd = event.event.currentTarget;
+          while (gd && !gd.classList.contains('js-plotly-plot')) {
+            gd = gd.parentElement;
+          }
+          gd.dispatchEvent(new Event('plotly_relayout'));
+          const card = gd.getRootNode().host || gd.closest('plotly-graph') || gd.parentElement;
+          if (card && typeof card.plot === 'function') {
+            console.log("Appel de card.plot()...");
+            card.onRelayout(); 
+          }
+        }
+        vars.unhoverEvent = (event) => {
+          console.log("event:", event);
+          vars.pullArray = vars.pullArray.map(_ => 0.0);
+          console.log("vars.pullArray is now:", vars.pullArray);
+        }
+      }
+    labels: $ex Object.keys(vars.durationsData)
+    values: $ex Object.values(vars.durationsData)
+    pull: $ex vars.pullArray
+    text: $ex Object.values(vars.durationsData).map(vars.durationToText)
+    hovertemplate: <b>%{label}</b><br>%{text}<extra></extra>
+    textinfo: label+text
+    textposition: inside
+    automargin: true
+    insidetextorientation: auto
+    on_click: $ex vars.hoverEvent
+layout:
+  height: 600
+  staticPlot: false
+  hovermode: closest
+  transition:
+    duration: 400
+    easing: cubic-in-out
+  legend:
+    visible: true
+    "y": -1
+    itemclick: false
+    itemdoubleclick: false
+  margin:
+    t: 20
+    b: 0
+    l: 20
+  annotations:
+    - text: $ex vars.totalDurationText
+      captureevents: false
+      showarrow: false
+      x: 0.5
+      "y": 0.5
+      xref: paper
+      yref: paper
+      font:
+        size: 14
