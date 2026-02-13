@@ -3,19 +3,15 @@ from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed, CoordinatorEntity
 from homeassistant.helpers import device_registry as dr
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.entity import EntityCategory
 from .const import DOMAIN
-from .translations_service import RecalboxTranslator
+from .services.translations_service import RecalboxTranslator
 from .api import RecalboxAPI
 import unicodedata
-import ipaddress
 import re
-import homeassistant.helpers.config_validation as cv
-import json
 import asyncio
 import logging
 from . import utils
-from .recalbox_offline_watcher import prepare_ping_coordinator
+from .services.recalbox_offline_watcher import prepare_ping_coordinator
 
 _LOGGER = logging.getLogger(__name__)
 
