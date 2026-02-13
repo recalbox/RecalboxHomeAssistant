@@ -3,7 +3,7 @@
 > By Recalbox, 2026.
 
 
-## v1.6.5 - ...
+## v1.6.5 - 13/02/2026
 
 **Polling mode workflow**
 - When pulling data from Recalbox via API (`get_current_status`), try to get the Recalbox version
