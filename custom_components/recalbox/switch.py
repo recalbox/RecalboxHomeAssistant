@@ -55,6 +55,12 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self.imageUrl = None
         self.recalboxIpAddress = None
 
+    def is_raspberry_pi3(self) -> bool:
+        hardware = self._attr_extra_state_attributes.get("hardware")
+        if isinstance(hardware, str):
+            return "pi 3" in hardware.lower()
+        return False
+
     #@property
     #def icon(self):
     #    return "mdi:controller" if self.is_on else "mdi:controller-off"
@@ -156,17 +162,35 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
 
     async def request_screenshot(self) -> bool :
         _LOGGER.debug("Screenshot UDP, puis API si échec")
-        port_api = self._api.api_port_gamesmanager
         port_udp = self._api.udp_retroarch
-        # 1. Test UDP
-        success = await self._api.send_udp_command(port_udp, "SCREENSHOT")
-        # 2. Fallback API
-        if not success:
-            _LOGGER.warning(f"Screenshot UDP command not sent on port {port_udp}. Please check your Recalbox is has this port running. Will now try a screenshot via API...")
-            return await self._api.post_api("/api/media/takescreenshot", port=port_api)
-        else:
-            _LOGGER.debug("Screenshot UDP command sent successfully to Recalbox")
-            return True
+        port_api = self._api.api_port_gamesmanager
+        screenshot_api_path = "/api/media/takescreenshot"
+        screenshot_udp_command = "SCREENSHOT"
+        if self.is_raspberry_pi3() :
+            _LOGGER.debug(f"Screenshot requested on a raspberry pi 3 : will try with UDP on priority...")
+            # Sur Raspberry Pi 3, on fait d'abord un screenshot UDP, parce que l'API rend un truc bizarre...
+            # 1. Test UDP
+            success = await self._api.send_udp_command(port_udp, screenshot_udp_command)
+            # 2. Fallback API
+            if not success:
+                _LOGGER.warning(f"Screenshot UDP command not sent on port {port_udp}. Please check your Recalbox is has this port running. Will now try a screenshot via API...")
+                return await self._api.post_api(screenshot_api_path, port=port_api)
+            else:
+                _LOGGER.debug("Screenshot UDP command sent successfully to Recalbox")
+                return True
+
+        else :
+            # Sur le reste, on fait d'abord un screenshot API
+            # 1. Test API
+            success = await self._api.post_api(screenshot_api_path, port=port_api)
+            # 2. Fallback UDP
+            if not success:
+                _LOGGER.warning(f"Screenshot API command failed. Will now try with UDP...")
+                return await self._api.send_udp_command(port_udp, screenshot_udp_command)
+            else:
+                _LOGGER.debug("Screenshot API command sent successfully to Recalbox")
+                return True
+
 
 
     async def request_quit_current_game(self) -> bool :
