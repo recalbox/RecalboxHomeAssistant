@@ -7,6 +7,7 @@
     ],
     "game_status_none": [
       "La Recalbox est allumée, mais aucun jeu n'est lancé.",
+      "Vous n'avez pas encore lancé de jeu, ou alors je n'ai pas encore reçu cette information.",
       "Aucun jeu n'est lancé pour le moment."
     ],
     "recalbox_not_found": [
@@ -25,7 +26,9 @@
       "La capture d'écran n'a pas pu être effectuée."
     ],
     "quit_game_requested": [
-      "Retour au menu"
+      "Retour au menu",
+      "J'arrête le jeu",
+      "Je quitte le jeu"
     ],
     "quit_game_failed": [
       "Echec de la demande de retour au menu."
@@ -41,7 +44,8 @@
       "Malheureusement, aucun jeu n'a été trouvé sur {console}."
     ],
     "game_not_found_on_console": [
-      "Le jeu {game} n'a pas été trouvé sur {console}."
+      "Le jeu {game} n'a pas été trouvé sur {console}.",
+      "Je n'ai pas trouvé {game} sur {console}."
     ],
     "game_launched_error": [
       "Le jeu {game} a bien été trouvé sur {console}, mais la commande de lancement a échoué."
@@ -49,10 +53,12 @@
     "game_launched_success": [
       "Le jeu {game} a bien été trouvé. Lancement sur {console} !",
       "C'est parti pour {game} sur {console} !",
-      "Le jeu {game} a été trouvé sur {console}. C'est parti !"
+      "Je lance {game} sur {console} !",
+      "Le jeu {game} a été trouvé sur {console}. Je le lance !"
     ],
     "list_roms_failed": [
-      "Impossible de récupérer les roms de la Recalbox. Vérifiez qu'elle est bien allumée, et connectée au réseau."
+      "Impossible de récupérer les roms de la Recalbox. Vérifiez qu'elle est bien allumée, et connectée au réseau.",
+      "Je n'arrive pas à lister les roms de la Recalbox. Veuillez réessayer dans quelques instants."
     ],
     "load_state_requested": [
       "J'ai demandé à Recalbox de recharger la dernière sauvegarde'",
@@ -70,7 +76,8 @@
     ],
     "quit_kodi_success": [
       "Je quitte Kodi !",
-      "Ciao Kodi !"
+      "J'arrête Kodi !",
+      "Je ferme Kodi !"
     ],
     "quit_kodi_failed": [
       "Erreur, impossible de quitter Kodi. Kodi n'est peut-être pas lancé, ou n'écoute sur le port 8081.",
