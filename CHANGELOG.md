@@ -12,6 +12,8 @@
   - if the hardware contains "pi 3" (ignoring case), we consider it is a Raspberry Pi 3, failing API screenshot,
     so we use UDP first, and then API
   - if any other device, we first try API, and if it fails, we use UDP command.
+- When pulling data from Recalbox, if getting game info fails, do not clean current games infos
+- As soon as 4 pings fail, clean current game/system attributes
 
 
 ## v1.6.4 - 12/02/2026

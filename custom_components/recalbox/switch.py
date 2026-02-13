@@ -80,6 +80,10 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         if is_alive and (not self._attr_is_on or self.recalboxIpAddress is None):
             _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF, ou que l'on ne reçoit pas de message push par la Recalbox. Lancement du Pull API.")
             self.hass.async_create_task(self.pull_game_infos_from_recalbox_api())
+        elif (not is_alive) and (self.console is not None):
+            self.reset_game_attributes()
+            self.async_write_ha_state()
+
         super()._handle_coordinator_update()
 
 
@@ -397,7 +401,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
             await self.update_from_recalbox_json_message(currentRecalboxStatus)
             _LOGGER.info("Recalbox marquée comme en ligne, les infos de jeu en cours ont été récupérées par API")
         except Exception as err :
-            self.reset_game_attributes()
+            # self.reset_game_attributes()
             _LOGGER.info(f"Recalbox marquée comme en ligne, sans info de jeux : {err}")
         finally:
             self.async_write_ha_state()
