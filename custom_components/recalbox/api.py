@@ -4,6 +4,7 @@ import asyncio
 import logging
 import socket
 import urllib.parse
+from . import utils
 from homeassistant.core import (
     HomeAssistant
 )
@@ -358,7 +359,7 @@ class RecalboxAPI:
                 _LOGGER.warning(f"Cannot get recalbox version via API : {e}")
 
             return {
-                "game": self.clean_game_name(data.get("Game", {}).get("Game") if is_game_running else None),
+                "game": utils.clean_game_name(data.get("Game", {}).get("Game") if is_game_running else None),
                 "console": data.get("System", {}).get("System"),
                 "rom": data.get("Game", {}).get("GamePath") if is_game_running else None,
                 "genre": data.get("Game", {}).get("Genre") if is_game_running else None,
@@ -440,14 +441,3 @@ class RecalboxAPI:
             _LOGGER.debug(f"Failed to PING ports of {self.host} : {ex}")
             return False
 
-
-# ------ utils
-
-
-    def clean_game_name(self, raw_game_name):
-        if raw_game_name is None:
-            return None
-        elif len(raw_game_name) > 4 and raw_game_name[:3].isdigit() and raw_game_name[3] == " ":
-            return raw_game_name[4:]
-        else:
-            return raw_game_name

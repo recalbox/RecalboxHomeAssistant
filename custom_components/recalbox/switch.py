@@ -14,7 +14,7 @@ import homeassistant.helpers.config_validation as cv
 import json
 import asyncio
 import logging
-from collections import deque
+from . import utils
 from .recalbox_offline_watcher import prepare_ping_coordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -266,7 +266,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
                 break
 
         if target:
-            game_cleaned_name = self._api.clean_game_name(target['name'])
+            game_cleaned_name = utils.clean_game_name(target['name'])
             _LOGGER.debug(f"Game found, with name {target['name']}, on system {console}. Try to launch via UDP command...")
             try:
                 await self._api.send_udp_command(port_udp, f"START|{console}|{target['path']}")
