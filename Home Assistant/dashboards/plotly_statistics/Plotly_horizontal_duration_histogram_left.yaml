@@ -1,0 +1,87 @@
+type: custom:plotly-graph
+hours_to_show: 1d
+title: Durée d'utilisation des jeux (dernières 24h)
+entities:
+  - entity: sensor.game_2
+    computeDurationsData: |
+      $ex {
+        // https://github.com/dbuezas/lovelace-plotly-graph-card?tab=readme-ov-file#sharing-data-across-functions
+        let durations = {};
+        for (let i = 0; i < ys.length - 1; i++) {
+          let currentValue = ys[i];
+          if (!currentValue || ['unavailable', 'unknown', 'idle'].includes(currentValue.toLowerCase())) continue;
+          let duration = (xs[i+1] - xs[i]) / (1000);
+          // On cumule ici : si le jeu existe déjà, on ajoute la durée
+          durations[currentValue] = (durations[currentValue] || 0) + duration;
+        }
+        vars.durationsData = durations;
+        console.log('durations:',durations);
+        vars.durationToText = totalSec => {
+          let h = Math.floor(totalSec / 3600);
+          let m = Math.floor((totalSec % 3600) / 60);
+          let s = Math.floor(totalSec % 60);
+      
+          let res = [];
+          if (h > 0) res.push(h + "h");
+          if (m > 0) res.push(m + "m");
+          if (s > 0 || res.length === 0) res.push(s + "s");
+          return res.join(" ");
+        }
+      
+        let keys = Object.keys(durations);
+        // On crée les annotations dynamiquement
+        vars.annotations = keys.map((name, i) => ({
+          text: name,
+          xref: "x",   // Référence à la largeur du graph (0 à 1)
+          yref: "y",       // Référence à la position sur l'axe Y
+          x: durations[name],         // Juste à droite de la zone de tracé (102%)
+          y: name,
+          xanchor: "left",
+          yanchor: "middle",
+          xshift: 10,
+          showarrow: false,
+          font: { size: 12 }
+        }));
+
+        // dimensions calculées
+        vars.calculatedHeight = Object.keys(durations).length * 24 + 50;
+        let cardWidth = hass.states['sensor.game_2']._element ? hass.states['sensor.game_2']._element.clientWidth : 400;
+        console.log("cardWidth:", cardWidth);
+        vars.dynamicMargin = 200;
+      }
+    type: bar
+    orientation: h
+    x: $ex Object.values(vars.durationsData)
+    "y": $ex Object.keys(vars.durationsData)
+    text: $ex Object.values(vars.durationsData).map(vars.durationToText)
+    hovertemplate: <b>%{y}</b><br>%{text}<extra></extra>
+layout:
+  barmode: stack
+  height: $ex vars.calculatedHeight
+  staticPlot: true
+  dragmode: false
+  transition:
+    duration: 1000
+    easing: cubic-in-out
+  margin:
+    b: 20
+    l: 30
+    r: 30
+    t: 20
+  annotations: $ex vars.annotations
+  xaxis:
+    title: Durée (minutes)
+    rangemode: tozero
+    showgrid: false
+    visible: false
+    autorange: true
+    staticPlot: true
+  yaxis:
+    type: category
+    categoryorder: total ascending
+    showgrid: false
+    side: right
+    visible: false
+    fixedrange: true
+config:
+  scrollZoom: false
