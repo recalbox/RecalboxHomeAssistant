@@ -5,16 +5,22 @@
 
 ## v1.6.5 - ...
 
-
+**Polling mode workflow**
 - When pulling data from Recalbox via API (`get_current_status`), try to get the Recalbox version
   with its API (new function `get_recalbox_version`, using "api/versions")
+- When pulling data from Recalbox, if getting game info fails, do not clean current games infos
+- Clean game name in pulling mode : remove the "NNN " prefix number
+
+**Cleaning data**
+- As soon as 4 pings fail, clean current game/system attributes
+
+**Raspberry Pi 3 exceptions**
 - Split screenshot feature in two cases :
   - if the hardware contains "pi 3" (ignoring case), we consider it is a Raspberry Pi 3, failing API screenshot,
     so we use UDP first, and then API
   - if any other device, we first try API, and if it fails, we use UDP command.
-- When pulling data from Recalbox, if getting game info fails, do not clean current games infos
-- As soon as 4 pings fail, clean current game/system attributes
-- Clean game name in pulling mode : remove the "NNN " prefix number
+
+**Dev tools**
 - Fix integration services declaration (missed `save_state`, `load_state`, `pause_resume_game` declarations for dev tools)
 
 
