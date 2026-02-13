@@ -6,7 +6,8 @@
 ## v1.6.5 - ...
 
 
-- ...
+- When pulling data from Recalbox via API (`get_current_status`), try to get the Recalbox version
+  with its API (new function `get_recalbox_version`, using "api/versions")
 
 
 ## v1.6.4 - 12/02/2026

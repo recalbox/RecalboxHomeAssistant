@@ -101,6 +101,150 @@ class RecalboxAPI:
 
     # ------- Specific services ----------
 
+    async def get_recalbox_version(self) -> str | None :
+        """Récupérer la version par l'API"""
+        url = f"http://{self.host}:{self.api_port_gamesmanager}/api/versions"
+        # Renvoie :
+        # {
+        #     "webapi": "2.0",
+        #     "recalbox": "10.0\n",
+        #     "linux": "Linux version 6.12.25-v7",
+        #     "libretro": {
+        #         "retroarch": "1.21.0",
+        #         "cores": {
+        #             "": "",
+        #             "2048": "v1.0 8bf45bfa90",
+        #             "AppleWin": "1.30.20.0",
+        #             "Atari800": "3.1.0 8bf45bfa90",
+        #             "Beetle Lynx": "v1.24.0 8bf45bfa90",
+        #             "Beetle NeoPop": "v1.29.0.0 8bf45bfa90",
+        #             "Beetle PCE Fast": "v1.31.0.0 8bf45bfa90",
+        #             "Beetle SuperGrafx": "v1.29.0 8bf45bfa90",
+        #             "Beetle VB": "v1.31.0 8bf45bfa90",
+        #             "Beetle WonderSwan": "v0.9.35.1 8bf45bfa90",
+        #             "Cannonball": "git",
+        #             "DOSBox-pure": "1.0-preview2",
+        #             "Dinothawr": "v1.0 8bf45bfa90",
+        #             "EasyRPG Player": "0.8",
+        #             "EightyOne": "1.0a 8bf45bf",
+        #             "FCEUmm": "(SVN) 8bf45bfa90",
+        #             "FinalBurn Neo": "v1.0.0.03 8bf45bfa90",
+        #             "Flycast": "0.1 8bf45bfa90",
+        #             "FreeChaF": "1.0 8bf45bfa90",
+        #             "FreeIntv": "1.2",
+        #             "Gambatte": "v0.5.0-netlink 8bf45bfa90",
+        #             "Game & Watch": "1.6.3",
+        #             "Gearcoleco": "1.0.1",
+        #             "Geargrafx": "10.0-dirty",
+        #             "Gearsystem": "baa78638",
+        #             "Genesis Plus GX": "v1.7.4-83485a27",
+        #             "Genesis Plus GX Wide": "v1.7.4-b7d31422",
+        #             "Geolith": "0.2.1",
+        #             "Handy": "0.97 8bf45bfa90",
+        #             "Hatari": "1.8 8bf45bfa90",
+        #             "Libretro-EmuSCV": "0.14.20221017160000",
+        #             "LowRes NX": "1.2",
+        #             "MAME 2000": "0.37b5 8bf45bfa90",
+        #             "MAME 2003 (0.78)": "0.78 8bf45bfa90",
+        #             "MAME 2003-Plus": " 8bf45bfa90",
+        #             "MAME 2010": "0.139 8bf45bfa90",
+        #             "MAME 2015": "0.160 8bf45bfa90",
+        #             "Meteor GBA": "v1.4 8bf45bfa90",
+        #             "Mini vMac": "b36",
+        #             "Mr.Boom": "5.3 8bf45bfa90",
+        #             "Mu": "v1.3.1 8bf45bfa90",
+        #             "Mupen64Plus-Next": "2.8-GLES2-680e033f",
+        #             "NXEngine": "1.0.0.6",
+        #             "Neko Project II kai": "rev.1 53a4fa3d698c22bf02a7fc78c3b73ba55e4a0732",
+        #             "NeoCD": "2022 8bf45bfa90",
+        #             "Nestopia": "1.52.0 8bf45bfa90",
+        #             "O2EM": "1.18 8bf45bfa90",
+        #             "Opera": "1.0.0 8bf45bfa90",
+        #             "PCSX-ReARMed": "r24l 8bf45bfa90",
+        #             "PUAE": "5.0.0 8bf45bfa90",
+        #             "PX68K": "0.15+ 8bf45bfa90",
+        #             "ParaLLEl N64": "2.0-rc2-1da824e1",
+        #             "PicoDrive": "2.05-8bf45bfa90",
+        #             "PokeMini": "v0.60",
+        #             "Potator": "1.0.5 8bf45bfa90",
+        #             "PrBoom": "v2.5.0 8bf45bfa90",
+        #             "ProSystem": "1.3e 8bf45bfa90",
+        #             "QUASI88": "0.6.4 8bf45bfa90",
+        #             "QuickNES": "1.0-WIP 10.0-dirty",
+        #             "RACE": "v2.16 8bf45bfa90",
+        #             "REminiscence": "0.3.6",
+        #             "SameBoy": "0.16.6 8bf45bfa90",
+        #             "SameDuck": "0.13.6 8bf45bfa90",
+        #             "ScummVM": "10.0",
+        #             "Snes9x": "1.63 8bf45bfa90",
+        #             "Snes9x 2005 Plus": "v1.36 8bf45bfa90",
+        #             "Snes9x 2010": "1.52.4 8bf45bfa90",
+        #             "Stella": "7.0_pre 8bf45bfa90",
+        #             "Stella 2014": "3.9.3 8bf45bfa90",
+        #             "Supafaust": "1.29.0 8bf45bfa90",
+        #             "SwanStation": "1.0.0",
+        #             "TGB Dual": "v0.8.3 8bf45bfa90",
+        #             "TIC-80": "1.2.44800-dev (8bf45bf)",
+        #             "TamaLIBretro": "git-67605e42",
+        #             "The Powder Toy": "92.5.336",
+        #             "TyrQuake": "v0.62 8bf45bfa90",
+        #             "Uzem": "v2.0",
+        #             "VICE x128": "3.8 8bf45bfa90",
+        #             "VICE x64": "3.8 8bf45bfa90",
+        #             "VICE x64sc": "3.8 8bf45bfa90",
+        #             "VICE xcbm2": "3.8 8bf45bfa90",
+        #             "VICE xcbm5x0": "3.8 8bf45bfa90",
+        #             "VICE xpet": "3.8 8bf45bfa90",
+        #             "VICE xplus4": "3.8 8bf45bfa90",
+        #             "VICE xscpu64": "3.8 8bf45bfa90",
+        #             "VICE xvic": "3.8 8bf45bfa90",
+        #             "VecX": "1.2 8bf45bfa90",
+        #             "WASM-4": "v1 8bf45bfa90",
+        #             "a5200": "2.0.2 8bf45bfa90",
+        #             "arduous": "0.1.0",
+        #             "bk": "v1.0 8bf45bfa90",
+        #             "blueMSX": "git 8bf45bfa90",
+        #             "cap32": "4.5.4 8bf45bfa90 HI",
+        #             "crocods": "git 8bf45bfa90",
+        #             "dice": "0.4.2",
+        #             "dirksimple": "0.3",
+        #             "ecwolf": "v0.01",
+        #             "fMSX": "6.0 8bf45bfa90",
+        #             "fake-08": "0.0.2.20",
+        #             "fuse": "1.6.0 8bf45bf",
+        #             "gong": "v1.0 8bf45bfa90",
+        #             "gpSP": "v0.91 8bf45bfa90",
+        #             "hatariB": "v0.4 unstable preview 8bf45bfa90 Feb 12 2026 13:49:00",
+        #             "holani": "0.9.6-1",
+        #             "image display": "v0.1",
+        #             "lutro": "0.0.1 8bf45bfa90",
+        #             "mGBA": "0.11-dev 8bf45bfa90",
+        #             "mojozork": "0.2",
+        #             "retro-8 (alpha)": "0.1b 8bf45bfa90",
+        #             "theodore": "10.0-dirty",
+        #             "uae4arm": "0.5",
+        #             "x1": "0.60",
+        #             "xrick": "021212-Dev"
+        #         }
+        #     }
+        # }
+        _LOGGER.debug(f"API GET versions from {url}")
+        try:
+            response = await self._http_client.get(url, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            # pour trimmer la version, ou renvoyer None si c'est None ou un texte vide
+            return (data.get("recalbox") or "").strip() or None
+        except httpx.HTTPError as e:
+            _LOGGER.error(f"Failed to get version from {url} : {e}")
+            raise
+        except Exception as e:
+            _LOGGER.error(f"Failed to get version from {url} : {e}")
+            raise
+
+
+
+
     async def get_roms(self, console):
         url = f"http://{self.host}:{self.api_port_gamesmanager}/api/systems/{console}/roms"
         _LOGGER.debug(f"API GET roms from {url}")
@@ -205,6 +349,14 @@ class RecalboxAPI:
                 romPathUrlEncoded = urllib.parse.quote(data.get("Game", {}).get("GamePath"), safe='')
                 imagePath = f"api/systems/{data.get("System", {}).get("SystemId")}/roms/metadata/image/{romPathUrlEncoded}"
                 _LOGGER.debug(f"Auto created image path : {imagePath}")
+
+            recalboxVersion = None
+            try :
+                recalboxVersion = await self.get_recalbox_version()
+                _LOGGER.debug(f"Got recalbox version via API : {recalboxVersion}")
+            except Exception as e:
+                _LOGGER.warning(f"Cannot get recalbox version via API : {e}")
+
             return {
                 "game": data.get("Game", {}).get("Game") if is_game_running else None,
                 "console": data.get("System", {}).get("System"),
@@ -213,7 +365,7 @@ class RecalboxAPI:
                 "genreId": data.get("Game", {}).get("GenreId") if is_game_running else None,
                 "imagePath": imagePath,
                 "recalboxIpAddress": None,
-                "recalboxVersion": None,
+                "recalboxVersion": recalboxVersion,
                 "hardware": None,
                 "scriptVersion": None,
                 "status": "ON"
