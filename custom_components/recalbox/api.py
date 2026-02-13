@@ -83,7 +83,7 @@ class RecalboxAPI:
             transport.close()
 
 
-    async def post_api(self, path, port=80):
+    async def post_api(self, path, port=80) -> bool:
         url = f"http://{self.host}:{port}{path}"
         _LOGGER.debug(f"API POST {url}")
         try:

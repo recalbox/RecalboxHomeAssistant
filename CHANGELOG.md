@@ -8,6 +8,10 @@
 
 - When pulling data from Recalbox via API (`get_current_status`), try to get the Recalbox version
   with its API (new function `get_recalbox_version`, using "api/versions")
+- Split screenshot feature in two cases :
+  - if the hardware contains "pi 3" (ignoring case), we consider it is a Raspberry Pi 3, failing API screenshot,
+    so we use UDP first, and then API
+  - if any other device, we first try API, and if it fails, we use UDP command.
 
 
 ## v1.6.4 - 12/02/2026
