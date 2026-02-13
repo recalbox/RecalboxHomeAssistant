@@ -2,9 +2,9 @@ from homeassistant.components.http import HomeAssistantView
 from aiohttp import web
 import logging
 import ipaddress
-from .const import DOMAIN
-from .switch import RecalboxEntity
-from .api import RecalboxAPI
+from ..const import DOMAIN
+from ..switch import RecalboxEntity
+from ..api import RecalboxAPI
 
 _LOGGER = logging.getLogger(__name__)
 

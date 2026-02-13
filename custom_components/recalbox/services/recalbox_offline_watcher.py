@@ -1,11 +1,9 @@
 import logging
-import socket
-import asyncio
 import async_timeout
 from datetime import timedelta
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed, CoordinatorEntity
 from collections import deque
-from .api import RecalboxAPI
+from ..api import RecalboxAPI
 
 _LOGGER = logging.getLogger(__name__)
 
