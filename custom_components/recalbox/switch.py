@@ -228,12 +228,6 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
 
 
 
-    def _clean_game_name(self, raw_game_name):
-        if len(raw_game_name) > 4 and raw_game_name[:3].isdigit() and raw_game_name[3] == " ":
-            return raw_game_name[4:]
-        else:
-            return raw_game_name
-
     # Renvoie le texte pour Assist
     async def search_and_launch_game_by_name(self, console, game_query, lang=None) -> str :
         _LOGGER.debug(f"Try to launch game {game_query} on system {console}")
@@ -272,7 +266,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
                 break
 
         if target:
-            game_cleaned_name = self._clean_game_name(target['name'])
+            game_cleaned_name = self._api.clean_game_name(target['name'])
             _LOGGER.debug(f"Game found, with name {target['name']}, on system {console}. Try to launch via UDP command...")
             try:
                 await self._api.send_udp_command(port_udp, f"START|{console}|{target['path']}")

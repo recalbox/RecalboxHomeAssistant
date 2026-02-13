@@ -14,6 +14,7 @@
   - if any other device, we first try API, and if it fails, we use UDP command.
 - When pulling data from Recalbox, if getting game info fails, do not clean current games infos
 - As soon as 4 pings fail, clean current game/system attributes
+- Clean game name in pulling mode : remove the "NNN " prefix number
 
 
 ## v1.6.4 - 12/02/2026
