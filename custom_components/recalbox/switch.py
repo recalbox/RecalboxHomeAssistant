@@ -81,6 +81,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
             _LOGGER.debug("Le coordinateur détecte un ping OK alors que l'état est OFF, ou que l'on ne reçoit pas de message push par la Recalbox. Lancement du Pull API.")
             self.hass.async_create_task(self.pull_game_infos_from_recalbox_api())
         elif (not is_alive) and (self.console is not None):
+            # la Recalbox ne répond plus, mais on avait encore des infos jeux en attributs : on nettoie.
             self.reset_game_attributes()
             self.async_write_ha_state()
 
@@ -305,6 +306,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self.rom = None
         self.imageUrl = None
         _LOGGER.debug("Recalbox game attributes cleaned")
+        self.refresh_dependencies()
 
 
 
@@ -360,8 +362,10 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         self.async_write_ha_state()
 
         # Notifier l'entité image de se rafraichir, et l'entité de game name
-        self.refresh_children(["image_entity", "game_name_entity", "system_name_entity"])
+        self.refresh_dependencies()
 
+    def refresh_dependencies(self):
+        self.refresh_children(["image_entity", "game_name_entity", "system_name_entity"])
 
     def refresh_children(self, children):
         for child in children:
