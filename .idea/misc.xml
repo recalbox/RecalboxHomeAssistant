@@ -6,7 +6,7 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.14 (RecalboxHomeAssistant)" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_25" project-jdk-name="Python 3.12 (RecalboxHomeAssistant)" project-jdk-type="Python SDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_25" project-jdk-name="Python 3.14 (RecalboxHomeAssistant)" project-jdk-type="Python SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
