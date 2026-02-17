@@ -3,6 +3,13 @@
 > By Recalbox, 2026.
 
 
+## v1.6.6 - ...
+
+
+- Add sign off
+
+
+
 ## v1.6.5 - 13/02/2026
 
 **Polling mode workflow**
