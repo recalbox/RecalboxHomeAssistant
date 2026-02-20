@@ -1,4 +1,4 @@
-![hacs_badge](https://img.shields.io/badge/Home_Assistant-2026.2.1_Compatible-blue)
+![hacs_badge](https://img.shields.io/badge/Home_Assistant-2026.2.2_Compatible-blue)
 ![hacs_badge](https://img.shields.io/badge/Recalbox-10.0_Compatible-blue)
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)  
 [![Release](https://img.shields.io/github/v/release/recalbox/RecalboxHomeAssistant)](https://github.com/recalbox/RecalboxHomeAssistant/releases)
