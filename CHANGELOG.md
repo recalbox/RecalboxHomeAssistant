@@ -6,7 +6,7 @@
 ## v1.6.6 - ...
 
 
-- Add sign off
+- Add sign off, and new [merge request for HACS referencing](https://github.com/hacs/default/pull/5704)
 
 
 
