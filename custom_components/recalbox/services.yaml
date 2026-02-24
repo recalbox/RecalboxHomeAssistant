@@ -8,7 +8,10 @@ shutdown:
       required: true
       example: "1234abcd5678efgh"
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
+
 
 reboot:
   name: "Redémarrer la Recalbox"
@@ -19,7 +22,9 @@ reboot:
       description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
 
 screenshot:
   name: "Prendre une capture d'écran"
@@ -30,7 +35,9 @@ screenshot:
       description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
 
 quit_game:
   name: "Quitter le jeu"
@@ -41,7 +48,9 @@ quit_game:
       description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
 
 pause_resume_game:
   name: "Pause/Reprendre le jeu"
@@ -52,7 +61,9 @@ pause_resume_game:
       description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
 
 save_state:
   name: "Sauvegarder la partie"
@@ -63,7 +74,9 @@ save_state:
       description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
 
 load_state:
   name: "Recharger la dernière sauvegarde"
@@ -74,7 +87,9 @@ load_state:
       description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
 
 launch_game:
   name: "Lancer un jeu"
@@ -85,7 +100,9 @@ launch_game:
       description: "L'identifiant de l'entité Recalbox."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
     game:
       name: "Nom du jeu"
       description: "Le nom du jeu à rechercher (ex: Super Mario World)."
@@ -110,4 +127,6 @@ quit_kodi:
       description: "L'identifiant de l'entité Recalbox (Config Entry ID)."
       required: true
       selector:
-        text:
+        entity:
+          integration: recalbox
+          domain: switch
