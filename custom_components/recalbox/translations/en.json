@@ -34,5 +34,105 @@
         }
       }
     }
+  },
+  "services": {
+    "shutdown": {
+      "name": "Shutdown Recalbox",
+      "description": "Sends a clean shutdown command to Recalbox via the API.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    },
+    "reboot": {
+      "name": "Reboot Recalbox",
+      "description": "Reboots the Recalbox system.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    },
+    "screenshot": {
+      "name": "Take a screenshot",
+      "description": "Takes a screenshot of what is displayed on Recalbox.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    },
+    "quit_game": {
+      "name": "Quit game",
+      "description": "Closes the current game and returns to the EmulationStation interface.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    },
+    "pause_resume_game": {
+      "name": "Pause/Resume game",
+      "description": "Pauses or resumes the emulator.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    },
+    "save_state": {
+      "name": "Save state",
+      "description": "Create a savestate of the current game.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    },
+    "load_state": {
+      "name": "Load last save",
+      "description": "Load the last savestate.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    },
+    "launch_game": {
+      "name": "Launch a game",
+      "description": "Searches and launches a game on Recalbox by its name and console, then starts it.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier."
+        },
+        "game": {
+          "name": "Game name",
+          "description": "The name of the game to search for (e.g. Super Mario World)."
+        },
+        "console": {
+          "name": "Console",
+          "description": "The name of the system (e.g. snes, megadrive, psx)."
+        }
+      }
+    },
+    "quit_kodi": {
+      "name": "Quit Kodi",
+      "description": "Closes Kodi, returning to the EmulationStation interface.",
+      "fields": {
+        "entity_id": {
+          "name": "Entity ID",
+          "description": "The Recalbox entity identifier (Config Entry ID)."
+        }
+      }
+    }
   }
 }
