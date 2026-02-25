@@ -11,11 +11,11 @@ intents:
     data:
       - sentences:
           - "(tomar | hacer | crear) una [captura de pantalla | screenshot] [del juego] [en [la] recalbox]"
-          - "(tomar | hacer | crear) una [captura de pantalla | screenshot] del [juego actual] [en [la] recalbox]"
+          - "(tomar | hacer | crear) una [captura de pantalla | screenshot] [del juego actual] [en [la] recalbox]"
   RecalboxLaunchGame:
     data:
       - sentences:
-          - "(ejecutar | lanzar | jugar | iniciar) {game} de [la] {console} [en [la] recalbox]"
+          - "(ejecutar | lanzar | jugar a | iniciar) {game} de [la] {console} [en [la] recalbox]"
           - "recalbox (ejecutar | lanzar | jugar a | iniciar) {game} de [la] {console}"
   RecalboxStopGame:
     data:
