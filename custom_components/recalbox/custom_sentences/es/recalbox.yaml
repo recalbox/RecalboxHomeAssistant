@@ -1,0 +1,89 @@
+# Traducción de intents y listas al español para Recalbox
+language: "es"
+intents:
+  RecalboxGameStatus:
+    data:
+      - sentences:
+          - "¿Cuál es el [juego] [actual] [en [la] recalbox]?"
+          - "¿Qué juego (estás | estoy) jugando [en [la] recalbox]?"
+          - "¿Qué juego está (ejecutándose | iniciado) [en [la] recalbox]?"
+  RecalboxCreateScreenshot:
+    data:
+      - sentences:
+          - "(tomar | hacer | crear) una [captura de pantalla | screenshot] [del juego] [en [la] recalbox]"
+          - "(tomar | hacer | crear) una [captura de pantalla | screenshot] del [juego actual] [en [la] recalbox]"
+  RecalboxLaunchGame:
+    data:
+      - sentences:
+          - "(ejecutar | lanzar | jugar | iniciar) {game} de [la] {console} [en [la] recalbox]"
+          - "recalbox (ejecutar | lanzar | jugar a | iniciar) {game} de [la] {console}"
+  RecalboxStopGame:
+    data:
+      - sentences:
+          - "(detener | salir | parar) [el] [juego actual] [en recalbox]"
+  RecalboxPauseGame:
+    data:
+      - sentences:
+          - "(pausar | reanudar | detener la pausa | continuar) [el] [(juego actual | en ejecución | el juego)] [en [la] recalbox]"
+          - "pausar [el] [(juego actual | en ejecución)] [en [la] recalbox]"
+          - "reanudar [el] [(juego actual | en ejecución)] [en [la] recalbox]"
+  RecalboxSaveState:
+    data:
+      - sentences:
+          - "guardar (el | mi) [(juego actual | en ejecución)] [(estado)] [en [la] recalbox]"
+  RecalboxLoadState:
+    data:
+      - sentences:
+          - "(cargar | recargar) (mi | el) [último] juego [(estado | guardado)] [en [la] recalbox]"
+          - "(cargar | recargar) (mi | el) [última] partida [en [la] recalbox]"
+  RecalboxQuitKodi:
+    data:
+      - sentences:
+          - "(salir | cerrar | terminar) (kodi | codi) [en [la] recalbox]"
+
+lists:
+  game:
+    wildcard: true
+  console:
+    values:
+      - in: "super nintendo"
+        out: "snes"
+      - in: "super nes"
+        out: "snes"
+      - in: "nes"
+        out: "nes"
+      - in: "nintendo"
+        out: "nes"
+      - in: "megadrive"
+        out: "megadrive"
+      - in: "genesis"
+        out: "megadrive"
+      - in: "sega"
+        out: "megadrive"
+      - in: "sega megadrive"
+        out: "megadrive"
+      - in: "game boy"
+        out: "gb"
+      - in: "game boy color"
+        out: "gbc"
+      - in: "game boy advance"
+        out: "gba"
+      - in: "play"
+        out: "psx"
+      - in: "playstation"
+        out: "psx"
+      - in: "playstation 1"
+        out: "psx"
+      - in: "p s x"
+        out: "psx"
+      - in: "psx"
+        out: "psx"
+      - in: "n 64"
+        out: "n64"
+      - in: "nintendo 64"
+        out: "n64"
+      - in: "dreamcast"
+        out: "dreamcast"
+      - in: "psp"
+        out: "psp"
+

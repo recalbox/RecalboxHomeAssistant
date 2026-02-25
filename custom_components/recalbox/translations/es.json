@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar nueva Recalbox",
+        "data": {
+          "host": "Dirección IP o nombre de host",
+          "api_port_os": "Puerto API del sistema (apagar, reiniciar)",
+          "api_port_gamesmanager": "Puerto API de juegos (listar roms, capturas)",
+          "udp_recalbox": "Puerto UDP de Recalbox",
+          "udp_retroarch": "Puerto UDP de RetroArch",
+          "api_port_kodi": "Puerto API de Kodi",
+          "only_ip_v4": "Forzar IP v4 en mDNS",
+          "test_connection": "Probar conexión (Recalbox encendida, en el menú)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "No se puede conectar con la Recalbox configurada (fallo de ping o puertos no abiertos)."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Reconfigurar Recalbox",
+        "data": {
+          "host": "Dirección IP o nombre de host",
+          "api_port_os": "Puerto API del sistema (apagar, reiniciar)",
+          "api_port_gamesmanager": "Puerto API de juegos (listar roms, capturas)",
+          "udp_recalbox": "Puerto UDP de Recalbox",
+          "udp_retroarch": "Puerto UDP de RetroArch",
+          "api_port_kodi": "Puerto API de Kodi",
+          "only_ip_v4": "Forzar IP v4 en mDNS"
+        }
+      }
+    }
+  }
+}

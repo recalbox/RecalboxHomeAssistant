@@ -1,0 +1,84 @@
+{
+  "intent_response": {
+    "game_status_playing": [
+      "Estás jugando a {game} de {console}.",
+      "El juego {game} está iniciado de {console}.",
+      "{game} está iniciado de {console}."
+    ],
+    "game_status_none": [
+      "La Recalbox está encendida, pero ningún juego está en ejecución.",
+      "No has iniciado ningún juego aún, o no tengo esa información.",
+      "Ningún juego está en ejecución por ahora."
+    ],
+    "recalbox_not_found": [
+      "No se ha encontrado la Recalbox."
+    ],
+    "recalbox_offline": [
+      "La Recalbox está apagada.",
+      "La Recalbox parece estar fuera de línea.",
+      "Enciende la Recalbox y vuelve a intentarlo."
+    ],
+    "screenshot_success": [
+      "¡Captura de pantalla realizada y guardada en la carpeta de screenshots de Recalbox!",
+      "Captura de pantalla solicitada. Debería estar en la carpeta screenshots de la Recalbox."
+    ],
+    "screenshot_fail": [
+      "No se pudo realizar la captura de pantalla."
+    ],
+    "quit_game_requested": [
+      "Volviendo al menú",
+      "Deteniendo el juego",
+      "Saliendo del juego"
+    ],
+    "quit_game_failed": [
+      "Fallo al solicitar volver al menú."
+    ],
+    "pause_game_requested": [
+      "Pausa/Reanudación solicitada"
+    ],
+    "pause_game_failed": [
+      "No se pudo solicitar la pausa/reanudación."
+    ],
+    "no_game_on_system": [
+      "No se encontraron juegos en la consola {console}.",
+      "Desafortunadamente, no se encontraron juegos para {console}."
+    ],
+    "game_not_found_on_console": [
+      "El juego {game} no se encontró en {console}."
+    ],
+    "game_launched_error": [
+      "El juego {game} se encontró en {console}, pero el comando de inicio falló."
+    ],
+    "game_launched_success": [
+      "El juego {game} se encontró. ¡Iniciando en {console}!"
+    ],
+    "list_roms_failed": [
+      "No se puede obtener la lista de roms de Recalbox. Verifica que esté encendida y conectada a la red."
+    ],
+    "load_state_requested": [
+      "Cargando el último estado"
+    ],
+    "load_state_failed": [
+      "Fallo al cargar el último estado"
+    ],
+    "save_state_requested": [
+      "¡Guardando el estado actual!"
+    ],
+    "save_state_failed": [
+      "Fallo al guardar el estado actual"
+    ],
+    "quit_kodi_success": [
+      "¡Saliendo de Kodi!"
+    ],
+    "quit_kodi_failed": [
+      "No se puede salir de Kodi. Quizá no está en ejecución...",
+      "Kodi no parece estar en ejecución..."
+    ]
+  },
+  "errors": {
+    "power_off_not_implemented_message": [
+      "No se puede encender la Recalbox remotamente."
+    ]
+  }
+}
+
