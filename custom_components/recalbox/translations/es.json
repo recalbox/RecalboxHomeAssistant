@@ -1,0 +1,138 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar nueva Recalbox",
+        "data": {
+          "host": "Dirección IP o nombre de host",
+          "api_port_os": "Puerto API del sistema (apagar, reiniciar)",
+          "api_port_gamesmanager": "Puerto API de juegos (listar roms, capturas)",
+          "udp_recalbox": "Puerto UDP de Recalbox",
+          "udp_retroarch": "Puerto UDP de RetroArch",
+          "api_port_kodi": "Puerto API de Kodi",
+          "only_ip_v4": "Forzar IP v4 en mDNS",
+          "test_connection": "Probar conexión (Recalbox encendida, en el menú)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "No se puede conectar con la Recalbox configurada (fallo de ping o puertos no abiertos)."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Reconfigurar Recalbox",
+        "data": {
+          "host": "Dirección IP o nombre de host",
+          "api_port_os": "Puerto API del sistema (apagar, reiniciar)",
+          "api_port_gamesmanager": "Puerto API de juegos (listar roms, capturas)",
+          "udp_recalbox": "Puerto UDP de Recalbox",
+          "udp_retroarch": "Puerto UDP de RetroArch",
+          "api_port_kodi": "Puerto API de Kodi",
+          "only_ip_v4": "Forzar IP v4 en mDNS"
+        }
+      }
+    }
+  },
+  "services": {
+    "shutdown": {
+      "name": "Apagar Recalbox",
+      "description": "Envía un comando de apagado limpio a Recalbox vía la API.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    },
+    "reboot": {
+      "name": "Reiniciar Recalbox",
+      "description": "Reinicia el sistema Recalbox.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    },
+    "screenshot": {
+      "name": "Hacer captura de pantalla",
+      "description": "Hace una captura de pantalla de lo que se muestra en Recalbox.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    },
+    "quit_game": {
+      "name": "Salir del juego",
+      "description": "Cierra el juego actual y vuelve a la interfaz de EmulationStation.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    },
+    "pause_resume_game": {
+      "name": "Pausar/Reanudar juego",
+      "description": "Pausa o reanuda el emulador.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    },
+    "save_state": {
+      "name": "Guardar estado",
+      "description": "Crea un guardado del estado actual del juego.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    },
+    "load_state": {
+      "name": "Cargar último guardado",
+      "description": "Carga el último guardado de estado.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    },
+    "launch_game": {
+      "name": "Lanzar un juego",
+      "description": "Busca y lanza un juego en Recalbox por su nombre y consola, luego lo inicia.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox."
+        },
+        "game": {
+          "name": "Nombre del juego",
+          "description": "El nombre del juego a buscar (ej. Super Mario World)."
+        },
+        "console": {
+          "name": "Consola",
+          "description": "El nombre del sistema (ej. snes, megadrive, psx)."
+        }
+      }
+    },
+    "quit_kodi": {
+      "name": "Salir de Kodi",
+      "description": "Cierra Kodi y vuelve a la interfaz de EmulationStation.",
+      "fields": {
+        "entity_id": {
+          "name": "ID de entidad",
+          "description": "El identificador de la entidad Recalbox (ID de configuración)."
+        }
+      }
+    }
+  }
+}
