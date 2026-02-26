@@ -163,7 +163,7 @@ gen_game_json() {
   "rom": $(clean_json_val "$ROM"),
   "genre": $(clean_json_val "$GAME_GENRE"),
   "genreId": $(clean_json_val "$GAME_GENRE_ID"),
-  "emulator": $(clean_json_val "EMULATOR"),
+  "emulator": $(clean_json_val "$EMULATOR"),
   "imagePath": $imagePath,
   "recalboxIpAddress": $(clean_json_val "$IP_LOCALE"),
   "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
