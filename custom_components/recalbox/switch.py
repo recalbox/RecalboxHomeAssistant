@@ -45,6 +45,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
         # Attribut volatile (non persisté dans l'objet d'état standard)
         self.game = None
         self.console = None
+        self.emulator = None
         self.rom = None
         self.genre = None
         self.genreId = None
@@ -106,6 +107,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
             "recalboxIpAddress": self.recalboxIpAddress,
             "game": self.game,
             "console": self.console,
+            "emulator": self.emulator,
             "genre": self.genre,
             "genreId": self.genreId,
             "rom": self.rom,
@@ -291,6 +293,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
     def reset_game_attributes(self):
         self.game = None
         self.console = None
+        self.emulator = None
         self.genre = None
         self.genreId = None
         self.rom = None
@@ -323,6 +326,7 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
 
         self.game = data.get("game")
         self.console = data.get("console")
+        self.emulator = data.get("emulator")
         self.genre = data.get("genre")
         self.genreId = data.get("genreId")
         self.rom = data.get("rom")

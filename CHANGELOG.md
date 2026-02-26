@@ -7,6 +7,10 @@
 
 
 - Add sign off, and new [merge request for HACS referencing](https://github.com/hacs/default/pull/5704)
+- [#10](https://github.com/recalbox/RecalboxHomeAssistant/issues/10) Disable in-game buttons for incompatible emulators
+- [PR#8](https://github.com/recalbox/RecalboxHomeAssistant/pull/8) Add Spanish translations (thanks to @MiguelAngelLV)
+- [PR#6](https://github.com/recalbox/RecalboxHomeAssistant/pull/6) Update services.yaml to filter on Recalbox switch entities only (thanks to @MiguelAngelLV)
+- [PR#6](https://github.com/recalbox/RecalboxHomeAssistant/pull/6) Add english services translations for Dev Tools (thanks to @MiguelAngelLV)
 
 
 

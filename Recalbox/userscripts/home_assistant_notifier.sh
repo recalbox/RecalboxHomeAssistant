@@ -35,6 +35,7 @@ ROM=$(get_val "GamePath")
 GAME_IMAGE_PATH=$(get_val "ImagePath")
 SYSTEM_ID=$(get_val "SystemId")
 SYSTEM_NAME=$(get_val "System")
+EMULATOR=$(get_val "Emulator")
 GAME_GENRE=$(get_val "Genre")
 GAME_GENRE_ID=$(get_val "GenreId")
 
@@ -100,6 +101,7 @@ case "$ACTION" in
   runkodi)
     clear_game
     SYSTEM_NAME="Kodi"
+    EMULATOR="null"
     ;;
   wakeup|rungame)
     ;;
@@ -161,6 +163,7 @@ gen_game_json() {
   "rom": $(clean_json_val "$ROM"),
   "genre": $(clean_json_val "$GAME_GENRE"),
   "genreId": $(clean_json_val "$GAME_GENRE_ID"),
+  "emulator": $(clean_json_val "$EMULATOR"),
   "imagePath": $imagePath,
   "recalboxIpAddress": $(clean_json_val "$IP_LOCALE"),
   "recalboxVersion": $(clean_json_val "$RECALBOX_VERSION"),
