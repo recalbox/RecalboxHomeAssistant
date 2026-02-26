@@ -361,7 +361,7 @@ class RecalboxAPI:
             return {
                 "game": utils.clean_game_name(data.get("Game", {}).get("Game") if is_game_running else None),
                 "console": data.get("System", {}).get("System"),
-                "emulator": data.get("System", {}).get("DefaultEmulator", {}).get("Emulator") if is_game_running else None,
+                "emulator": data.get("Game", {}).get("SelectedEmulator", {}).get("Emulator") if is_game_running else None,
                 "rom": data.get("Game", {}).get("GamePath") if is_game_running else None,
                 "genre": data.get("Game", {}).get("Genre") if is_game_running else None,
                 "genreId": data.get("Game", {}).get("GenreId") if is_game_running else None,
