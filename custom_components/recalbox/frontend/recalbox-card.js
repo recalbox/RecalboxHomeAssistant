@@ -1,4 +1,8 @@
 const RECALBOX_SCRIPT_MIN_VERSION = "v1.5.0";
+// Incompatible emulators with in-game buttons
+const INCOMPATIBLE_EMULATORS_WITH_BUTTONS = [
+    'ppsspp'
+];
 // Traductions
 const TRANSLATIONS = {
   "fr": {
@@ -244,6 +248,7 @@ class RecalboxCard extends HTMLElement {
     const isOn = state.state === "on";
     const game = state.attributes.game || "-";
     const consoleName = state.attributes.console || "-";
+    const emulator = state.attributes.emulator || "-";
     const genre = state.attributes.genre || "-";
     const romPath = state.attributes.rom || "-";
     const imageUrl = state.attributes.imageUrl || "";
@@ -333,7 +338,7 @@ class RecalboxCard extends HTMLElement {
         <div class="action-button" id="btn-reboot" ` + ((showRebootButton) ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:restart"></ha-icon>${i18n.buttons.reboot}</div>
         <div class="action-button" id="btn-quit-kodi" ` + ((showQuitKodiButton && isKodiRunning) ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:kodi"></ha-icon>${i18n.buttons.quit_kodi}</div>
 
-        <div class="action-button no-gap" ` + (isAGameRunning ? '' : 'style="display:none"')+ `>
+        <div class="action-button no-gap" ` + (isAGameRunning ? (INCOMPATIBLE_EMULATORS_WITH_BUTTONS.includes(emulator) ? 'style="opacity:0.3; pointer-events: none;"' : '') : 'style="display:none"')+ `>
             ${i18n.game} &nbsp;
             <div class="game-icon-button" title="${i18n.buttons.screenshot}" id="btn-snap" ` + ((showScreenshotButton) ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:camera"></ha-icon></div>
             <div class="game-icon-button" title="${i18n.buttons.pause}" id="btn-pause" ` + ((showPauseGameButton) ? '' : 'style="display:none"')+ `><ha-icon icon="mdi:play-pause"></ha-icon></div>
