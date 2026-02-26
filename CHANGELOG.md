@@ -7,6 +7,7 @@
 
 
 - Add sign off, and new [merge request for HACS referencing](https://github.com/hacs/default/pull/5704)
+- [#10](https://github.com/recalbox/RecalboxHomeAssistant/issues/10) Disable in-game buttons for incompatible emulators
 
 
 
