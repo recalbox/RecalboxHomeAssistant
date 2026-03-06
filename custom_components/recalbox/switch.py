@@ -326,6 +326,8 @@ class RecalboxEntity(CoordinatorEntity, SwitchEntity, RestoreEntity):
 
         self.game = data.get("game")
         self.console = data.get("console")
+        if self.console.lower() == 'kodi':
+            self.console = 'Kodi'
         self.emulator = data.get("emulator")
         self.genre = data.get("genre")
         self.genreId = data.get("genreId")
