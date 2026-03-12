@@ -4,7 +4,7 @@
 # A placer dans le dossier userscripts
 # Par Aurélien Tomassini
 
-SCRIPT_VERSION="home_assistant_notifier.sh:v1.6.6"
+SCRIPT_VERSION="home_assistant_notifier.sh:v1.6.7"
 
 # Configuration
 HOME_ASSISTANT_DOMAIN="homeassistant.local"
